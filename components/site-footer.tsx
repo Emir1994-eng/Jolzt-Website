@@ -1,8 +1,13 @@
+"use client"
+
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
+import { useTranslations } from "@/utils/i18n"
 
-export function SiteFooter() {
+export function SiteFooter({ lang = "en" }: { lang?: string }) {
+  const { t } = useTranslations(lang)
+
   return (
     <footer className="bg-slate-900 text-white py-12">
       <div className="container px-4 md:px-6">
@@ -11,18 +16,18 @@ export function SiteFooter() {
             <h3 className="font-bold mb-4">JOLZT</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="text-sm hover:underline">
-                  Home
+                <Link href={`/${lang}`} className="text-sm hover:underline">
+                  {t("footer.home")}
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="text-sm hover:underline">
-                  About us
+                <Link href={`/${lang}/about-us`} className="text-sm hover:underline">
+                  {t("footer.about")}
                 </Link>
               </li>
               <li>
-                <Link href="/how-it-works" className="text-sm hover:underline">
-                  How Jolzt Works
+                <Link href={`/${lang}/how-jolzt-works`} className="text-sm hover:underline">
+                  {t("footer.howItWorks")}
                 </Link>
               </li>
             </ul>
@@ -31,18 +36,18 @@ export function SiteFooter() {
             <h3 className="font-bold mb-4">Explore</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/travel-guides" className="text-sm hover:underline">
-                  Travel Guides & Destinations
+                <Link href={`/${lang}/travel-guides-and-destinations`} className="text-sm hover:underline">
+                  {t("footer.travelGuides")}
                 </Link>
               </li>
               <li>
-                <Link href="/partner" className="text-sm hover:underline">
-                  Partner with Jolzt
+                <Link href={`/${lang}/partner`} className="text-sm hover:underline">
+                  {t("footer.partner")}
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-sm hover:underline">
-                  Help & Contact
+                <Link href={`/${lang}/contact`} className="text-sm hover:underline">
+                  {t("footer.help")}
                 </Link>
               </li>
             </ul>
@@ -51,79 +56,84 @@ export function SiteFooter() {
             <h3 className="font-bold mb-4">Legal</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/terms-of-service" className="text-sm hover:underline">
-                  Terms of Service
+                <Link href={`/${lang}/terms-of-service`} className="text-sm hover:underline">
+                  {t("footer.termsOfService")}
                 </Link>
               </li>
               <li>
-                <Link href="/privacy-policy" className="text-sm hover:underline">
-                  Privacy Policy
+                <Link href={`/${lang}/privacy-policy`} className="text-sm hover:underline">
+                  {t("footer.privacyPolicy")}
                 </Link>
               </li>
               <li>
-                <Link href="/terms-of-payment" className="text-sm hover:underline">
-                  Terms of Payment
+                <Link href={`/${lang}/terms-of-payment`} className="text-sm hover:underline">
+                  {t("footer.termsOfPayment")}
                 </Link>
               </li>
             </ul>
           </div>
           <div>
-            <h3 className="font-bold mb-4">Download App</h3>
+            <h3 className="font-bold mb-4">{t("footer.downloadApp")}</h3>
             <p className="text-sm text-slate-400 mb-4">Get the Jolzt app for the best experience</p>
             <div className="flex flex-col gap-2">
               <Button
                 variant="outline"
                 size="sm"
                 className="bg-transparent border-white text-white hover:bg-white/10 justify-start"
+                asChild
               >
-                <Image
-                  src="/placeholder.svg?height=20&width=20"
-                  alt="App Store"
-                  width={20}
-                  height={20}
-                  className="mr-2"
-                />
-                Download on App Store
+                <Link
+                  href="https://apps.apple.com/mk/app/jolzt-rent-a-car-macedonia/id6618112125"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Image
+                    src="/placeholder.svg?height=20&width=20"
+                    alt="App Store"
+                    width={20}
+                    height={20}
+                    className="mr-2"
+                  />
+                  {t("footer.appStore")}
+                </Link>
               </Button>
               <Button
                 variant="outline"
                 size="sm"
                 className="bg-transparent border-white text-white hover:bg-white/10 justify-start"
+                asChild
               >
-                <Image
-                  src="/placeholder.svg?height=20&width=20"
-                  alt="Google Play"
-                  width={20}
-                  height={20}
-                  className="mr-2"
-                />
-                Get it on Google Play
-              </Button>
-            </div>
-            <div className="flex items-center gap-2 mt-4">
-              <Button variant="outline" size="sm" className="bg-transparent border-white text-white hover:bg-white/10">
-                EN
-              </Button>
-              <Button variant="outline" size="sm" className="bg-transparent border-white text-white hover:bg-white/10">
-                MK
-              </Button>
-              <Button variant="outline" size="sm" className="bg-transparent border-white text-white hover:bg-white/10">
-                SQ
+                <Link
+                  href="https://play.google.com/store/apps/details?id=com.jolzt&hl=en&pli=1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Image
+                    src="/placeholder.svg?height=20&width=20"
+                    alt="Google Play"
+                    width={20}
+                    height={20}
+                    className="mr-2"
+                  />
+                  {t("footer.googlePlay")}
+                </Link>
               </Button>
             </div>
           </div>
         </div>
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 mt-8 pt-8 border-t border-slate-700">
-          <div className="text-sm text-slate-400">© Jolzt {new Date().getFullYear()}</div>
+          <div className="text-sm text-slate-400">
+            {t("footer.copyright")} {new Date().getFullYear()}
+          </div>
           <div className="flex flex-wrap justify-center gap-4">
-            <Link href="/terms-of-service" className="text-sm text-slate-400 hover:underline">
-              Terms of Service
+            <Link href={`/${lang}/terms-of-service`} className="text-sm text-slate-400 hover:underline">
+              {t("footer.termsOfService")}
             </Link>
-            <Link href="/privacy-policy" className="text-sm text-slate-400 hover:underline">
-              Privacy Policy
+            <Link href={`/${lang}/privacy-policy`} className="text-sm text-slate-400 hover:underline">
+              {t("footer.privacyPolicy")}
             </Link>
-            <Link href="/terms-of-payment" className="text-sm text-slate-400 hover:underline">
-              Terms of Payment
+            <Link href={`/${lang}/terms-of-payment`} className="text-sm text-slate-400 hover:underline">
+              {t("footer.termsOfPayment")}
             </Link>
           </div>
         </div>

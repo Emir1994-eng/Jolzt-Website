@@ -184,11 +184,7 @@ export default function PartnerPage() {
                     <div className="space-y-3">
                       <div className="flex items-start gap-2">
                         <CheckIcon className="h-5 w-5 text-[#f26522] mt-0.5 shrink-0" />
-                        <p className="text-sm">Increase your bookings by an average of 35%</p>
-                      </div>
-                      <div className="flex items-start gap-2">
-                        <CheckIcon className="h-5 w-5 text-[#f26522] mt-0.5 shrink-0" />
-                        <p className="text-sm">Access our network of 50,000+ monthly active users</p>
+                        <p className="text-sm">Access our network of growing monthly user base</p>
                       </div>
                       <div className="flex items-start gap-2">
                         <CheckIcon className="h-5 w-5 text-[#f26522] mt-0.5 shrink-0" />
@@ -201,6 +197,10 @@ export default function PartnerPage() {
                       <div className="flex items-start gap-2">
                         <CheckIcon className="h-5 w-5 text-[#f26522] mt-0.5 shrink-0" />
                         <p className="text-sm">No upfront costs or monthly fees</p>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <CheckIcon className="h-5 w-5 text-[#f26522] mt-0.5 shrink-0" />
+                        <p className="text-sm">Only 15% commission from each booking</p>
                       </div>
                     </div>
                   </CardContent>
@@ -252,6 +252,13 @@ export default function PartnerPage() {
                     </div>
                   </CardContent>
                 </Card>
+
+                <div className="mt-8">
+                  <div className="bg-white p-4 rounded-lg text-center">
+                    <div className="text-2xl md:text-3xl font-bold text-[#f26522] mb-2">10+</div>
+                    <div className="text-sm text-muted-foreground">Active Partners</div>
+                  </div>
+                </div>
 
                 <div className="bg-[#f26522]/5 rounded-lg p-4">
                   <h3 className="font-medium text-sm mb-2">Need help?</h3>
@@ -335,31 +342,14 @@ export default function PartnerPage() {
                     Join our network of successful rental companies across North Macedonia and take advantage of our
                     growing customer base.
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <Button size="lg" className="bg-[#f26522] hover:bg-[#e05a1c]">
-                      Apply Now
-                    </Button>
-                    <Button size="lg" variant="outline" className="border-[#f26522] text-[#f26522]">
-                      Schedule a Demo
-                    </Button>
-                  </div>
+                  <Button size="lg" className="bg-[#f26522] hover:bg-[#e05a1c]">
+                    Apply Now
+                  </Button>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4">
                   <div className="bg-white p-4 rounded-lg text-center">
-                    <div className="text-2xl md:text-3xl font-bold text-[#f26522] mb-2">500+</div>
+                    <div className="text-2xl md:text-3xl font-bold text-[#f26522] mb-2">10+</div>
                     <div className="text-sm text-muted-foreground">Active Partners</div>
-                  </div>
-                  <div className="bg-white p-4 rounded-lg text-center">
-                    <div className="text-2xl md:text-3xl font-bold text-[#f26522] mb-2">15K+</div>
-                    <div className="text-sm text-muted-foreground">Monthly Bookings</div>
-                  </div>
-                  <div className="bg-white p-4 rounded-lg text-center">
-                    <div className="text-2xl md:text-3xl font-bold text-[#f26522] mb-2">98%</div>
-                    <div className="text-sm text-muted-foreground">Partner Satisfaction</div>
-                  </div>
-                  <div className="bg-white p-4 rounded-lg text-center">
-                    <div className="text-2xl md:text-3xl font-bold text-[#f26522] mb-2">35%</div>
-                    <div className="text-sm text-muted-foreground">Avg. Revenue Increase</div>
                   </div>
                 </div>
               </div>

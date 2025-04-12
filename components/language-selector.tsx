@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { useRouter, usePathname } from "next/navigation"
 import { GlobeIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -30,114 +31,93 @@ const languages: Language[] = [
   },
 ]
 
-// Translation dictionaries
-const translations = {
-  en: {
-    home: "Home",
-    about: "About Us",
-    howItWorks: "How It Works",
-    travelGuides: "Travel Guides",
-    partner: "Partner with Jolzt",
-    help: "Help & Contact",
-    termsOfService: "Terms of Service",
-    privacyPolicy: "Privacy Policy",
-    termsOfPayment: "Terms of Payment",
-    downloadApp: "Download App",
-    appStore: "Download on App Store",
-    googlePlay: "Get it on Google Play",
-    copyright: "© Jolzt",
-    signIn: "Sign In / Register",
-    bookNow: "Book Now",
-    showCars: "Show Cars",
-    rentNow: "Rent Now",
-    // Add more translations as needed
-  },
-  mk: {
-    home: "Почетна",
-    about: "За Нас",
-    howItWorks: "Како Функционира",
-    travelGuides: "Туристички Водичи",
-    partner: "Станете Партнер",
-    help: "Помош & Контакт",
-    termsOfService: "Услови за Користење",
-    privacyPolicy: "Политика за Приватност",
-    termsOfPayment: "Услови за Плаќање",
-    downloadApp: "Преземи ја Апликацијата",
-    appStore: "Преземи од App Store",
-    googlePlay: "Преземи од Google Play",
-    copyright: "© Jolzt",
-    signIn: "Најави се / Регистрирај се",
-    bookNow: "Резервирај Сега",
-    showCars: "Прикажи Автомобили",
-    rentNow: "Изнајми Сега",
-    // Add more translations as needed
-  },
-  sq: {
-    home: "Ballina",
-    about: "Rreth Nesh",
-    howItWorks: "Si Funksionon",
-    travelGuides: "Udhëzues Turistik",
-    partner: "Bëhu Partner",
-    help: "Ndihmë & Kontakt",
-    termsOfService: "Kushtet e Shërbimit",
-    privacyPolicy: "Politika e Privatësisë",
-    termsOfPayment: "Kushtet e Pagesës",
-    downloadApp: "Shkarko Aplikacionin",
-    appStore: "Shkarko nga App Store",
-    googlePlay: "Shkarko nga Google Play",
-    copyright: "© Jolzt",
-    signIn: "Hyr / Regjistrohu",
-    bookNow: "Rezervo Tani",
-    showCars: "Shfaq Makinat",
-    rentNow: "Merr me Qira Tani",
-    // Add more translations as needed
-  },
-}
-
-// Create a context for the current language
-export const LanguageContext = React.createContext<{
-  language: Language
-  setLanguage: (lang: Language) => void
-  t: (key: string) => string
+const LanguageContext = React.createContext<{
+  lang: string
+  setLang: (lang: string) => void
 }>({
-  language: languages[0],
-  setLanguage: () => {},
-  t: (key) => key,
+  lang: "en",
+  setLang: () => {},
 })
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguage] = React.useState<Language>(languages[0])
+  const [lang, setLang] = React.useState("en")
+  const router = useRouter()
 
-  const t = React.useCallback(
-    (key: string) => {
-      return translations[language.code as keyof typeof translations]?.[key as keyof (typeof translations)["en"]] || key
-    },
-    [language],
-  )
+  const setLanguage = (newLang: string) => {
+    if (newLang !== lang) {
+      setLang(newLang)
 
-  return <LanguageContext.Provider value={{ language, setLanguage, t }}>{children}</LanguageContext.Provider>
+      const currentPath = window.location.pathname
+      const pathWithoutLang = currentPath.split("/").slice(2).join("/")
+      const newPath = `/${newLang}/${pathWithoutLang}`
+
+      router.push(newPath)
+
+      document.documentElement.lang = newLang
+    }
+  }
+
+  return <LanguageContext.Provider value={{ lang, setLang: setLanguage }}>{children}</LanguageContext.Provider>
 }
 
 export function useTranslation() {
   const context = React.useContext(LanguageContext)
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useTranslation must be used within a LanguageProvider")
   }
-  return context
+
+  const translations = {
+    en: {
+      home: "Home",
+      // Add other translations here
+    },
+    mk: {
+      home: "Почетна",
+      // Add other translations here
+    },
+    sq: {
+      home: "Ballina",
+      // Add other translations here
+    },
+  }
+
+  const t = (key: keyof (typeof translations)["en"]) => {
+    return translations[context.lang as keyof typeof translations]?.[key] || key
+  }
+
+  return { t, lang: context.lang }
 }
 
+// Add back the LanguageSelector component
 export function LanguageSelector() {
-  const [language, setLanguage] = React.useState<Language>(languages[0])
+  const router = useRouter()
+  const pathname = usePathname()
+  const [currentLang, setCurrentLang] = React.useState<string>("en")
+
+  // Extract current language from URL on component mount
+  React.useEffect(() => {
+    const pathParts = pathname.split("/")
+    if (pathParts.length > 1 && languages.some((lang) => lang.code === pathParts[1])) {
+      setCurrentLang(pathParts[1])
+    }
+  }, [pathname])
 
   const handleLanguageChange = (lang: Language) => {
-    setLanguage(lang)
-    // In a real app, this would update the app's language context
-    // and potentially redirect to a localized version of the page
+    // Get current path without language prefix
+    let pathWithoutLang = pathname.split("/").slice(2).join("/")
+    if (pathWithoutLang === "") {
+      // If we're on the homepage, don't add an extra slash
+      pathWithoutLang = ""
+    }
 
-    // For demonstration purposes, we'll just store the language preference in localStorage
-    localStorage.setItem("preferredLanguage", lang.code)
+    // Navigate to the same page but with different language
+    const newPath = `/${lang.code}/${pathWithoutLang}`
+    router.push(newPath)
 
-    // In a production app, you would also update the HTML lang attribute
+    // Update current language
+    setCurrentLang(lang.code)
+
+    // Update HTML lang attribute
     document.documentElement.lang = lang.code
   }
 
@@ -146,7 +126,7 @@ export function LanguageSelector() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="flex items-center gap-1">
           <GlobeIcon className="h-4 w-4" />
-          <span>{language.code.toUpperCase()}</span>
+          <span>{currentLang.toUpperCase()}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -154,7 +134,7 @@ export function LanguageSelector() {
           <DropdownMenuItem
             key={lang.code}
             onClick={() => handleLanguageChange(lang)}
-            className={lang.code === language.code ? "bg-muted" : ""}
+            className={lang.code === currentLang ? "bg-muted" : ""}
           >
             <span className="mr-2">{lang.nativeName}</span>
             <span className="text-muted-foreground">{lang.name}</span>
