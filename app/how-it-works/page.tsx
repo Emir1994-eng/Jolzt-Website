@@ -1,13 +1,17 @@
-"use client"
-
 import Link from "next/link"
 import Image from "next/image"
+import type { Metadata } from "next"
 import { ChevronLeftIcon, CheckIcon, ChevronRightIcon, ArrowRightIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { LanguageSelector, useTranslation, LanguageProvider } from "@/components/language-selector"
 import { SiteFooter } from "@/components/site-footer"
+
+export const metadata: Metadata = {
+  title: 'How It Works - Jolzt Car Rental',
+  description: 'Learn how to easily rent a car in North Macedonia with our step-by-step guide.',
+}
 
 export default function HowItWorksPage() {
   return (
@@ -59,13 +63,6 @@ function HowItWorksContent() {
 
             <div className="relative max-w-4xl mx-auto">
               <div className="aspect-video relative bg-gray-100 rounded-lg overflow-hidden">
-                <Image
-                  src="/placeholder.svg?height=600&width=1200"
-                  alt="How Jolzt Works Video"
-                  width={1200}
-                  height={600}
-                  className="w-full h-full object-cover"
-                />
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center cursor-pointer hover:bg-white transition-colors shadow-lg">
                     <div className="w-0 h-0 border-t-[8px] border-t-transparent border-l-[16px] border-l-[#f26522] border-b-[8px] border-b-transparent ml-1"></div>
@@ -276,14 +273,15 @@ function HowItWorksContent() {
                   </div>
 
                   <div className="mt-16 text-center">
+                  <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer">
                     <Button
                       size="lg"
                       className="bg-[#f26522] hover:bg-[#e05a1c] px-8 py-6 h-auto text-lg rounded-md shadow-md"
-                      onClick={() => (window.location.href = "https://app.jolzt.com")}
                     >
                       Download the App & Start Renting
                       <ArrowRightIcon className="ml-2 h-5 w-5" />
                     </Button>
+                    </Link>
                   </div>
                 </div>
               </TabsContent>
