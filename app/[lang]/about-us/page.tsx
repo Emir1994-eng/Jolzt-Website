@@ -51,7 +51,7 @@ const translations = {
     cooDesc: "Operations wizard who can solve any problem with a smile 😊",
     ctoRole: "CTO",
     ctoDesc: "Code ninja who turns coffee into amazing tech solutions ⚡",
-    cxRole: "Head of Customer Experience",
+    cxRole: "Co-Founder & CBO",
     cxDesc: "Customer happiness champion who won't rest until you're smiling 🌈",
   },
   mk: {
@@ -285,9 +285,9 @@ export default function AboutPage({ params }: { params: { lang: string } }) {
                 <CardContent className="p-6">
                   <div className="flex flex-col items-center text-center">
                     <Avatar className="h-28 w-28 mb-4 ring-4 ring-[#f26522]/20">
-                      <AvatarFallback className="bg-[#f26522]/10 text-[#f26522] text-2xl">MK</AvatarFallback>
+                      <AvatarFallback className="bg-[#f26522]/10 text-[#f26522] text-2xl">EZ</AvatarFallback>
                     </Avatar>
-                    <h3 className="font-bold text-xl mb-1">Marko Kostovski</h3>
+                    <h3 className="font-bold text-xl mb-1">Emir Zekjovikj</h3>
                     <p className="text-sm text-[#f26522] mb-2">{t.ceoRole}</p>
                     <p className="text-lg text-gray-600">{t.ceoDesc}</p>
                     <div className="mt-4 flex gap-2">
@@ -303,9 +303,9 @@ export default function AboutPage({ params }: { params: { lang: string } }) {
                 <CardContent className="p-6">
                   <div className="flex flex-col items-center text-center">
                     <Avatar className="h-28 w-28 mb-4 ring-4 ring-[#f26522]/20">
-                      <AvatarFallback className="bg-[#f26522]/10 text-[#f26522] text-2xl">ET</AvatarFallback>
+                      <AvatarFallback className="bg-[#f26522]/10 text-[#f26522] text-2xl">MS</AvatarFallback>
                     </Avatar>
-                    <h3 className="font-bold text-xl mb-1">Elena Trajkovska</h3>
+                    <h3 className="font-bold text-xl mb-1">Marko Strahilov</h3>
                     <p className="text-sm text-[#f26522] mb-2">{t.cooRole}</p>
                     <p className="text-lg text-gray-600">{t.cooDesc}</p>
                     <div className="mt-4 flex gap-2">
@@ -316,37 +316,35 @@ export default function AboutPage({ params }: { params: { lang: string } }) {
                   </div>
                 </CardContent>
               </Card>
-
               <Card className="overflow-hidden hover:shadow-xl transition-all hover:-translate-y-2 duration-300 border-none bg-gradient-to-br from-orange-50 to-white">
                 <CardContent className="p-6">
                   <div className="flex flex-col items-center text-center">
                     <Avatar className="h-28 w-28 mb-4 ring-4 ring-[#f26522]/20">
-                      <AvatarFallback className="bg-[#f26522]/10 text-[#f26522] text-2xl">NS</AvatarFallback>
+                      <AvatarFallback className="bg-[#f26522]/10 text-[#f26522] text-2xl">BP</AvatarFallback>
                     </Avatar>
-                    <h3 className="font-bold text-xl mb-1">Nikola Stefanovski</h3>
-                    <p className="text-sm text-[#f26522] mb-2">{t.ctoRole}</p>
-                    <p className="text-lg text-gray-600">{t.ctoDesc}</p>
-                    <div className="mt-4 flex gap-2">
-                      <Button variant="outline" size="sm" className="rounded-full">
-                        <Zap className="h-4 w-4 mr-1" /> {t.techWizard}
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="overflow-hidden hover:shadow-xl transition-all hover:-translate-y-2 duration-300 border-none bg-gradient-to-br from-orange-50 to-white">
-                <CardContent className="p-6">
-                  <div className="flex flex-col items-center text-center">
-                    <Avatar className="h-28 w-28 mb-4 ring-4 ring-[#f26522]/20">
-                      <AvatarFallback className="bg-[#f26522]/10 text-[#f26522] text-2xl">AP</AvatarFallback>
-                    </Avatar>
-                    <h3 className="font-bold text-xl mb-1">Ana Petrovska</h3>
+                    <h3 className="font-bold text-xl mb-1">Bogdan Prodanov</h3>
                     <p className="text-sm text-[#f26522] mb-2">{t.cxRole}</p>
                     <p className="text-lg text-gray-600">{t.cxDesc}</p>
                     <div className="mt-4 flex gap-2">
                       <Button variant="outline" size="sm" className="rounded-full">
                         <Heart className="h-4 w-4 mr-1" /> {t.peoplePerson}
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="overflow-hidden hover:shadow-xl transition-all hover:-translate-y-2 duration-300 border-none bg-gradient-to-br from-orange-50 to-white">
+                <CardContent className="p-6">
+                  <div className="flex flex-col items-center text-center">
+                    <Avatar className="h-28 w-28 mb-4 ring-4 ring-[#f26522]/20">
+                      <AvatarFallback className="bg-[#f26522]/10 text-[#f26522] text-2xl">MM</AvatarFallback>
+                    </Avatar>
+                    <h3 className="font-bold text-xl mb-1">Mahir Mersimoski</h3>
+                    <p className="text-sm text-[#f26522] mb-2">{t.ctoRole}</p>
+                    <p className="text-lg text-gray-600">{t.ctoDesc}</p>
+                    <div className="mt-4 flex gap-2">
+                      <Button variant="outline" size="sm" className="rounded-full">
+                        <Zap className="h-4 w-4 mr-1" /> {t.techWizard}
                       </Button>
                     </div>
                   </div>

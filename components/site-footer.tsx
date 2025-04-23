@@ -88,10 +88,10 @@ export function SiteFooter({ lang = "en" }: { lang?: string }) {
                   rel="noopener noreferrer"
                 >
                   <Image
-                    src="/placeholder.svg?height=20&width=20"
+                    src="/AppleStore.png?height=20&width=20"
                     alt="App Store"
-                    width={20}
-                    height={20}
+                    width={70}
+                    height={70}
                     className="mr-2"
                   />
                   {t("footer.appStore")}
@@ -109,10 +109,10 @@ export function SiteFooter({ lang = "en" }: { lang?: string }) {
                   rel="noopener noreferrer"
                 >
                   <Image
-                    src="/placeholder.svg?height=20&width=20"
+                    src="/GooglePlay.png?height=20&width=20"
                     alt="Google Play"
-                    width={20}
-                    height={20}
+                    width={80}
+                    height={80}
                     className="mr-2"
                   />
                   {t("footer.googlePlay")}

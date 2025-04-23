@@ -393,12 +393,7 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
             {/* Desktop version - grid */}
             <div className="hidden md:grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {cars && cars.map((car) => (
-                <Link
-                  key={car?._id}
-                  href={`https://app.jolzt.com/?carId=${car._id}`}
-                  className="block"
-                >
-                  <Card className="overflow-hidden transition-all hover:shadow-md">
+                  <Card key={car?._id} className="overflow-hidden transition-all hover:shadow-md">
                     <CardContent className="p-0">
                       <div className="aspect-[4/3] bg-slate-100 relative">
                         {car.images?.[0] ? (
@@ -465,17 +460,18 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
                             </div>
                           ))}
                         </div>
-                        <Button
-                          onClick={handleCarClick(car?._id)}
-                          variant="outline"
-                          className="w-full border-[#f26522] text-[#f26522] hover:bg-[#f26522] hover:text-white"
-                        >
-                          <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
-                        </Button>
+                        <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer" passHref>
+                          <Button
+                            onClick={handleCarClick(car?._id)}
+                            variant="outline"
+                            className="w-full border-[#f26522] text-[#f26522] hover:bg-[#f26522] hover:text-white"
+                          >
+                            <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
+                          </Button>
+                        </Link>
                       </div>
                     </CardContent>
                   </Card>
-                </Link>
               ))}
             </div>
             {/* Mobile version - carousel */}
@@ -560,7 +556,7 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
                                   {car.insurance ? 'Insured' : 'No Insurance'}
                                 </div>
                               </div>
-                              <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer">
+                              <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer" passHref>
                                 <Button
                                   onClick={handleCarClick(car?._id)}
                                   variant="outline"
