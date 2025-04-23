@@ -3,79 +3,62 @@
 import * as React from "react"
 import { useRouter, usePathname } from "next/navigation"
 import { GlobeIcon } from "lucide-react"
+
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
-// Move languages to lib/constants.ts for shared access
-const languages = [
-  { code: "en", name: "English", nativeName: "English" },
-  { code: "mk", name: "Macedonian", nativeName: "Македонски" },
-  { code: "sq", name: "Albanian", nativeName: "Shqip" },
-] as const
-
-type LanguageCode = typeof languages[number]['code']
-type Language = typeof languages[number]
-
-type LanguageContextType = {
-  lang: LanguageCode
-  setLang: (lang: LanguageCode) => void
+type Language = {
+  code: string
+  name: string
+  nativeName: string
 }
 
-const LanguageContext = React.createContext<LanguageContextType>({
+const languages: Language[] = [
+  {
+    code: "en",
+    name: "English",
+    nativeName: "English",
+  },
+  {
+    code: "mk",
+    name: "Macedonian",
+    nativeName: "Македонски",
+  },
+  {
+    code: "sq",
+    name: "Albanian",
+    nativeName: "Shqip",
+  },
+]
+
+const LanguageContext = React.createContext<{
+  lang: string
+  setLang: (lang: string) => void
+}>({
   lang: "en",
   setLang: () => {},
 })
 
-interface LanguageProviderProps {
-  children: React.ReactNode
-  initialLang?: LanguageCode
-}
-
-export function LanguageProvider({ 
-  children, 
-  initialLang = "en" 
-}: LanguageProviderProps) {
-  const [lang, setLang] = React.useState<LanguageCode>(initialLang)
+export function LanguageProvider({ children }: { children: React.ReactNode }) {
+  const [lang, setLang] = React.useState("en")
   const router = useRouter()
-  const pathname = usePathname()
 
-  const setLanguage = React.useCallback((newLang: LanguageCode) => {
+  const setLanguage = (newLang: string) => {
     if (newLang !== lang) {
       setLang(newLang)
-      const pathWithoutLang = pathname.split('/').slice(2).join('/')
-      router.push(`/${newLang}/${pathWithoutLang}`)
+
+      const currentPath = window.location.pathname
+      const pathWithoutLang = currentPath.split("/").slice(2).join("/")
+      const newPath = `/${newLang}/${pathWithoutLang}`
+
+      router.push(newPath)
+
       document.documentElement.lang = newLang
     }
-  }, [lang, pathname, router])
+  }
 
-  // Sync language with URL on route changes
-  React.useEffect(() => {
-    const pathLang = pathname.split('/')[1]
-    if (isValidLanguage(pathLang)) {
-      setLang(pathLang)
-    }
-  }, [pathname])
-
-  return (
-    <LanguageContext.Provider value={{ lang, setLang: setLanguage }}>
-      {children}
-    </LanguageContext.Provider>
-  )
+  return <LanguageContext.Provider value={{ lang, setLang: setLanguage }}>{children}</LanguageContext.Provider>
 }
-
-// Helper function for type-safe language validation
-function isValidLanguage(lang: string): lang is LanguageCode {
-  return languages.some(l => l.code === lang)
-}
-
-// Move translations to separate file (lib/translations.ts)
-const translations = {
-  en: { home: "Home" },
-  mk: { home: "Почетна" },
-  sq: { home: "Ballina" },
-} satisfies Record<LanguageCode, Record<string, string>>
-
-type TranslationKey = keyof typeof translations.en
 
 export function useTranslation() {
   const context = React.useContext(LanguageContext)
@@ -83,27 +66,60 @@ export function useTranslation() {
     throw new Error("useTranslation must be used within a LanguageProvider")
   }
 
-  const t = React.useCallback((key: TranslationKey) => {
-    return translations[context.lang][key] || key
-  }, [context.lang])
-
-  return { 
-    t, 
-    lang: context.lang, 
-    setLang: context.setLang,
-    languages // Expose languages for components that need them
+  const translations = {
+    en: {
+      home: "Home",
+      // Add other translations here
+    },
+    mk: {
+      home: "Почетна",
+      // Add other translations here
+    },
+    sq: {
+      home: "Ballina",
+      // Add other translations here
+    },
   }
+
+  const t = (key: keyof (typeof translations)["en"]) => {
+    return translations[context.lang as keyof typeof translations]?.[key] || key
+  }
+
+  return { t, lang: context.lang }
 }
 
+// Add back the LanguageSelector component
 export function LanguageSelector() {
-  const { lang: currentLang, setLang, languages } = useTranslation()
+  const router = useRouter()
   const pathname = usePathname()
+  const [currentLang, setCurrentLang] = React.useState<string>("en")
 
-  const handleLanguageChange = React.useCallback((lang: Language) => {
-    const pathWithoutLang = pathname.split('/').slice(2).join('/')
-    setLang(lang.code)
+  // Extract current language from URL on component mount
+  React.useEffect(() => {
+    const pathParts = pathname.split("/")
+    if (pathParts.length > 1 && languages.some((lang) => lang.code === pathParts[1])) {
+      setCurrentLang(pathParts[1])
+    }
+  }, [pathname])
+
+  const handleLanguageChange = (lang: Language) => {
+    // Get current path without language prefix
+    let pathWithoutLang = pathname.split("/").slice(2).join("/")
+    if (pathWithoutLang === "") {
+      // If we're on the homepage, don't add an extra slash
+      pathWithoutLang = ""
+    }
+
+    // Navigate to the same page but with different language
+    const newPath = `/${lang.code}/${pathWithoutLang}`
+    router.push(newPath)
+
+    // Update current language
+    setCurrentLang(lang.code)
+
+    // Update HTML lang attribute
     document.documentElement.lang = lang.code
-  }, [pathname, setLang])
+  }
 
   return (
     <DropdownMenu>
