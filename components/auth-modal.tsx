@@ -39,6 +39,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
     // Simulate authentication
     setTimeout(() => {
       setIsLoading(false)
+      window.location.href = "https://app.jolzt.com"
     }, 1500)
   }
 
@@ -49,6 +50,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
     // Simulate registration
     setTimeout(() => {
       setIsLoading(false)
+      window.location.href = "https://app.jolzt.com"
     }, 1500)
   }
 
@@ -58,6 +60,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
     // Simulate social authentication
     setTimeout(() => {
       setIsLoading(false)
+      window.location.href = "https://app.jolzt.com"
     }, 1500)
   }
 
