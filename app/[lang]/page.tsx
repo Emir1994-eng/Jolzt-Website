@@ -2,14 +2,11 @@ import { redirect } from "next/navigation"
 import HomePage from "@/components/home-page"
 import { supportedLanguages } from "./layout"
 
-type SupportedLanguage = typeof supportedLanguages[number];
-
 export default function LocalizedHomePage({ params }: { params: { lang: string } }) {
-  const lang = params.lang as SupportedLanguage;
-
-  if (!supportedLanguages.includes(lang)) {
-    redirect("/en");
+  // Validate the language parameter
+  if (!supportedLanguages.includes(params.lang)) {
+    redirect("/en") // Redirect to English if language is not supported
   }
 
-  return <HomePage lang={lang} />;
+  return <HomePage lang={params.lang} />
 }
