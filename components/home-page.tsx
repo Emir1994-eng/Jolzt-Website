@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import {
@@ -15,6 +15,7 @@ import {
   ZapIcon,
   SmileIcon,
   ThumbsUpIcon,
+  ArrowRightIcon
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -30,10 +31,103 @@ import { SiteFooter } from "@/components/site-footer"
 import { AvatarFallback } from "@/components/ui/avatar"
 import { Avatar } from "@/components/ui/avatar"
 import { useTranslations } from "@/utils/i18n"
+import CarsLoading from "./ui/carsloading"
+import axios from "axios"
+
+import { logEvent } from "firebase/analytics"
+import { logFacebookEvent } from '@/lib/facebookPixel'
+import { analytics } from '@/lib/firebase'
+
+interface Car {
+  _id: string;
+  model: string;
+  category: string;
+  regularPrice: number;
+}
 
 export default function HomePage({ lang = "en" }: { lang?: string }) {
   const { t } = useTranslations(lang)
+  const [cars, setCars] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const [authModalOpen, setAuthModalOpen] = useState(false)
+
+  useEffect(() => {
+    const fetchCars = async () => {
+      try {
+        const response = await axios.post('/api/cars', {
+          action: 'getCars',
+          query: {
+            region: 'Macedonia',
+            'availability.status': 'Active'
+          }
+        })
+        setCars(response.data?.data?.foundCars || [])
+      } catch (err) {
+        setError(err.response?.data?.error || 'Failed to load cars')
+        console.error('API Error:', err)
+        setCars([])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchCars()
+  }, [])
+
+  const handleBookNowClick = () => {
+
+    if (!analytics) {
+      console.warn("Analytics not available");
+      return;
+    }
+
+    logEvent(analytics, "Show_Cars", {
+      content_type: "car",
+    });
+
+    logFacebookEvent("Show_Cars", {
+      content_type: "car",
+    });
+
+  }
+
+  const handleCarClick = (carId: string) => (event: React.MouseEvent) => {
+
+    const car = cars.find(c => c._id === carId)
+
+    if (!car) {
+      console.error('Car not found');
+      return;
+    }
+
+    if (!analytics) {
+      console.warn("Analytics not available");
+      return;
+    }
+
+    logEvent(analytics, "Web_Car_Select", {
+      content_type: "car",
+      car_id: car._id,
+      car_model: car.model,
+      category: car.category,
+      eur_price_per_day: car.regularPrice,
+    });
+
+    logFacebookEvent("Web_Car_Select", {
+      content_type: "car",
+      car_id: car._id,
+      car_model: car.model,
+      category: car.category,
+      eur_price_per_day: car.regularPrice,
+    });
+
+  }
+
+  if (loading) return <CarsLoading />
+  if (error) return <div className="p-4 text-red-500">Error: {error}</div>
+  if (!cars) return <div className="p-4">No cars data available</div>
+
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -53,13 +147,15 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
           </div>
           <div className="flex items-center gap-2 md:gap-4">
             <LanguageSelector />
-            <Button
-              size="sm"
-              className="bg-[#f26522] hover:bg-[#e05a1c] text-xs md:text-sm"
-              onClick={() => (window.location.href = "https://app.jolzt.com")}
-            >
-              Book Your Ride
-            </Button>
+            <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer">
+              <Button
+                size="sm"
+                className="bg-[#f26522] hover:bg-[#e05a1c] text-xs md:text-sm"
+                onClick={handleBookNowClick}
+              >
+                Book Your Ride
+              </Button>
+            </Link>
           </div>
         </div>
       </header>
@@ -111,9 +207,11 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
                     </div>
                     <LocationSelector />
                     <DatePickerWithRange />
-                    <Button className="w-full bg-[#f26522] hover:bg-[#e05a1c]" onClick={() => setAuthModalOpen(true)}>
-                      <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
-                    </Button>
+                    <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer">
+                      <Button className="w-full bg-[#f26522] hover:bg-[#e05a1c]">
+                        <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -293,502 +391,189 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
             </div>
 
             {/* Desktop version - grid */}
-            <div className="hidden md:grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-              <Link
-                href={`/${lang}/travel-guides-and-destinations/10-must-visit-places-around-lake-ohrid`}
-                className="block"
-              >
-                <Card className="overflow-hidden transition-all hover:shadow-md">
-                  <CardContent className="p-0">
-                    <div className="aspect-[4/3] bg-slate-100 relative">
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <CarFrontIcon className="h-16 w-16 text-[#f26522]/40" />
+            <div className="hidden md:grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {cars && cars.map((car) => (
+                <Link
+                  key={car?._id}
+                  href={`https://app.jolzt.com/?carId=${car._id}`}
+                  className="block"
+                >
+                  <Card className="overflow-hidden transition-all hover:shadow-md">
+                    <CardContent className="p-0">
+                      <div className="aspect-[4/3] bg-slate-100 relative">
+                        {car.images?.[0] ? (
+                          <img
+                            src={car.images[0]}
+                            alt={`${car.model} ${car.modelType}`}
+                            className="w-full h-full object-cover" // Ensures image covers container
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'cover',
+                              objectPosition: 'center'
+                            }}
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <CarFrontIcon className="h-16 w-16 text-[#f26522]/40" />
+                          </div>
+                        )}
+                        {car.isPremium && (
+                          <div className="absolute top-4 left-4">
+                            <Badge className="bg-[#f26522]">
+                              {t("home.findRide.mostPopular")}
+                            </Badge>
+                          </div>
+                        )}
                       </div>
-                      <div className="absolute top-4 left-4">
-                        <Badge className="bg-[#f26522]">{t("home.findRide.mostPopular")}</Badge>
-                      </div>
-                    </div>
-                    <div className="p-5">
-                      <div className="flex justify-between items-start mb-2">
-                        <div>
-                          <h3 className="font-bold text-lg mb-0">Volkswagen Golf</h3>
-                          <p className="text-sm text-muted-foreground">Hatchback • 2022</p>
+                      <div className="p-5">
+                        <div className="flex justify-between items-start mb-2">
+                          <div>
+                            <h3 className="font-bold text-lg mb-0">
+                              {car.model} {car.modelType}
+                            </h3>
+                            <p className="text-sm text-muted-foreground">
+                              {car.category} • {car.productionYear}
+                            </p>
+                          </div>
+                          <div className="flex">
+                            {[...Array(5)].map((_, i) => (
+                              <StarIcon key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                            ))}
+                          </div>
                         </div>
-                        <div className="flex">
-                          {[...Array(5)].map((_, i) => (
-                            <StarIcon key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        <div className="flex items-center gap-2 mb-3">
+                          <Badge variant="outline" className="text-xs font-normal">
+                            {car.availableLocation}
+                          </Badge>
+                          <span className="text-xs text-muted-foreground">
+                            ({car.reviews?.length || 0} reviews)
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="text-sm font-medium">From</div>
+                          <div className="text-xl font-bold text-[#f26522]">
+                            €{car.regularPrice}
+                            <span className="text-sm font-normal text-muted-foreground">/day</span>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground mb-4">
+                          {Array.from({ length: 4 }).map((_, index) => (
+                            <div key={index} className="flex items-center gap-1">
+                              <CheckIcon className="h-3 w-3 text-[#f26522]" />
+                              {car.features?.[index] || '—'}
+                            </div>
                           ))}
                         </div>
+                        <Button
+                          onClick={handleCarClick(car?._id)}
+                          variant="outline"
+                          className="w-full border-[#f26522] text-[#f26522] hover:bg-[#f26522] hover:text-white"
+                        >
+                          <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
+                        </Button>
                       </div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <Badge variant="outline" className="text-xs font-normal">
-                          Auto Rent Ltd.
-                        </Badge>
-                        <span className="text-xs text-muted-foreground">(32 reviews)</span>
-                      </div>
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="text-sm font-medium">From</div>
-                        <div className="text-xl font-bold text-[#f26522]">
-                          €25<span className="text-sm font-normal text-muted-foreground">/day</span>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground mb-4">
-                        <div className="flex items-center gap-1">
-                          <CheckIcon className="h-3 w-3 text-[#f26522]" /> 4-5 Seats
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <CheckIcon className="h-3 w-3 text-[#f26522]" /> 2 Small Bags
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <CheckIcon className="h-3 w-3 text-[#f26522]" /> A/C
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <CheckIcon className="h-3 w-3 text-[#f26522]" /> Manual/Auto
-                        </div>
-                      </div>
-                      <Button
-                        variant="outline"
-                        className="w-full border-[#f26522] text-[#f26522] hover:bg-[#f26522] hover:text-white"
-                      >
-                        <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-
-              <Link href={`/${lang}/travel-guides-and-destinations/exploring-skopjes-old-bazaar`} className="block">
-                <Card className="overflow-hidden">
-                  <CardContent className="p-0">
-                    <div className="aspect-[4/3] bg-slate-100 relative">
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <CarFrontIcon className="h-16 w-16 text-[#f26522]/40" />
-                      </div>
-                    </div>
-                    <div className="p-5">
-                      <div className="flex justify-between items-start mb-2">
-                        <div>
-                          <h3 className="font-bold text-lg mb-0">Toyota Corolla</h3>
-                          <p className="text-sm text-muted-foreground">Sedan • 2021</p>
-                        </div>
-                        <div className="flex">
-                          {[...Array(4)].map((_, i) => (
-                            <StarIcon key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                          ))}
-                          <StarIcon className="h-4 w-4 text-yellow-400" />
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <Badge variant="outline" className="text-xs font-normal">
-                          Macedonia Rentals
-                        </Badge>
-                        <span className="text-xs text-muted-foreground">(18 reviews)</span>
-                      </div>
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="text-sm font-medium">From</div>
-                        <div className="text-xl font-bold text-[#f26522]">
-                          €35<span className="text-sm font-normal text-muted-foreground">/day</span>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground mb-4">
-                        <div className="flex items-center gap-1">
-                          <CheckIcon className="h-3 w-3 text-[#f26522]" /> 5 Seats
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <CheckIcon className="h-3 w-3 text-[#f26522]" /> 3 Bags
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <CheckIcon className="h-3 w-3 text-[#f26522]" /> A/C
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <CheckIcon className="h-3 w-3 text-[#f26522]" /> Auto
-                        </div>
-                      </div>
-                      <Button
-                        variant="outline"
-                        className="w-full border-[#f26522] text-[#f26522] hover:bg-[#f26522] hover:text-white"
-                      >
-                        <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-
-              <Link
-                href={`/${lang}/travel-guides-and-destinations/road-trip-through-mavrovo-national-park`}
-                className="block"
-              >
-                <Card className="overflow-hidden">
-                  <CardContent className="p-0">
-                    <div className="aspect-[4/3] bg-slate-100 relative">
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <CarFrontIcon className="h-16 w-16 text-[#f26522]/40" />
-                      </div>
-                      <div className="absolute top-4 left-4">
-                        <Badge className="bg-green-600">{t("home.findRide.bestValue")}</Badge>
-                      </div>
-                    </div>
-                    <div className="p-5">
-                      <div className="flex justify-between items-start mb-2">
-                        <div>
-                          <h3 className="font-bold text-lg mb-0">Hyundai Tucson</h3>
-                          <p className="text-sm text-muted-foreground">SUV • 2023</p>
-                        </div>
-                        <div className="flex">
-                          {[...Array(5)].map((_, i) => (
-                            <StarIcon key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                          ))}
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <Badge variant="outline" className="text-xs font-normal">
-                          Balkan Cars
-                        </Badge>
-                        <span className="text-xs text-muted-foreground">(27 reviews)</span>
-                      </div>
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="text-sm font-medium">From</div>
-                        <div className="text-xl font-bold text-[#f26522]">
-                          €45<span className="text-sm font-normal text-muted-foreground">/day</span>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground mb-4">
-                        <div className="flex items-center gap-1">
-                          <CheckIcon className="h-3 w-3 text-[#f26522]" /> 5-7 Seats
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <CheckIcon className="h-3 w-3 text-[#f26522]" /> 4 Bags
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <CheckIcon className="h-3 w-3 text-[#f26522]" /> A/C
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <CheckIcon className="h-3 w-3 text-[#f26522]" /> Auto
-                        </div>
-                      </div>
-                      <Button
-                        variant="outline"
-                        className="w-full border-[#f26522] text-[#f26522] hover:bg-[#f26522] hover:text-white"
-                      >
-                        <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-
-              <Card className="overflow-hidden">
-                <CardContent className="p-0">
-                  <div className="aspect-[4/3] bg-slate-100 relative">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <CarFrontIcon className="h-16 w-16 text-[#f26522]/40" />
-                    </div>
-                    <div className="absolute top-4 left-4">
-                      <Badge className="bg-purple-600">{t("home.findRide.premium")}</Badge>
-                    </div>
-                  </div>
-                  <div className="p-5">
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <h3 className="font-bold text-lg mb-0">Mercedes C-Class</h3>
-                        <p className="text-sm text-muted-foreground">Luxury • 2022</p>
-                      </div>
-                      <div className="flex">
-                        {[...Array(5)].map((_, i) => (
-                          <StarIcon key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                        ))}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <Badge variant="outline" className="text-xs font-normal">
-                        Premium Rentals
-                      </Badge>
-                      <span className="text-xs text-muted-foreground">(15 reviews)</span>
-                    </div>
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="text-sm font-medium">From</div>
-                      <div className="text-xl font-bold text-[#f26522]">
-                        €75<span className="text-sm font-normal text-muted-foreground">/day</span>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground mb-4">
-                      <div className="flex items-center gap-1">
-                        <CheckIcon className="h-3 w-3 text-[#f26522]" /> 5 Seats
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <CheckIcon className="h-3 w-3 text-[#f26522]" /> 4 Bags
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <CheckIcon className="h-3 w-3 text-[#f26522]" /> Premium Features
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <CheckIcon className="h-3 w-3 text-[#f26522]" /> Auto
-                      </div>
-                    </div>
-                    <Button
-                      variant="outline"
-                      className="w-full border-[#f26522] text-[#f26522] hover:bg-[#f26522] hover:text-white"
-                    >
-                      <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
             </div>
-
             {/* Mobile version - carousel */}
             <div className="md:hidden">
               <div className="relative">
                 <Carousel className="w-full overflow-visible">
                   <CarouselContent className="-ml-2 -mr-2">
-                    <CarouselItem className="md:hidden pl-2 pr-2 basis-[85%] min-w-0">
-                      <Card className="overflow-hidden">
-                        <CardContent className="p-0">
-                          <div className="aspect-[4/3] bg-slate-100 relative">
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <CarFrontIcon className="h-16 w-16 text-[#f26522]/40" />
+                    {cars.map((car) => (
+                      <CarouselItem key={car._id} className="pl-2 basis-[85%] min-w-0">
+                        <Card className="overflow-hidden h-full">
+                          <CardContent className="p-0 h-full flex flex-col">
+                            <div className="aspect-[4/3] bg-slate-100 relative">
+                              {car.images?.[0] ? (
+                                <img
+                                  src={car.images[0]}
+                                  alt={`${car.model} ${car.modelType}`}
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <CarFrontIcon className="h-16 w-16 text-[#f26522]/40" />
+                                </div>
+                              )}
+                              {car.isPremium && (
+                                <div className="absolute top-4 left-4">
+                                  <Badge className="bg-[#f26522]">
+                                    {t("home.findRide.mostPopular")}
+                                  </Badge>
+                                </div>
+                              )}
+                              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/20 to-transparent h-12"></div>
                             </div>
-                            <div className="absolute top-4 left-4">
-                              <Badge className="bg-[#f26522]">{t("home.findRide.mostPopular")}</Badge>
+                            <div className="p-5 flex-grow">
+                              <div className="flex justify-between items-start mb-2">
+                                <div>
+                                  <h3 className="font-bold text-lg mb-0">
+                                    {car.model} {car.modelType}
+                                  </h3>
+                                  <p className="text-sm text-muted-foreground">
+                                    {car.category} • {car.productionYear}
+                                  </p>
+                                </div>
+                                <div className="flex">
+                                  {[...Array(5)].map((_, i) => (
+                                    <StarIcon key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                                  ))}
+                                </div>
+                              </div>
+
+                              <div className="flex items-center gap-2 mb-3">
+                                <Badge variant="outline" className="text-xs font-normal">
+                                  {car.availableLocation}
+                                </Badge>
+                                <span className="text-xs text-muted-foreground">
+                                  ({car.reviews?.length || 0} reviews)
+                                </span>
+                              </div>
+
+                              <div className="flex items-center justify-between mb-4">
+                                <div className="text-sm font-medium">From</div>
+                                <div className="text-xl font-bold text-[#f26522]">
+                                  €{car.regularPrice}
+                                  <span className="text-sm font-normal text-muted-foreground">/day</span>
+                                </div>
+                              </div>
+
+                              <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground mb-4">
+                                <div className="flex items-center gap-1">
+                                  <CheckIcon className="h-3 w-3 text-[#f26522]" />
+                                  {car.gear === 'Automatic' ? 'Automatic' : 'Manual'}
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <CheckIcon className="h-3 w-3 text-[#f26522]" />
+                                  {car.features?.includes('Air Conditioning') ? 'A/C' : 'No A/C'}
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <CheckIcon className="h-3 w-3 text-[#f26522]" />
+                                  {car.addons?.find(a => a.addonName === 'Child Seat') ? 'Child Seat' : 'No Child Seat'}
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <CheckIcon className="h-3 w-3 text-[#f26522]" />
+                                  {car.insurance ? 'Insured' : 'No Insurance'}
+                                </div>
+                              </div>
+                              <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer">
+                                <Button
+                                  onClick={handleCarClick(car?._id)}
+                                  variant="outline"
+                                  className="w-full border-[#f26522] text-[#f26522] hover:bg-[#f26522] hover:text-white"
+                                >
+                                  <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
+                                </Button>
+                              </Link>
                             </div>
-                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/20 to-transparent h-12"></div>
-                          </div>
-                          <div className="p-5">
-                            <div className="flex justify-between items-start mb-2">
-                              <div>
-                                <h3 className="font-bold text-lg mb-0">Volkswagen Golf</h3>
-                                <p className="text-sm text-muted-foreground">Hatchback • 2022</p>
-                              </div>
-                              <div className="flex">
-                                {[...Array(5)].map((_, i) => (
-                                  <StarIcon key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                                ))}
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-2 mb-3">
-                              <Badge variant="outline" className="text-xs font-normal">
-                                Auto Rent Ltd.
-                              </Badge>
-                              <span className="text-xs text-muted-foreground">(32 reviews)</span>
-                            </div>
-                            <div className="flex items-center justify-between mb-4">
-                              <div className="text-sm font-medium">From</div>
-                              <div className="text-xl font-bold text-[#f26522]">
-                                €25<span className="text-sm font-normal text-muted-foreground">/day</span>
-                              </div>
-                            </div>
-                            <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground mb-4">
-                              <div className="flex items-center gap-1">
-                                <CheckIcon className="h-3 w-3 text-[#f26522]" /> 4-5 Seats
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <CheckIcon className="h-3 w-3 text-[#f26522]" /> 2 Small Bags
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <CheckIcon className="h-3 w-3 text-[#f26522]" /> A/C
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <CheckIcon className="h-3 w-3 text-[#f26522]" /> Manual/Auto
-                              </div>
-                            </div>
-                            <Button
-                              variant="outline"
-                              className="w-full border-[#f26522] text-[#f26522] hover:bg-[#f26522] hover:text-white"
-                              onClick={() =>
-                                (window.location.href = `/${lang}/travel-guides-and-destinations/10-must-visit-places-around-lake-ohrid`)
-                              }
-                            >
-                              <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </CarouselItem>
-                    <CarouselItem className="md:hidden pl-2 pr-2 basis-[85%] min-w-0">
-                      <Card className="overflow-hidden">
-                        <CardContent className="p-0">
-                          <div className="aspect-[4/3] bg-slate-100 relative">
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <CarFrontIcon className="h-16 w-16 text-[#f26522]/40" />
-                            </div>
-                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/20 to-transparent h-12"></div>
-                          </div>
-                          <div className="p-5">
-                            <div className="flex justify-between items-start mb-2">
-                              <div>
-                                <h3 className="font-bold text-lg mb-0">Toyota Corolla</h3>
-                                <p className="text-sm text-muted-foreground">Sedan • 2021</p>
-                              </div>
-                              <div className="flex">
-                                {[...Array(4)].map((_, i) => (
-                                  <StarIcon key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                                ))}
-                                <StarIcon className="h-4 w-4 text-yellow-400" />
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-2 mb-3">
-                              <Badge variant="outline" className="text-xs font-normal">
-                                Macedonia Rentals
-                              </Badge>
-                              <span className="text-xs text-muted-foreground">(18 reviews)</span>
-                            </div>
-                            <div className="flex items-center justify-between mb-4">
-                              <div className="text-sm font-medium">From</div>
-                              <div className="text-xl font-bold text-[#f26522]">
-                                €35<span className="text-sm font-normal text-muted-foreground">/day</span>
-                              </div>
-                            </div>
-                            <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground mb-4">
-                              <div className="flex items-center gap-1">
-                                <CheckIcon className="h-3 w-3 text-[#f26522]" /> 5 Seats
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <CheckIcon className="h-3 w-3 text-[#f26522]" /> 3 Bags
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <CheckIcon className="h-3 w-3 text-[#f26522]" /> A/C
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <CheckIcon className="h-3 w-3 text-[#f26522]" /> Auto
-                              </div>
-                            </div>
-                            <Button
-                              variant="outline"
-                              className="w-full border-[#f26522] text-[#f26522] hover:bg-[#f26522] hover:text-white"
-                              onClick={() =>
-                                (window.location.href = `/${lang}/travel-guides-and-destinations/exploring-skopjes-old-bazaar`)
-                              }
-                            >
-                              <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </CarouselItem>
-                    <CarouselItem className="md:hidden pl-2 pr-2 basis-[85%] min-w-0">
-                      <Card className="overflow-hidden">
-                        <CardContent className="p-0">
-                          <div className="aspect-[4/3] bg-slate-100 relative">
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <CarFrontIcon className="h-16 w-16 text-[#f26522]/40" />
-                            </div>
-                            <div className="absolute top-4 left-4">
-                              <Badge className="bg-green-600">{t("home.findRide.bestValue")}</Badge>
-                            </div>
-                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/20 to-transparent h-12"></div>
-                          </div>
-                          <div className="p-5">
-                            <div className="flex justify-between items-start mb-2">
-                              <div>
-                                <h3 className="font-bold text-lg mb-0">Hyundai Tucson</h3>
-                                <p className="text-sm text-muted-foreground">SUV • 2023</p>
-                              </div>
-                              <div className="flex">
-                                {[...Array(5)].map((_, i) => (
-                                  <StarIcon key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                                ))}
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-2 mb-3">
-                              <Badge variant="outline" className="text-xs font-normal">
-                                Balkan Cars
-                              </Badge>
-                              <span className="text-xs text-muted-foreground">(27 reviews)</span>
-                            </div>
-                            <div className="flex items-center justify-between mb-4">
-                              <div className="text-sm font-medium">From</div>
-                              <div className="text-xl font-bold text-[#f26522]">
-                                €45<span className="text-sm font-normal text-muted-foreground">/day</span>
-                              </div>
-                            </div>
-                            <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground mb-4">
-                              <div className="flex items-center gap-1">
-                                <CheckIcon className="h-3 w-3 text-[#f26522]" /> 5-7 Seats
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <CheckIcon className="h-3 w-3 text-[#f26522]" /> 4 Bags
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <CheckIcon className="h-3 w-3 text-[#f26522]" /> A/C
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <CheckIcon className="h-3 w-3 text-[#f26522]" /> Auto
-                              </div>
-                            </div>
-                            <Button
-                              variant="outline"
-                              className="w-full border-[#f26522] text-[#f26522] hover:bg-[#f26522] hover:text-white"
-                              onClick={() =>
-                                (window.location.href = `/${lang}/travel-guides-and-destinations/road-trip-through-mavrovo-national-park`)
-                              }
-                            >
-                              <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </CarouselItem>
-                    <CarouselItem className="md:hidden pl-2 pr-2 basis-[85%] min-w-0">
-                      <Card className="overflow-hidden">
-                        <CardContent className="p-0">
-                          <div className="aspect-[4/3] bg-slate-100 relative">
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <CarFrontIcon className="h-16 w-16 text-[#f26522]/40" />
-                            </div>
-                            <div className="absolute top-4 left-4">
-                              <Badge className="bg-purple-600">{t("home.findRide.premium")}</Badge>
-                            </div>
-                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/20 to-transparent h-12"></div>
-                          </div>
-                          <div className="p-5">
-                            <div className="flex justify-between items-start mb-2">
-                              <div>
-                                <h3 className="font-bold text-lg mb-0">Mercedes C-Class</h3>
-                                <p className="text-sm text-muted-foreground">Luxury • 2022</p>
-                              </div>
-                              <div className="flex">
-                                {[...Array(5)].map((_, i) => (
-                                  <StarIcon key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                                ))}
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-2 mb-3">
-                              <Badge variant="outline" className="text-xs font-normal">
-                                Premium Rentals
-                              </Badge>
-                              <span className="text-xs text-muted-foreground">(15 reviews)</span>
-                            </div>
-                            <div className="flex items-center justify-between mb-4">
-                              <div className="text-sm font-medium">From</div>
-                              <div className="text-xl font-bold text-[#f26522]">
-                                €75<span className="text-sm font-normal text-muted-foreground">/day</span>
-                              </div>
-                            </div>
-                            <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground mb-4">
-                              <div className="flex items-center gap-1">
-                                <CheckIcon className="h-3 w-3 text-[#f26522]" /> 5 Seats
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <CheckIcon className="h-3 w-3 text-[#f26522]" /> 4 Bags
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <CheckIcon className="h-3 w-3 text-[#f26522]" /> Premium Features
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <CheckIcon className="h-3 w-3 text-[#f26522]" /> Auto
-                              </div>
-                            </div>
-                            <Button
-                              variant="outline"
-                              className="w-full border-[#f26522] text-[#f26522] hover:bg-[#f26522] hover:text-white"
-                            >
-                              <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </CarouselItem>
+                          </CardContent>
+                        </Card>
+                      </CarouselItem>
+                    ))}
                   </CarouselContent>
                 </Carousel>
                 <div className="flex justify-center mt-4 items-center gap-2">
@@ -825,7 +610,74 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
         </section>
 
         <section className="py-16 bg-white">
-          <div className="container px-4 md:px-6">
+          <div id="road-trips" className="pt-8 mt-8 border-t border-gray-200">
+            <div className="bg-gray-50 rounded-lg p-6 shadow-sm">
+              <div className="flex flex-col md:flex-row gap-8 items-center">
+                <div className="md:w-1/2">
+                  <h3 className="text-xl font-bold mb-4 text-gray-900">Plan Your Perfect Road Trip</h3>
+                  <p className="text-gray-600 mb-6">
+                    North Macedonia is perfect for road trips, with diverse landscapes, historic sites, and
+                    charming towns all within a short drive of each other. Rent a car with Jolzt and explore at
+                    your own pace.
+                  </p>
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 rounded-full bg-[#f26522] text-white flex items-center justify-center shrink-0 mt-0.5">
+                        1
+                      </div>
+                      <div>
+                        <h4 className="font-medium">Choose your destinations</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Browse our travel guides to find inspiration
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 rounded-full bg-[#f26522] text-white flex items-center justify-center shrink-0 mt-0.5">
+                        2
+                      </div>
+                      <div>
+                        <h4 className="font-medium">Book your perfect car</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Select a vehicle that suits your journey
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 rounded-full bg-[#f26522] text-white flex items-center justify-center shrink-0 mt-0.5">
+                        3
+                      </div>
+                      <div>
+                        <h4 className="font-medium">Hit the road</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Enjoy the freedom to explore at your own pace
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer">
+                    <Button className="mt-6 bg-[#f26522] hover:bg-[#e05a1c]" >
+                      Book a Car Now
+                      <ArrowRightIcon className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                </div>
+                <div className="md:w-1/2">
+                  <div className="rounded-lg overflow-hidden shadow-md">
+                    <Image
+                      src="travel-w-jolzt.jpg?height=100&width=100"
+                      alt="Road Trip in North Macedonia"
+                      width={600}
+                      height={400}
+                      className="w-full h-auto object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        {/* <div className="container px-4 md:px-6">
             <div className="flex flex-col md:flex-row justify-between items-center mb-10">
               <div>
                 <h2 className="text-2xl md:text-3xl font-bold mb-2">{t("home.travelGuides.title")}</h2>
@@ -834,11 +686,10 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
               <Button asChild variant="outline" className="mt-4 md:mt-0 border-[#f26522] text-[#f26522]">
                 <Link href={`/${lang}/travel-guides-and-destinations`}>{t("common.viewAll")}</Link>
               </Button>
-            </div>
+            </div> */}
 
-            {/* Desktop version - grid */}
-            <div className="hidden md:grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              <Link
+        {/* Desktop version - grid */}
+        {/* <Link
                 href={`/${lang}/travel-guides-and-destinations/10-must-visit-places-around-lake-ohrid`}
                 className="block"
               >
@@ -869,209 +720,8 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
                     </div>
                   </CardContent>
                 </Card>
-              </Link>
-
-              <Link href={`/${lang}/travel-guides-and-destinations/exploring-skopjes-old-bazaar`} className="block">
-                <Card className="overflow-hidden transition-all hover:shadow-md">
-                  <CardContent className="p-0">
-                    <div className="relative">
-                      <Image
-                        src="/placeholder.svg?height=200&width=400"
-                        alt="Skopje Old Bazaar"
-                        width={400}
-                        height={200}
-                        className="w-full aspect-[16/9] object-cover"
-                      />
-                    </div>
-                    <div className="p-6">
-                      <div className="text-sm text-muted-foreground mb-2">
-                        {t("home.travelGuides.travelGuide")} • 4 {t("home.travelGuides.minRead")}
-                      </div>
-                      <h3 className="font-bold text-xl mb-2">Exploring Skopje's Old Bazaar</h3>
-                      <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
-                        Walk through one of the oldest and largest marketplaces in the Balkans, with its authentic
-                        Ottoman architecture and vibrant atmosphere.
-                      </p>
-                      <Button variant="outline" className="px-0 text-[#f26522]">
-                        {t("common.readMore")}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-
-              <Link
-                href={`/${lang}/travel-guides-and-destinations/road-trip-through-mavrovo-national-park`}
-                className="block"
-              >
-                <Card className="overflow-hidden transition-all hover:shadow-md">
-                  <CardContent className="p-0">
-                    <div className="relative">
-                      <Image
-                        src="/placeholder.svg?height=200&width=400"
-                        alt="Mavrovo National Park"
-                        width={400}
-                        height={200}
-                        className="w-full aspect-[16/9] object-cover"
-                      />
-                    </div>
-                    <div className="p-6">
-                      <div className="text-sm text-muted-foreground mb-2">
-                        {t("home.travelGuides.travelGuide")} • 6 {t("home.travelGuides.minRead")}
-                      </div>
-                      <h3 className="font-bold text-xl mb-2">Road Trip Through Mavrovo National Park</h3>
-                      <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
-                        Experience breathtaking mountain scenery, pristine lakes, and outdoor activities in North
-                        Macedonia's largest national park.
-                      </p>
-                      <Button variant="outline" className="px-0 text-[#f26522]">
-                        {t("common.readMore")}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            </div>
-
-            {/* Mobile version - carousel */}
-            <div className="md:hidden">
-              <div className="relative">
-                <Carousel className="w-full overflow-visible">
-                  <CarouselContent className="-ml-2 -mr-2">
-                    <CarouselItem className="md:hidden pl-2 pr-2 basis-[85%] min-w-0">
-                      <Card className="overflow-hidden transition-all hover:shadow-md">
-                        <CardContent className="p-0">
-                          <div className="relative">
-                            <Image
-                              src="/placeholder.svg?height=200&width=400"
-                              alt="Lake Ohrid"
-                              width={400}
-                              height={200}
-                              className="w-full aspect-[16/9] object-cover"
-                            />
-                            <Badge className="absolute top-4 left-4 bg-[#f26522]">
-                              {t("home.travelGuides.featured")}
-                            </Badge>
-                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/20 to-transparent h-12"></div>
-                          </div>
-                          <div className="p-6">
-                            <div className="text-sm text-muted-foreground mb-2">
-                              {t("home.travelGuides.travelGuide")} • 5 {t("home.travelGuides.minRead")}
-                            </div>
-                            <h3 className="font-bold text-xl mb-2">10 Must-Visit Places Around Lake Ohrid</h3>
-                            <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
-                              Discover the crystal-clear waters, historic churches, and charming villages around one of
-                              Europe's oldest and deepest lakes.
-                            </p>
-                            <Button
-                              variant="outline"
-                              className="px-0 text-[#f26522]"
-                              onClick={() =>
-                                (window.location.href = `/${lang}/travel-guides-and-destinations/10-must-visit-places-around-lake-ohrid`)
-                              }
-                            >
-                              {t("common.readMore")}
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </CarouselItem>
-                    <CarouselItem className="md:hidden pl-2 pr-2 basis-[85%] min-w-0">
-                      <Card className="overflow-hidden transition-all hover:shadow-md">
-                        <CardContent className="p-0">
-                          <div className="relative">
-                            <Image
-                              src="/placeholder.svg?height=200&width=400"
-                              alt="Skopje Old Bazaar"
-                              width={400}
-                              height={200}
-                              className="w-full aspect-[16/9] object-cover"
-                            />
-                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/20 to-transparent h-12"></div>
-                          </div>
-                          <div className="p-6">
-                            <div className="text-sm text-muted-foreground mb-2">
-                              {t("home.travelGuides.travelGuide")} • 4 {t("home.travelGuides.minRead")}
-                            </div>
-                            <h3 className="font-bold text-xl mb-2">Exploring Skopje's Old Bazaar</h3>
-                            <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
-                              Walk through one of the oldest and largest marketplaces in the Balkans, with its authentic
-                              Ottoman architecture and vibrant atmosphere.
-                            </p>
-                            <Button
-                              variant="outline"
-                              className="px-0 text-[#f26522]"
-                              onClick={() =>
-                                (window.location.href = `/${lang}/travel-guides-and-destinations/exploring-skopjes-old-bazaar`)
-                              }
-                            >
-                              {t("common.readMore")}
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </CarouselItem>
-                    <CarouselItem className="md:hidden pl-2 pr-2 basis-[85%] min-w-0">
-                      <Card className="overflow-hidden transition-all hover:shadow-md">
-                        <CardContent className="p-0">
-                          <div className="relative">
-                            <Image
-                              src="/placeholder.svg?height=200&width=400"
-                              alt="Mavrovo National Park"
-                              width={400}
-                              height={200}
-                              className="w-full aspect-[16/9] object-cover"
-                            />
-                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/20 to-transparent h-12"></div>
-                          </div>
-                          <div className="p-6">
-                            <div className="text-sm text-muted-foreground mb-2">
-                              {t("home.travelGuides.travelGuide")} • 6 {t("home.travelGuides.minRead")}
-                            </div>
-                            <h3 className="font-bold text-xl mb-2">Road Trip Through Mavrovo National Park</h3>
-                            <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
-                              Experience breathtaking mountain scenery, pristine lakes, and outdoor activities in North
-                              Macedonia's largest national park.
-                            </p>
-                            <Button
-                              variant="outline"
-                              className="px-0 text-[#f26522]"
-                              onClick={() =>
-                                (window.location.href = `/${lang}/travel-guides-and-destinations/road-trip-through-mavrovo-national-park`)
-                              }
-                            >
-                              {t("common.readMore")}
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </CarouselItem>
-                  </CarouselContent>
-                </Carousel>
-                <div className="flex justify-center mt-4 items-center gap-2">
-                  <div className="text-xs text-muted-foreground flex items-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="mr-1"
-                    >
-                      <path d="M17 8l4 4-4 4"></path>
-                      <path d="M3 12h18"></path>
-                    </svg>
-                    {t("home.findRide.swipeMore")}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+              </Link> */}
+        {/* Mobile version - carousel */}
 
         <section className="py-16 md:py-24 bg-gradient-to-br from-[#f26522] to-[#f58220] relative overflow-hidden">
           <div className="absolute inset-0 bg-pattern opacity-10 mix-blend-overlay"></div>

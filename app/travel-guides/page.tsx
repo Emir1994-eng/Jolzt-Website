@@ -235,71 +235,7 @@ export default function TravelGuidesPage() {
                     </div>
                   </div>
 
-                  <div id="road-trips" className="pt-8 mt-8 border-t border-gray-200">
-                    <h2 className="text-2xl font-bold mb-6 text-gray-900">Road Trip Ideas</h2>
-                    <div className="bg-gray-50 rounded-lg p-6 shadow-sm">
-                      <div className="flex flex-col md:flex-row gap-8 items-center">
-                        <div className="md:w-1/2">
-                          <h3 className="text-xl font-bold mb-4 text-gray-900">Plan Your Perfect Road Trip</h3>
-                          <p className="text-gray-600 mb-6">
-                            North Macedonia is perfect for road trips, with diverse landscapes, historic sites, and
-                            charming towns all within a short drive of each other. Rent a car with Jolzt and explore at
-                            your own pace.
-                          </p>
-                          <div className="space-y-4">
-                            <div className="flex items-start gap-3">
-                              <div className="w-6 h-6 rounded-full bg-[#f26522] text-white flex items-center justify-center shrink-0 mt-0.5">
-                                1
-                              </div>
-                              <div>
-                                <h4 className="font-medium">Choose your destinations</h4>
-                                <p className="text-sm text-muted-foreground">
-                                  Browse our travel guides to find inspiration
-                                </p>
-                              </div>
-                            </div>
-                            <div className="flex items-start gap-3">
-                              <div className="w-6 h-6 rounded-full bg-[#f26522] text-white flex items-center justify-center shrink-0 mt-0.5">
-                                2
-                              </div>
-                              <div>
-                                <h4 className="font-medium">Book your perfect car</h4>
-                                <p className="text-sm text-muted-foreground">
-                                  Select a vehicle that suits your journey
-                                </p>
-                              </div>
-                            </div>
-                            <div className="flex items-start gap-3">
-                              <div className="w-6 h-6 rounded-full bg-[#f26522] text-white flex items-center justify-center shrink-0 mt-0.5">
-                                3
-                              </div>
-                              <div>
-                                <h4 className="font-medium">Hit the road</h4>
-                                <p className="text-sm text-muted-foreground">
-                                  Enjoy the freedom to explore at your own pace
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                          <Button className="mt-6 bg-[#f26522] hover:bg-[#e05a1c]">
-                            Book a Car Now
-                            <ArrowRightIcon className="ml-2 h-4 w-4" />
-                          </Button>
-                        </div>
-                        <div className="md:w-1/2">
-                          <div className="rounded-lg overflow-hidden shadow-md">
-                            <Image
-                              src="/placeholder.svg?height=400&width=600"
-                              alt="Road Trip in North Macedonia"
-                              width={600}
-                              height={400}
-                              className="w-full h-auto object-cover"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  
                 </TabsContent>
 
                 <TabsContent value="cities">
