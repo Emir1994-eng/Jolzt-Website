@@ -275,13 +275,18 @@ export default function HowItWorksPage({ params }: { params: { lang: string } })
 
             <div className="relative max-w-4xl mx-auto">
               <div className="aspect-video relative bg-gray-100 rounded-lg overflow-hidden">
-                <Image
-                  src="/placeholder.svg?height=600&width=1200"
-                  alt="How Jolzt Works Video"
-                  width={1200}
-                  height={600}
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
                   className="w-full h-full object-cover"
-                />
+                >
+                  <source
+                    src="/how-it-works-intro.mp4?height=600&width=1200"  // Update path if needed
+                    type="video/mp4"
+                  />
+                </video>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center cursor-pointer hover:bg-white transition-colors shadow-lg">
                     <div className="w-0 h-0 border-t-[8px] border-t-transparent border-l-[16px] border-l-[#f26522] border-b-[8px] border-b-transparent ml-1"></div>
@@ -478,14 +483,16 @@ export default function HowItWorksPage({ params }: { params: { lang: string } })
                   </div>
 
                   <div className="mt-16 text-center">
+                    
+                  <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer">
                     <Button
                       size="lg"
                       className="bg-[#f26522] hover:bg-[#e05a1c] px-8 py-6 h-auto text-lg rounded-md shadow-md"
-                      onClick={() => (window.location.href = "https://app.jolzt.com")}
                     >
                       {t.downloadApp}
                       <ArrowRightIcon className="ml-2 h-5 w-5" />
                     </Button>
+                    </Link>
                   </div>
                 </div>
               </TabsContent>
