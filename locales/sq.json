@@ -83,7 +83,13 @@
       "growBusiness": "Rritni biznesin tuaj",
       "growBusinessDesc": "Aksesoni tregje të reja dhe segmente klientësh",
       "partnerWithJolzt": "Bëhuni partner me Jolzt",
-      "activePartners": "Partnerë aktivë"
+      "activePartners": "Partnerë aktivë",
+      "hostDashboard": "Paneli i Hostit",
+      "hostDashboardText": "Menaxho makinat, rezervimet dhe fitimet në një vend.",
+      "hostChat": "Komuniko me klientët",
+      "hostChatText": "Bisedo drejtpërdrejt me klientët përmes aplikacionit.",
+      "hostReserations": "Menaxho rezervimet",
+      "hostReserationsText": "Menaxho lehtësisht të gjitha rezervimet në një vend."
     }
   },
   "about": {
