@@ -232,7 +232,7 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
                   </div>
                   <LocationSelector />
                   <DatePickerWithRange />
-                  <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer">
+                  <Link href='https://app.jolzt.com' target="_blank" rel="noopener noreferrer">
                     <Button className="w-full bg-[#f26522] hover:bg-[#e05a1c]">
                       <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
                     </Button>
