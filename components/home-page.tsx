@@ -229,9 +229,11 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
                   </div>
                   <LocationSelector />
                   <DatePickerWithRange />
-                  <Button className="w-full bg-[#f26522] hover:bg-[#e05a1c]" onClick={() => setAuthModalOpen(true)}>
-                    <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
-                  </Button>
+                  <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer">
+                    <Button className="w-full bg-[#f26522] hover:bg-[#e05a1c]">
+                      <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
+                    </Button>
+                  </Link>
                   <Button variant="link" size="sm" className="text-[#f26522] text-xs mx-auto">
                     {t("applyRate")}
                   </Button>
@@ -393,85 +395,85 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
             {/* Desktop version - grid */}
             <div className="hidden md:grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {cars && cars.map((car) => (
-                  <Card key={car?._id} className="overflow-hidden transition-all hover:shadow-md">
-                    <CardContent className="p-0">
-                      <div className="aspect-[4/3] bg-slate-100 relative">
-                        {car.images?.[0] ? (
-                          <img
-                            src={car.images[0]}
-                            alt={`${car.model} ${car.modelType}`}
-                            className="w-full h-full object-cover" // Ensures image covers container
-                            style={{
-                              width: '100%',
-                              height: '100%',
-                              objectFit: 'cover',
-                              objectPosition: 'center'
-                            }}
-                          />
-                        ) : (
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <CarFrontIcon className="h-16 w-16 text-[#f26522]/40" />
-                          </div>
-                        )}
-                        {car.isPremium && (
-                          <div className="absolute top-4 left-4">
-                            <Badge className="bg-[#f26522]">
-                              {t("home.findRide.mostPopular")}
-                            </Badge>
-                          </div>
-                        )}
-                      </div>
-                      <div className="p-5">
-                        <div className="flex justify-between items-start mb-2">
-                          <div>
-                            <h3 className="font-bold text-lg mb-0">
-                              {car.model} {car.modelType}
-                            </h3>
-                            <p className="text-sm text-muted-foreground">
-                              {car.category} • {car.productionYear}
-                            </p>
-                          </div>
-                          <div className="flex">
-                            {[...Array(5)].map((_, i) => (
-                              <StarIcon key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                            ))}
-                          </div>
+                <Card key={car?._id} className="overflow-hidden transition-all hover:shadow-md">
+                  <CardContent className="p-0">
+                    <div className="aspect-[4/3] bg-slate-100 relative">
+                      {car.images?.[0] ? (
+                        <img
+                          src={car.images[0]}
+                          alt={`${car.model} ${car.modelType}`}
+                          className="w-full h-full object-cover" // Ensures image covers container
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            objectPosition: 'center'
+                          }}
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <CarFrontIcon className="h-16 w-16 text-[#f26522]/40" />
                         </div>
-                        <div className="flex items-center gap-2 mb-3">
-                          <Badge variant="outline" className="text-xs font-normal">
-                            {car.availableLocation}
+                      )}
+                      {car.isPremium && (
+                        <div className="absolute top-4 left-4">
+                          <Badge className="bg-[#f26522]">
+                            {t("home.findRide.mostPopular")}
                           </Badge>
-                          <span className="text-xs text-muted-foreground">
-                            ({car.reviews?.length || 0} reviews)
-                          </span>
                         </div>
-                        <div className="flex items-center justify-between mb-4">
-                          <div className="text-sm font-medium">From</div>
-                          <div className="text-xl font-bold text-[#f26522]">
-                            €{car.regularPrice}
-                            <span className="text-sm font-normal text-muted-foreground">/day</span>
-                          </div>
+                      )}
+                    </div>
+                    <div className="p-5">
+                      <div className="flex justify-between items-start mb-2">
+                        <div>
+                          <h3 className="font-bold text-lg mb-0">
+                            {car.model} {car.modelType}
+                          </h3>
+                          <p className="text-sm text-muted-foreground">
+                            {car.category} • {car.productionYear}
+                          </p>
                         </div>
-                        <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground mb-4">
-                          {Array.from({ length: 4 }).map((_, index) => (
-                            <div key={index} className="flex items-center gap-1">
-                              <CheckIcon className="h-3 w-3 text-[#f26522]" />
-                              {car.features?.[index] || '—'}
-                            </div>
+                        <div className="flex">
+                          {[...Array(5)].map((_, i) => (
+                            <StarIcon key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                           ))}
                         </div>
-                        <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer" passHref>
-                          <Button
-                            onClick={handleCarClick(car?._id)}
-                            variant="outline"
-                            className="w-full border-[#f26522] text-[#f26522] hover:bg-[#f26522] hover:text-white"
-                          >
-                            <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
-                          </Button>
-                        </Link>
                       </div>
-                    </CardContent>
-                  </Card>
+                      <div className="flex items-center gap-2 mb-3">
+                        <Badge variant="outline" className="text-xs font-normal">
+                          {car.availableLocation}
+                        </Badge>
+                        <span className="text-xs text-muted-foreground">
+                          ({car.reviews?.length || 0} reviews)
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="text-sm font-medium">From</div>
+                        <div className="text-xl font-bold text-[#f26522]">
+                          €{car.regularPrice}
+                          <span className="text-sm font-normal text-muted-foreground">/day</span>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground mb-4">
+                        {Array.from({ length: 4 }).map((_, index) => (
+                          <div key={index} className="flex items-center gap-1">
+                            <CheckIcon className="h-3 w-3 text-[#f26522]" />
+                            {car.features?.[index] || '—'}
+                          </div>
+                        ))}
+                      </div>
+                      <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer" passHref>
+                        <Button
+                          onClick={handleCarClick(car?._id)}
+                          variant="outline"
+                          className="w-full border-[#f26522] text-[#f26522] hover:bg-[#f26522] hover:text-white"
+                        >
+                          <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
+                        </Button>
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
             {/* Mobile version - carousel */}
