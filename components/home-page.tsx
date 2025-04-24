@@ -15,7 +15,10 @@ import {
   ZapIcon,
   SmileIcon,
   ThumbsUpIcon,
-  ArrowRightIcon
+  ArrowRightIcon,
+  LayoutDashboard,
+  MessageCircleMore,
+  CalendarCheck2
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -393,85 +396,85 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
             {/* Desktop version - grid */}
             <div className="hidden md:grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {cars && cars.map((car) => (
-                  <Card key={car?._id} className="overflow-hidden transition-all hover:shadow-md">
-                    <CardContent className="p-0">
-                      <div className="aspect-[4/3] bg-slate-100 relative">
-                        {car.images?.[0] ? (
-                          <img
-                            src={car.images[0]}
-                            alt={`${car.model} ${car.modelType}`}
-                            className="w-full h-full object-cover" // Ensures image covers container
-                            style={{
-                              width: '100%',
-                              height: '100%',
-                              objectFit: 'cover',
-                              objectPosition: 'center'
-                            }}
-                          />
-                        ) : (
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <CarFrontIcon className="h-16 w-16 text-[#f26522]/40" />
-                          </div>
-                        )}
-                        {car.isPremium && (
-                          <div className="absolute top-4 left-4">
-                            <Badge className="bg-[#f26522]">
-                              {t("home.findRide.mostPopular")}
-                            </Badge>
-                          </div>
-                        )}
-                      </div>
-                      <div className="p-5">
-                        <div className="flex justify-between items-start mb-2">
-                          <div>
-                            <h3 className="font-bold text-lg mb-0">
-                              {car.model} {car.modelType}
-                            </h3>
-                            <p className="text-sm text-muted-foreground">
-                              {car.category} • {car.productionYear}
-                            </p>
-                          </div>
-                          <div className="flex">
-                            {[...Array(5)].map((_, i) => (
-                              <StarIcon key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                            ))}
-                          </div>
+                <Card key={car?._id} className="overflow-hidden transition-all hover:shadow-md">
+                  <CardContent className="p-0">
+                    <div className="aspect-[4/3] bg-slate-100 relative">
+                      {car.images?.[0] ? (
+                        <img
+                          src={car.images[0]}
+                          alt={`${car.model} ${car.modelType}`}
+                          className="w-full h-full object-cover" // Ensures image covers container
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            objectPosition: 'center'
+                          }}
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <CarFrontIcon className="h-16 w-16 text-[#f26522]/40" />
                         </div>
-                        <div className="flex items-center gap-2 mb-3">
-                          <Badge variant="outline" className="text-xs font-normal">
-                            {car.availableLocation}
+                      )}
+                      {car.isPremium && (
+                        <div className="absolute top-4 left-4">
+                          <Badge className="bg-[#f26522]">
+                            {t("home.findRide.mostPopular")}
                           </Badge>
-                          <span className="text-xs text-muted-foreground">
-                            ({car.reviews?.length || 0} reviews)
-                          </span>
                         </div>
-                        <div className="flex items-center justify-between mb-4">
-                          <div className="text-sm font-medium">From</div>
-                          <div className="text-xl font-bold text-[#f26522]">
-                            €{car.regularPrice}
-                            <span className="text-sm font-normal text-muted-foreground">/day</span>
-                          </div>
+                      )}
+                    </div>
+                    <div className="p-5">
+                      <div className="flex justify-between items-start mb-2">
+                        <div>
+                          <h3 className="font-bold text-lg mb-0">
+                            {car.model} {car.modelType}
+                          </h3>
+                          <p className="text-sm text-muted-foreground">
+                            {car.category} • {car.productionYear}
+                          </p>
                         </div>
-                        <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground mb-4">
-                          {Array.from({ length: 4 }).map((_, index) => (
-                            <div key={index} className="flex items-center gap-1">
-                              <CheckIcon className="h-3 w-3 text-[#f26522]" />
-                              {car.features?.[index] || '—'}
-                            </div>
+                        <div className="flex">
+                          {[...Array(5)].map((_, i) => (
+                            <StarIcon key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                           ))}
                         </div>
-                        <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer" passHref>
-                          <Button
-                            onClick={handleCarClick(car?._id)}
-                            variant="outline"
-                            className="w-full border-[#f26522] text-[#f26522] hover:bg-[#f26522] hover:text-white"
-                          >
-                            <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
-                          </Button>
-                        </Link>
                       </div>
-                    </CardContent>
-                  </Card>
+                      <div className="flex items-center gap-2 mb-3">
+                        <Badge variant="outline" className="text-xs font-normal">
+                          {car.availableLocation}
+                        </Badge>
+                        <span className="text-xs text-muted-foreground">
+                          ({car.reviews?.length || 0} reviews)
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="text-sm font-medium">From</div>
+                        <div className="text-xl font-bold text-[#f26522]">
+                          €{car.regularPrice}
+                          <span className="text-sm font-normal text-muted-foreground">/day</span>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground mb-4">
+                        {Array.from({ length: 4 }).map((_, index) => (
+                          <div key={index} className="flex items-center gap-1">
+                            <CheckIcon className="h-3 w-3 text-[#f26522]" />
+                            {car.features?.[index] || '—'}
+                          </div>
+                        ))}
+                      </div>
+                      <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer" passHref>
+                        <Button
+                          onClick={handleCarClick(car?._id)}
+                          variant="outline"
+                          className="w-full border-[#f26522] text-[#f26522] hover:bg-[#f26522] hover:text-white"
+                        >
+                          <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
+                        </Button>
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
             {/* Mobile version - carousel */}
@@ -605,68 +608,70 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
           </div>
         </section>
 
-        <section className="py-16 bg-white">
-          <div id="road-trips" className="pt-8 mt-8 border-t border-gray-200">
-            <div className="bg-gray-50 rounded-lg p-6 shadow-sm">
-              <div className="flex flex-col md:flex-row gap-8 items-center">
-                <div className="md:w-1/2">
-                  <h3 className="text-xl font-bold mb-4 text-gray-900">Plan Your Perfect Road Trip</h3>
-                  <p className="text-gray-600 mb-6">
-                    North Macedonia is perfect for road trips, with diverse landscapes, historic sites, and
-                    charming towns all within a short drive of each other. Rent a car with Jolzt and explore at
-                    your own pace.
-                  </p>
-                  <div className="space-y-4">
-                    <div className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-[#f26522] text-white flex items-center justify-center shrink-0 mt-0.5">
-                        1
+        <section className="py-12 md:py-16 bg-slate-50">
+          <div className="container px-4 md:px-6">
+            <div id="road-trips" className="pt-8 mt-8 border-t border-gray-200">
+              <div className="bg-gray-50 rounded-lg p-6 shadow-sm">
+                <div className="flex flex-col md:flex-row gap-8 items-center">
+                  <div className="md:w-1/2">
+                    <h3 className="text-xl font-bold mb-4 text-gray-900">Plan Your Perfect Road Trip</h3>
+                    <p className="text-gray-600 mb-6">
+                      North Macedonia is perfect for road trips, with diverse landscapes, historic sites, and
+                      charming towns all within a short drive of each other. Rent a car with Jolzt and explore at
+                      your own pace.
+                    </p>
+                    <div className="space-y-4">
+                      <div className="flex items-start gap-3">
+                        <div className="w-6 h-6 rounded-full bg-[#f26522] text-white flex items-center justify-center shrink-0 mt-0.5">
+                          1
+                        </div>
+                        <div>
+                          <h4 className="font-medium">Choose your destinations</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Browse our travel guides to find inspiration
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="font-medium">Choose your destinations</h4>
-                        <p className="text-sm text-muted-foreground">
-                          Browse our travel guides to find inspiration
-                        </p>
+                      <div className="flex items-start gap-3">
+                        <div className="w-6 h-6 rounded-full bg-[#f26522] text-white flex items-center justify-center shrink-0 mt-0.5">
+                          2
+                        </div>
+                        <div>
+                          <h4 className="font-medium">Book your perfect car</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Select a vehicle that suits your journey
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="w-6 h-6 rounded-full bg-[#f26522] text-white flex items-center justify-center shrink-0 mt-0.5">
+                          3
+                        </div>
+                        <div>
+                          <h4 className="font-medium">Hit the road</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Enjoy the freedom to explore at your own pace
+                          </p>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-[#f26522] text-white flex items-center justify-center shrink-0 mt-0.5">
-                        2
-                      </div>
-                      <div>
-                        <h4 className="font-medium">Book your perfect car</h4>
-                        <p className="text-sm text-muted-foreground">
-                          Select a vehicle that suits your journey
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-[#f26522] text-white flex items-center justify-center shrink-0 mt-0.5">
-                        3
-                      </div>
-                      <div>
-                        <h4 className="font-medium">Hit the road</h4>
-                        <p className="text-sm text-muted-foreground">
-                          Enjoy the freedom to explore at your own pace
-                        </p>
-                      </div>
-                    </div>
+                    <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer">
+                      <Button className="mt-6 bg-[#f26522] hover:bg-[#e05a1c]" >
+                        Book a Car Now
+                        <ArrowRightIcon className="ml-2 h-4 w-4" />
+                      </Button>
+                    </Link>
                   </div>
-                  <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer">
-                    <Button className="mt-6 bg-[#f26522] hover:bg-[#e05a1c]" >
-                      Book a Car Now
-                      <ArrowRightIcon className="ml-2 h-4 w-4" />
-                    </Button>
-                  </Link>
-                </div>
-                <div className="md:w-1/2">
-                  <div className="rounded-lg overflow-hidden shadow-md">
-                    <Image
-                      src="travel-w-jolzt.jpg?height=100&width=100"
-                      alt="Road Trip in North Macedonia"
-                      width={600}
-                      height={400}
-                      className="w-full h-auto object-cover"
-                    />
+                  <div className="md:w-1/2">
+                    <div className="rounded-lg overflow-hidden shadow-md">
+                      <Image
+                        src="travel-w-jolzt.jpg?height=100&width=100"
+                        alt="Road Trip in North Macedonia"
+                        width={600}
+                        height={400}
+                        className="w-full h-auto object-cover"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -788,71 +793,45 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
               </div>
 
               <div className="hidden lg:block order-2">
-                <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20">
-                  <div className="space-y-6">
-                    <div className="flex items-start gap-4">
-                      <div className="shrink-0">
-                        <Avatar className="h-12 w-12 border-2 border-white">
-                          <AvatarFallback className="bg-[#f26522]/20 text-white">AR</AvatarFallback>
-                        </Avatar>
-                      </div>
-                      <div>
-                        <div className="flex items-center mb-1">
-                          <div className="flex">
-                            {[...Array(5)].map((_, i) => (
-                              <StarIcon key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                            ))}
-                          </div>
+                <div className="text-white order-1">
+                  <div className="grid gap-4 md:gap-6">
+                    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 md:p-5 border border-white/20 transition-transform hover:translate-x-2">
+                      <div className="flex items-center gap-4">
+                        <div className="bg-white rounded-full p-3 shadow-lg shrink-0">
+                          <LayoutDashboard className="h-5 w-5 md:h-6 md:w-6 text-[#f26522]" />
                         </div>
-                        <p className="text-white/90 text-sm mb-2">
-                          "Partnering with Jolzt has increased our bookings by 40% and simplified our operations. Their
-                          platform is intuitive and their support team is exceptional."
-                        </p>
-                        <p className="text-white/70 text-sm font-medium">Auto Rent Ltd., Ohrid</p>
+                        <div>
+                          <h4 className="font-bold text-base md:text-lg">{t("home.partnerSection.hostDashboard")}</h4>
+                          <p className="text-white/80 text-sm md:text-base">
+                            {t("home.partnerSection.hostDashboardText")}
+                          </p>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="flex items-start gap-4">
-                      <div className="shrink-0">
-                        <Avatar className="h-12 w-12 border-2 border-white">
-                          <AvatarFallback className="bg-[#f26522]/20 text-white">MR</AvatarFallback>
-                        </Avatar>
-                      </div>
-                      <div>
-                        <div className="flex items-center mb-1">
-                          <div className="flex">
-                            {[...Array(5)].map((_, i) => (
-                              <StarIcon key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                            ))}
-                          </div>
+                    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 md:p-5 border border-white/20 transition-transform hover:translate-x-2">
+                      <div className="flex items-center gap-4">
+                        <div className="bg-white rounded-full p-3 shadow-lg shrink-0">
+                          <MessageCircleMore className="h-5 w-5 md:h-6 md:w-6 text-[#f26522]" />
                         </div>
-                        <p className="text-white/90 text-sm mb-2">
-                          "Since joining Jolzt, we've expanded our fleet by 15 vehicles to meet the increased demand.
-                          The platform has transformed our business model completely."
-                        </p>
-                        <p className="text-white/70 text-sm font-medium">Macedonia Rentals, Skopje</p>
+                        <div>
+                          <h4 className="font-bold text-base md:text-lg">{t("home.partnerSection.hostChat")}</h4>
+                          <p className="text-white/80 text-sm md:text-base">{t("home.partnerSection.hostChatText")}</p>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="flex items-start gap-4">
-                      <div className="shrink-0">
-                        <Avatar className="h-12 w-12 border-2 border-white">
-                          <AvatarFallback className="bg-[#f26522]/20 text-white">BT</AvatarFallback>
-                        </Avatar>
-                      </div>
-                      <div>
-                        <div className="flex items-center mb-1">
-                          <div className="flex">
-                            {[...Array(5)].map((_, i) => (
-                              <StarIcon key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                            ))}
-                          </div>
+                    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 md:p-5 border border-white/20 transition-transform hover:translate-x-2">
+                      <div className="flex items-center gap-4">
+                        <div className="bg-white rounded-full p-3 shadow-lg shrink-0">
+                          <CalendarCheck2 className="h-5 w-5 md:h-6 md:w-6 text-[#f26522]" />
                         </div>
-                        <p className="text-white/90 text-sm mb-2">
-                          "The onboarding process was seamless, and we started seeing results within the first month.
-                          Jolzt has become an essential part of our business strategy."
-                        </p>
-                        <p className="text-white/70 text-sm font-medium">Balkan Cars, Skopje Airport</p>
+                        <div>
+                          <h4 className="font-bold text-base md:text-lg">{t("home.partnerSection.hostReserations")}</h4>
+                          <p className="text-white/80 text-sm md:text-base">
+                            {t("home.partnerSection.hostReserationsText")}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>

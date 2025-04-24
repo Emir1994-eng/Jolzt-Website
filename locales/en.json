@@ -83,7 +83,13 @@
       "growBusiness": "Grow your business",
       "growBusinessDesc": "Access new markets and customer segments",
       "partnerWithJolzt": "Partner with Jolzt",
-      "activePartners": "Active partners"
+      "activePartners": "Active partners",
+      "hostDashboard": "Host Dashboard",
+      "hostDashboardText": "Manage your cars, bookings, and earnings all in one place.",
+      "hostChat": "Communicate with customers",
+      "hostChatText": "Chat with customers directly through the app.",
+      "hostReserations": "Manage reservations",
+      "hostReserationsText": "Easily manage all your reservations in one place."
     }
   },
   "about": {

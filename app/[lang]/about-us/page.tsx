@@ -97,7 +97,7 @@ const translations = {
     cooDesc: "Оперативен волшебник кој може да реши секаков проблем со насмевка 😊",
     ctoRole: "Технички директор",
     ctoDesc: "Код нинџа кој го претвора кафето во неверојатни технолошки решенија ⚡",
-    cxRole: "Раководител на корисничко искуство",
+    cxRole: "Ко-основач и Директор за бренд",
     cxDesc: "Шампион за среќа на клиентите кој нема да се одмори додека не се насмеете 🌈",
   },
   sq: {
@@ -143,7 +143,7 @@ const translations = {
     cooDesc: "Magjistar operacionesh që mund të zgjidhë çdo problem me buzëqeshje 😊",
     ctoRole: "CTO",
     ctoDesc: "Ninja kodi që shndërron kafen në zgjidhje të mahnitshme teknologjike ⚡",
-    cxRole: "Drejtor i Përvojës së Klientit",
+    cxRole: "Drejtor dhe CBO",
     cxDesc: "Kampion i lumturisë së klientëve që nuk do të pushojë derisa të buzëqeshni 🌈",
   },
 }
@@ -207,7 +207,7 @@ export default function AboutPage({ params }: { params: { lang: string } }) {
                   <div className="relative h-64 md:h-full min-h-[300px] rounded-lg overflow-hidden transform hover:rotate-2 transition-transform duration-300">
                     <div className="absolute inset-0 bg-gradient-to-br from-pink-200 via-orange-100 to-yellow-200 opacity-50" />
                     <Image
-                      src="/placeholder.svg?height=400&width=600"
+                      src="/about-us-1.jpg?height=400&width=600"
                       alt="Jolzt Team Having Fun"
                       fill
                       className="object-cover mix-blend-overlay"
@@ -225,7 +225,7 @@ export default function AboutPage({ params }: { params: { lang: string } }) {
         </section>
 
         <section className="py-16 bg-white relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full bg-[url('/placeholder.svg?height=200&width=200')] opacity-5 bg-repeat" />
+          <div className="absolute top-0 left-0 w-full h-full opacity-5 bg-repeat" />
           <div className="container px-4 md:px-6 relative z-10">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-5xl font-bold mb-4 text-[#f26522]">{t.whatMakesUsTick}</h2>
@@ -273,7 +273,7 @@ export default function AboutPage({ params }: { params: { lang: string } }) {
         </section>
 
         <section className="py-16 bg-white relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full bg-[url('/placeholder.svg?height=200&width=200')] opacity-5 bg-repeat" />
+          <div className="absolute top-0 left-0 w-full h-full opacity-5 bg-repeat" />
           <div className="container px-4 md:px-6 relative z-10">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-5xl font-bold mb-4 text-[#f26522]">{t.meetOurDreamTeam}</h2>
@@ -355,7 +355,7 @@ export default function AboutPage({ params }: { params: { lang: string } }) {
         </section>
 
         <section className="py-16 md:py-24 bg-gradient-to-br from-[#f26522] to-[#f58220] text-white relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full bg-[url('/placeholder.svg?height=100&width=100')] opacity-10 bg-repeat" />
+          <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-repeat" />
           <div className="absolute -top-10 -right-10 w-40 h-40 bg-yellow-500/30 rounded-full blur-3xl" />
           <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-pink-500/30 rounded-full blur-3xl" />
           <div className="container px-4 md:px-6 relative z-10">
@@ -363,16 +363,18 @@ export default function AboutPage({ params }: { params: { lang: string } }) {
               <div>
                 <h2 className="text-3xl md:text-5xl font-bold mb-4">{t.readyToExperience}</h2>
                 <p className="text-xl mb-6">{t.readyToExperienceDesc}</p>
-                <Button
-                  size="lg"
-                  className="bg-white text-[#f26522] hover:bg-white/90 text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all"
-                >
-                  <Car className="h-5 w-5 mr-2" /> {t.bookYourAdventure}
-                </Button>
+                <Link href={`https://app.jolzt.com/`} target="_blank" rel="noopener noreferrer">
+                  <Button
+                    size="lg"
+                    className="bg-white text-[#f26522] hover:bg-white/90 text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all"
+                  >
+                    <Car className="h-5 w-5 mr-2" /> {t.bookYourAdventure}
+                  </Button>
+                </Link>
               </div>
               <div className="relative h-64 md:h-96 bg-white/10 rounded-lg overflow-hidden shadow-2xl">
                 <Image
-                  src="/placeholder.svg?height=400&width=600"
+                  src="/about-us-2.jpg?height=400&width=600"
                   alt="Happy Jolzt Customer"
                   fill
                   className="object-cover"

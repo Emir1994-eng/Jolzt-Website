@@ -282,10 +282,8 @@ export default function HowItWorksPage({ params }: { params: { lang: string } })
                   playsInline
                   className="w-full h-full object-cover"
                 >
-                  <source
-                    src="/how-it-works-intro.mp4?height=600&width=1200"  // Update path if needed
-                    type="video/mp4"
-                  />
+                  <source src="/how-it-works-intro.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
                 </video>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center cursor-pointer hover:bg-white transition-colors shadow-lg">
@@ -351,7 +349,7 @@ export default function HowItWorksPage({ params }: { params: { lang: string } })
                       <div className="md:w-1/2 order-1 md:order-2">
                         <div className="rounded-lg overflow-hidden shadow-md">
                           <Image
-                            src="/placeholder.svg?height=400&width=600"
+                            src="/how-it-works-1.jpg?height=400&width=600"
                             alt="Search and Compare"
                             width={600}
                             height={400}
@@ -366,7 +364,7 @@ export default function HowItWorksPage({ params }: { params: { lang: string } })
                       <div className="md:w-1/2">
                         <div className="rounded-lg overflow-hidden shadow-md">
                           <Image
-                            src="/placeholder.svg?height=400&width=600"
+                            src="/how-it-works-2.jpg?height=400&width=600"
                             alt="Book in Minutes"
                             width={600}
                             height={400}
@@ -431,7 +429,7 @@ export default function HowItWorksPage({ params }: { params: { lang: string } })
                       <div className="md:w-1/2 order-1 md:order-2">
                         <div className="rounded-lg overflow-hidden shadow-md">
                           <Image
-                            src="/placeholder.svg?height=400&width=600"
+                            src="/how-it-works-3.jpg?height=400&width=600"
                             alt="Skip the Counter"
                             width={600}
                             height={400}
@@ -446,7 +444,7 @@ export default function HowItWorksPage({ params }: { params: { lang: string } })
                       <div className="md:w-1/2">
                         <div className="rounded-lg overflow-hidden shadow-md">
                           <Image
-                            src="/placeholder.svg?height=400&width=600"
+                            src="/how-it-works-4.jpg?height=400&width=600"
                             alt="Drive and Return"
                             width={600}
                             height={400}
@@ -483,15 +481,15 @@ export default function HowItWorksPage({ params }: { params: { lang: string } })
                   </div>
 
                   <div className="mt-16 text-center">
-                    
-                  <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer">
-                    <Button
-                      size="lg"
-                      className="bg-[#f26522] hover:bg-[#e05a1c] px-8 py-6 h-auto text-lg rounded-md shadow-md"
-                    >
-                      {t.downloadApp}
-                      <ArrowRightIcon className="ml-2 h-5 w-5" />
-                    </Button>
+
+                    <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer">
+                      <Button
+                        size="lg"
+                        className="bg-[#f26522] hover:bg-[#e05a1c] px-8 py-6 h-auto text-lg rounded-md shadow-md"
+                      >
+                        {t.downloadApp}
+                        <ArrowRightIcon className="ml-2 h-5 w-5" />
+                      </Button>
                     </Link>
                   </div>
                 </div>
