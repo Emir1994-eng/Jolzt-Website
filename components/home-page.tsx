@@ -88,23 +88,10 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
     if (typeof window !== 'undefined') {
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({
-        event: "Web_Car_Select",
+        event: "Show_Cars",
         content_type: "car",
-        car_id: car._id,
-        car_model: car.model,
-        category: car.category,
-        eur_price_per_day: car.regularPrice,
       });
     }
-
-    logEvent(analytics, "Show_Cars", {
-      content_type: "car",
-    });
-
-    logFacebookEvent("Show_Cars", {
-      content_type: "car",
-    });
-
   }
 
   const handleCarClick = (carId: string) => (event: React.MouseEvent) => {
@@ -113,11 +100,6 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
 
     if (!car) {
       console.error('Car not found');
-      return;
-    }
-
-    if (!analytics) {
-      console.warn("Analytics not available");
       return;
     }
 
@@ -132,22 +114,6 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
         eur_price_per_day: car.regularPrice,
       });
     }
-
-    logEvent(analytics, "Web_Car_Select", {
-      content_type: "car",
-      car_id: car._id,
-      car_model: car.model,
-      category: car.category,
-      eur_price_per_day: car.regularPrice,
-    });
-
-    logFacebookEvent("Web_Car_Select", {
-      content_type: "car",
-      car_id: car._id,
-      car_model: car.model,
-      category: car.category,
-      eur_price_per_day: car.regularPrice,
-    });
 
   }
 
@@ -235,7 +201,7 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
                     <LocationSelector />
                     <DatePickerWithRange />
                     <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer">
-                      <Button className="w-full bg-[#f26522] hover:bg-[#e05a1c]">
+                      <Button className="w-full bg-[#f26522] hover:bg-[#e05a1c]" onClick={handleBookNowClick}>
                         <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
                       </Button>
                     </Link>
@@ -257,7 +223,7 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
                   <LocationSelector />
                   <DatePickerWithRange />
                   <Link href='https://app.jolzt.com' target="_blank" rel="noopener noreferrer">
-                    <Button className="w-full bg-[#f26522] hover:bg-[#e05a1c]">
+                    <Button className="w-full bg-[#f26522] hover:bg-[#e05a1c]" onClick={handleBookNowClick}>
                       <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
                     </Button>
                   </Link>
