@@ -85,6 +85,18 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
       return;
     }
 
+    if (typeof window !== 'undefined') {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: "Web_Car_Select",
+        content_type: "car",
+        car_id: car._id,
+        car_model: car.model,
+        category: car.category,
+        eur_price_per_day: car.regularPrice,
+      });
+    }
+
     logEvent(analytics, "Show_Cars", {
       content_type: "car",
     });
@@ -107,6 +119,18 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
     if (!analytics) {
       console.warn("Analytics not available");
       return;
+    }
+
+    if (typeof window !== 'undefined') {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: "Web_Car_Select",
+        content_type: "car",
+        car_id: car._id,
+        car_model: car.model,
+        category: car.category,
+        eur_price_per_day: car.regularPrice,
+      });
     }
 
     logEvent(analytics, "Web_Car_Select", {
