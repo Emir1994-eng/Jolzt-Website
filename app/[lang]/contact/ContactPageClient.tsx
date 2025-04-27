@@ -88,19 +88,7 @@ export default function ContactPageClient({ params }: { params: { lang: string }
           <div className="container px-4 md:px-6">
             <div className="text-center relative z-10 bg-black/30 py-8 px-4 rounded-xl backdrop-blur-sm">
               <h1 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]">
-                {lang === "en" ? (
-                  <>
-                    Contact <span className="text-[#ffcc80]">JOLZT</span>
-                  </>
-                ) : lang === "mk" ? (
-                  <>
-                    Контактирајте <span className="text-[#ffcc80]">JOLZT</span>
-                  </>
-                ) : (
-                  <>
-                    Na Kontaktoni <span className="text-[#ffcc80]">JOLZT</span>
-                  </>
-                )}
+                {t.heading}
               </h1>
               <p className="text-xl md:text-2xl max-w-3xl mx-auto font-medium text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)] mb-8">
                 {t.subheading}

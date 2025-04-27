@@ -528,7 +528,7 @@ export default function HowItWorksPage({ params }: { params: { lang: string } })
                       <div className="md:w-1/2 order-1 md:order-2">
                         <div className="rounded-lg overflow-hidden shadow-md">
                           <Image
-                            src="/placeholder.svg?height=400&width=600"
+                            src="/how-it-works-host-1.jpg?height=400&width=600"
                             alt="Join the Platform"
                             width={600}
                             height={400}
@@ -543,7 +543,7 @@ export default function HowItWorksPage({ params }: { params: { lang: string } })
                       <div className="md:w-1/2">
                         <div className="rounded-lg overflow-hidden shadow-md">
                           <Image
-                            src="/placeholder.svg?height=400&width=600"
+                            src="/how-it-works-host-2.jpg?height=400&width=600"
                             alt="List Your Fleet"
                             width={600}
                             height={400}
@@ -608,7 +608,7 @@ export default function HowItWorksPage({ params }: { params: { lang: string } })
                       <div className="md:w-1/2 order-1 md:order-2">
                         <div className="rounded-lg overflow-hidden shadow-md">
                           <Image
-                            src="/placeholder.svg?height=400&width=600"
+                            src="/how-it-works-host-3.jpg?height=400&width=600"
                             alt="Manage Bookings"
                             width={600}
                             height={400}
@@ -623,7 +623,7 @@ export default function HowItWorksPage({ params }: { params: { lang: string } })
                       <div className="md:w-1/2">
                         <div className="rounded-lg overflow-hidden shadow-md">
                           <Image
-                            src="/placeholder.svg?height=400&width=600"
+                            src="/how-it-works-host-4.jpg?height=400&width=600"
                             alt="Grow Your Business"
                             width={600}
                             height={400}

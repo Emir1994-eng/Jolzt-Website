@@ -38,7 +38,7 @@ import CarsLoading from "./ui/carsloading"
 import axios from "axios"
 
 import { logEvent } from "firebase/analytics"
-import { logFacebookEvent } from '@/lib/facebookPixel'
+import { logFacebookEvent } from '@/hooks/lib/facebookPixel'
 import { analytics } from '@/lib/firebase'
 
 interface Car {
