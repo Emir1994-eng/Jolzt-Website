@@ -36,11 +36,6 @@ export function SiteFooter({ lang = "en" }: { lang?: string }) {
             <h3 className="font-bold mb-4">Explore</h3>
             <ul className="space-y-2">
               <li>
-                <Link href={`/${lang}/travel-guides-and-destinations`} className="text-sm hover:underline">
-                  {t("footer.travelGuides")}
-                </Link>
-              </li>
-              <li>
                 <Link href={`/${lang}/partner`} className="text-sm hover:underline">
                   {t("footer.partner")}
                 </Link>

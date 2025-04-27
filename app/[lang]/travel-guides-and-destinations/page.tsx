@@ -436,10 +436,12 @@ export default function TravelGuidesPage({ params }: { params: { lang: string } 
                               </div>
                             </div>
                           </div>
-                          <Button className="mt-6 bg-[#f26522] hover:bg-[#e05a1c]">
-                            {t.bookCarNow}
-                            <ArrowRightIcon className="ml-2 h-4 w-4" />
-                          </Button>
+                          <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer" passHref>
+                            <Button className="mt-6 bg-[#f26522] hover:bg-[#e05a1c]">
+                              {t.bookCarNow}
+                              <ArrowRightIcon className="ml-2 h-4 w-4" />
+                            </Button>
+                          </Link>
                         </div>
                         <div className="md:w-1/2">
                           <div className="rounded-lg overflow-hidden shadow-md">
