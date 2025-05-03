@@ -478,12 +478,12 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
                       <CarouselItem key={car._id} className="pl-2 basis-[85%] min-w-0">
                         <Card className="overflow-hidden h-full">
                           <CardContent className="p-0 h-full flex flex-col">
-                            <div className="aspect-[4/3] bg-slate-100 relative">
+                          <div className="h-48 w-full bg-slate-100 relative flex-shrink-0">
                               {car.images?.[0] ? (
                                 <img
                                   src={car.images[0]}
                                   alt={`${car.model} ${car.modelType}`}
-                                  className="w-full h-full object-cover"
+                                  className="w-full h-full object-cover object-center"
                                 />
                               ) : (
                                 <div className="absolute inset-0 flex items-center justify-center">
