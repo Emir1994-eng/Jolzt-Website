@@ -2,37 +2,39 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { useTranslations } from "@/utils/i18n"
 
-export function ContactForm({ lang = "en" }: { lang?: string }) {
+export function ContactForm({ lang = "en" }: { lang?: string | any }) {
   const { t } = useTranslations(lang)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    setSubmitStatus("idle")
-
-    // Simulate form submission
-    try {
-      // In a real implementation, you would send the form data to your backend
-      await new Promise((resolve) => setTimeout(resolve, 1500))
-      setSubmitStatus("success")
-    } catch (error) {
-      setSubmitStatus("error")
-    } finally {
-      setIsSubmitting(false)
+  useEffect(() => {
+    const showSuccessMessage = () => {
+      setSubmitStatus("idle")
+      try {
+        setSubmitStatus("success")
+      } catch (error) {
+        setSubmitStatus("error")
+      }
     }
-  }
+
+    const urlParams = new URLSearchParams(window.location.search)
+    if (urlParams.get("messageSent") === "true") {
+      showSuccessMessage()
+      urlParams.delete("messageSent")
+    }
+  })
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form action="https://formsubmit.co/jolztapp@gmail.com" method="POST" className="space-y-6">
+      <input type="hidden" name="_next" value="https://jolzt.com/en/contact?messageSent=true" />
+
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="name" className="text-base font-medium text-gray-700">
