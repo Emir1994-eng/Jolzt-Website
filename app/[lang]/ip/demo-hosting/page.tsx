@@ -6,7 +6,7 @@ import { HowItWorks } from "@/components/how-it-works"
 import { ZeroCommission } from "@/components/zero-commission"
 import { SocialProof } from "@/components/social-proof"
 import { PartnershipForm } from "@/components/partnership-form"
-// import { Footer } from "@/components/footer"
+import { Footer } from "@/components/footer"
 import type { Metadata } from "next"
 
 type Props = {
@@ -76,7 +76,7 @@ export default async function DemoHostPage({ params }: Props) {
           <SocialProof dictionary={safeDict.socialProof} />
           <PartnershipForm dictionary={safeDict.form} /> 
         </main>
-        {/* <Footer dictionary={safeDict.footer} />  */}
+        <Footer dictionary={safeDict.footer} /> 
       </div>
     )
   } catch (error) {
