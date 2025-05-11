@@ -107,7 +107,7 @@ export function PartnershipForm({ dictionary }: PartnershipFormProps) {
                   <p className="text-gray-600 mb-6">{dictionary.contact.subtitle}</p>
 
                   <form action="https://formsubmit.co/jolztapp@gmail.com" method="POST" className="space-y-6">
-                    <input type="hidden" name="_next" value="https://jolzt.com/en/demo-hosting?messageSent=true" />
+                    <input type="hidden" name="_next" value="https://jolzt.com/en/lp/demo-hosting?messageSent=true" />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-3">
                         <Label htmlFor="firstName" className="text-sm font-medium">
