@@ -3,6 +3,8 @@ export const en = {
     title: "Boost Your Car Rental Business",
     subtitle: "We bring you more customers with ZERO FEES for 2 months. Get all your cars rented and make more money!",
     cta: "Apply Now",
+    offer: "Limited Offer",
+    offerText: "Only 3 spots remaining out of 5 total!",
     highlight: "0% COMMISSION",
     highlightText: "for 2 full months",
     benefits: {

@@ -36,7 +36,7 @@ export function FeaturesSection({ dictionary }: FeaturesSectionProps) {
       alt: "Availability calendar dashboard",
     },
     {
-      src: "/car-rental-support-dashboard.png",
+      src: "https://nvlomg7q94tlumq6.public.blob.vercel-storage.com/Grey%20and%20White%20Simple%20Cafe%20Buy%201%20Take%201%20Instagram%20Post%20%281%29-uwrxXbg2rR6og3A6q9RqrCoV14FjzQ.jpg",
       alt: "Customer support dashboard with active inquiries",
     },
     {
