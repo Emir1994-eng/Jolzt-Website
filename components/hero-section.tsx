@@ -11,6 +11,8 @@ interface HeroSectionProps {
     title: string
     subtitle: string
     cta: string
+    offer: string
+    offerText: string
     highlight: string
     highlightText: string
     benefits: {
@@ -86,7 +88,7 @@ export function HeroSection({ dictionary }: HeroSectionProps) {
             </div>
 
             <div className="bg-orange-400/30 backdrop-blur-sm text-white px-6 py-4 rounded-lg font-medium inline-block shadow-lg border border-white/20">
-              <span className="font-bold">Limited Offer:</span> Only 3 spots remaining out of 5 total!
+              <span className="font-bold">{dictionary.offer}:</span> {dictionary.offerText}
             </div>
           </div>
 

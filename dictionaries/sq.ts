@@ -1,9 +1,13 @@
+import { off } from "process";
+
 export const sq = {
   hero: {
     title: "Rritni biznesin tuaj të makinave me qira",
     subtitle:
       "Ne ju sjellim më shumë klientë me ZERO TARIFA për 2 muaj. Jepni me qira të gjitha makinat tuaja dhe fitoni më shumë! Ofertë e kufizuar - vetëm 3 vende të mbetura!",
     cta: "Aplikoni tani",
+    offer: "Ofertë e kufizuar",
+    offerText: "Vetëm 3 vende të mbetura nga 5 gjithsej!",
     highlight: "0% KOMISION",
     highlightText: "për 2 muaj të plotë",
     benefits: {

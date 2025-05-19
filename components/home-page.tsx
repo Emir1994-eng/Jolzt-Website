@@ -115,7 +115,6 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
 
     const url = new URL("https://app.jolzt.com");
     url.searchParams.append('region', "Macedonia");
-    url.searchParams.append('locationLabel', selectedLocation.label);
     url.searchParams.append('startDate', startDate);
     url.searchParams.append('endDate', endDate);
 
