@@ -3,18 +3,26 @@
 import * as React from "react"
 import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
-
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { DateRange } from "react-day-picker"
 
-export function DatePickerWithRange() {
-  const [date, setDate] = React.useState({
+interface DatePickerWithRangeProps {
+  date?: DateRange
+  onDateChange: (date: DateRange) => void
+}
+
+export function DatePickerWithRange({ date, onDateChange }: DatePickerWithRangeProps) {
+  // Set default dates if not provided
+  const defaultDate = {
     from: new Date(),
     to: new Date(new Date().setDate(new Date().getDate() + 3)),
-  })
+  }
+  
+  const selectedDate = date || defaultDate
 
   // Generate time options
   const timeOptions = []
@@ -35,19 +43,36 @@ export function DatePickerWithRange() {
             <PopoverTrigger asChild>
               <Button
                 variant={"outline"}
-                className={cn("w-full justify-start text-left font-normal", !date && "text-muted-foreground")}
+                className={cn(
+                  "w-full justify-start text-left font-normal",
+                  !selectedDate?.from && "text-muted-foreground"
+                )}
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
-                {date?.from ? format(date.from, "MMM d, yyyy") : <span>Pick a date</span>}
+                {selectedDate?.from ? (
+                  format(selectedDate.from, "MMM d, yyyy")
+                ) : (
+                  <span>Pick a date</span>
+                )}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
               <Calendar
                 initialFocus
                 mode="range"
-                defaultMonth={date?.from}
-                selected={date}
-                onSelect={setDate}
+                defaultMonth={selectedDate?.from}
+                selected={selectedDate}
+                onSelect={(range) => {
+                  if (range?.from && range?.to) {
+                    onDateChange(range)
+                  } else if (range?.from) {
+                    // If only start date is selected, set end date to start date + 3 days
+                    onDateChange({
+                      from: range.from,
+                      to: new Date(range.from.getTime() + 3 * 24 * 60 * 60 * 1000)
+                    })
+                  }
+                }}
                 numberOfMonths={2}
               />
             </PopoverContent>
@@ -59,19 +84,36 @@ export function DatePickerWithRange() {
             <PopoverTrigger asChild>
               <Button
                 variant={"outline"}
-                className={cn("w-full justify-start text-left font-normal", !date && "text-muted-foreground")}
+                className={cn(
+                  "w-full justify-start text-left font-normal",
+                  !selectedDate?.to && "text-muted-foreground"
+                )}
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
-                {date?.to ? format(date.to, "MMM d, yyyy") : <span>Pick a date</span>}
+                {selectedDate?.to ? (
+                  format(selectedDate.to, "MMM d, yyyy")
+                ) : (
+                  <span>Pick a date</span>
+                )}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
               <Calendar
                 initialFocus
                 mode="range"
-                defaultMonth={date?.from}
-                selected={date}
-                onSelect={setDate}
+                defaultMonth={selectedDate?.from}
+                selected={selectedDate}
+                onSelect={(range) => {
+                  if (range?.from && range?.to) {
+                    onDateChange(range)
+                  } else if (range?.from) {
+                    // If only start date is selected, set end date to start date + 3 days
+                    onDateChange({
+                      from: range.from,
+                      to: new Date(range.from.getTime() + 3 * 24 * 60 * 60 * 1000)
+                    })
+                  }
+                }}
                 numberOfMonths={2}
               />
             </PopoverContent>

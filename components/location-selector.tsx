@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from "react"
+import React, { useCallback } from "react"
 import { Check, ChevronsUpDown, MapPin } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -64,8 +64,12 @@ const locations = [
   },
 ]
 
-// Modify the LocationSelector component to allow custom input
-export function LocationSelector() {
+interface LocationSelectorProps {
+  onLocationChange: (value: string, label: string) => void;
+}
+
+export function LocationSelector({ onLocationChange }: LocationSelectorProps) {
+
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("skopje")
   const [customInput, setCustomInput] = React.useState("")
@@ -77,21 +81,24 @@ export function LocationSelector() {
       setValue(currentValue)
       setDisplayValue(selectedLocation.label)
       setCustomInput("")
+      onLocationChange(currentValue, selectedLocation.label)
     }
     setOpen(false)
-  }, [])
+  }, [onLocationChange])
 
-  const handleInputChange = React.useCallback(
+    const handleInputChange = React.useCallback(
     (input: string) => {
       setCustomInput(input)
       if (input) {
         setDisplayValue(input)
+        // If user types a custom location, pass it up
+        onLocationChange('custom', input)
       } else {
         const selectedLocation = locations.find((location) => location.value === value)
         setDisplayValue(selectedLocation?.label || "")
       }
     },
-    [value],
+    [value, onLocationChange],
   )
 
   return (

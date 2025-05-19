@@ -31,14 +31,10 @@ import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carouse
 import { AuthModal } from "@/components/auth-modal"
 import { LanguageSelector } from "@/components/language-selector"
 import { SiteFooter } from "@/components/site-footer"
-import { AvatarFallback } from "@/components/ui/avatar"
-import { Avatar } from "@/components/ui/avatar"
 import { useTranslations } from "@/utils/i18n"
 import CarsLoading from "./ui/carsloading"
 import axios from "axios"
-
-import { logEvent } from "firebase/analytics"
-import { logFacebookEvent } from '@/hooks/lib/facebookPixel'
+import { format } from "date-fns"
 import { analytics } from '@/lib/firebase'
 
 interface Car {
@@ -54,6 +50,20 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [authModalOpen, setAuthModalOpen] = useState(false)
+
+  const [selectedLocation, setSelectedLocation] = useState({
+    value: 'skopje',
+    label: 'Skopje'
+  });
+  const [dateRange, setDateRange] = useState({
+    from: new Date(),
+    to: new Date(new Date().setDate(new Date().getDate() + 3)),
+  });
+
+  const handleLocationChange = (value: string, label: string) => {
+    setSelectedLocation({ value, label });
+  };
+
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -92,6 +102,25 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
         content_type: "car",
       });
     }
+
+    const formatDate = (date: Date) => format(date, 'yyyy-MM-dd');
+    const startDate = dateRange.from ? formatDate(dateRange.from) : '';
+    const endDate = dateRange.to ? formatDate(dateRange.to) : '';
+
+    if (!startDate || !endDate) {
+      e.preventDefault();
+      // Optionally show error to user
+      return;
+    }
+
+    const url = new URL("https://app.jolzt.com");
+    url.searchParams.append('region', "Macedonia");
+    url.searchParams.append('locationLabel', selectedLocation.label);
+    url.searchParams.append('startDate', startDate);
+    url.searchParams.append('endDate', endDate);
+
+    // Open in new tab
+    window.open(url.toString(), '_blank', 'noopener,noreferrer');
   }
 
   const handleCarClick = (carId: string) => (event: React.MouseEvent) => {
@@ -198,13 +227,13 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
                         {t("home.booking.differentReturn")}
                       </Button>
                     </div>
-                    <LocationSelector />
-                    <DatePickerWithRange />
-                    <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer">
+                    <LocationSelector onLocationChange={handleLocationChange}  />
+                    <DatePickerWithRange date={dateRange} onDateChange={setDateRange} />
+                    {/* <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer"> */}
                       <Button className="w-full bg-[#f26522] hover:bg-[#e05a1c]" onClick={handleBookNowClick}>
                         <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
                       </Button>
-                    </Link>
+                    {/* </Link> */}
                   </div>
                 </div>
               </div>
@@ -220,13 +249,13 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
                       {t("home.booking.differentReturn")}
                     </Button>
                   </div>
-                  <LocationSelector />
-                  <DatePickerWithRange />
-                  <Link href='https://app.jolzt.com' target="_blank" rel="noopener noreferrer">
+                    <LocationSelector onLocationChange={handleLocationChange}  />
+                    <DatePickerWithRange date={dateRange} onDateChange={setDateRange} />
+                  {/* <Link href='https://app.jolzt.com' target="_blank" rel="noopener noreferrer"> */}
                     <Button className="w-full bg-[#f26522] hover:bg-[#e05a1c]" onClick={handleBookNowClick}>
                       <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
                     </Button>
-                  </Link>
+                  {/* </Link> */}
                   <Button variant="link" size="sm" className="text-[#f26522] text-xs mx-auto">
                     {t("applyRate")}
                   </Button>
@@ -478,7 +507,7 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
                       <CarouselItem key={car._id} className="pl-2 basis-[85%] min-w-0">
                         <Card className="overflow-hidden h-full">
                           <CardContent className="p-0 h-full flex flex-col">
-                          <div className="h-48 w-full bg-slate-100 relative flex-shrink-0">
+                            <div className="h-48 w-full bg-slate-100 relative flex-shrink-0">
                               {car.images?.[0] ? (
                                 <img
                                   src={car.images[0]}
