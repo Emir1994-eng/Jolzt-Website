@@ -414,7 +414,7 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
             </div>
 
             {/* Desktop version - grid */}
-            <div className="hidden md:grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="hidden md:grid gap-6 md:grid-cols-2 lg:grid-cols-4">
               {cars && cars.map((car) => (
                 <Card key={car?._id} className="overflow-hidden transition-all hover:shadow-md">
                   <CardContent className="p-0">

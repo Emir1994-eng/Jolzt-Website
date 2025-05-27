@@ -176,6 +176,8 @@ export const en = {
       "Full transparency on all bookings and revenue",
       "Make more money with every vehicle",
     ],
+    offer: "Limited Offer",
+    offerText: "Only 3 spots remaining out of 5 total!",
     contact: {
       title: "Apply for Partnership",
       subtitle: "Fill out the form below to get started with your 2-month free trial",

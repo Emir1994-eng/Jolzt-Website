@@ -161,6 +161,8 @@ export const sq = {
       "Transparencë e plotë për të gjitha rezervimet dhe të ardhurat",
       "Maksimizoni fitimet tuaja me çdo automjet",
     ],
+    offer: "Ofertë e kufizuar",
+    offerText: "Vetëm 3 vende të mbetura nga 5 gjithsej!",
     contact: {
       title: "Aplikoni për partneritet",
       subtitle: "Plotësoni formularin më poshtë për të filluar me provën tuaj 2-mujore falas",

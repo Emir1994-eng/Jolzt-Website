@@ -15,6 +15,8 @@ interface PartnershipFormProps {
     title: string
     subtitle: string
     benefits: string[]
+    offer: string
+    offerText: string
     contact: {
       title: string
       subtitle: string
@@ -102,7 +104,7 @@ export function PartnershipForm({ dictionary }: PartnershipFormProps) {
                 <div>
                   <h3 className="text-2xl font-bold mb-4">{dictionary.contact.title}</h3>
                   <div className="inline-block bg-orange-100 text-orange-800 px-4 py-2 rounded-full mb-6 font-medium">
-                    <span className="font-bold">Limited Offer:</span> Only 3 spots remaining out of 5 total!
+                    <span className="font-bold">{dictionary.offer}:</span> {dictionary.offerText}
                   </div>
                   <p className="text-gray-600 mb-6">{dictionary.contact.subtitle}</p>
 
