@@ -103,7 +103,7 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
       });
     }
 
-    const formatDate = (date: Date) => format(date, 'DD-MM-YYYY');
+    const formatDate = (date: Date) => format(date, 'dd-mm-yyyy');
     const startDate = dateRange.from ? formatDate(dateRange.from) : '';
     const endDate = dateRange.to ? formatDate(dateRange.to) : '';
 
