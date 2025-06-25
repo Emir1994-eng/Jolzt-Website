@@ -72,7 +72,8 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
           action: 'getCars',
           query: {
             region: 'Macedonia',
-            'availability.status': 'Active'
+            'availability.status': 'Active',
+            limit: 8
           }
         })
         setCars(response.data?.data?.foundCars || [])
