@@ -30,11 +30,6 @@ export function SiteFooter({ lang = "en" }: { lang?: string }) {
                   {t("footer.howItWorks")}
                 </Link>
               </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="font-bold mb-4">Explore</h3>
-            <ul className="space-y-2">
               <li>
                 <Link href={`/${lang}/partner`} className="text-sm hover:underline">
                   {t("footer.partner")}
@@ -43,6 +38,31 @@ export function SiteFooter({ lang = "en" }: { lang?: string }) {
               <li>
                 <Link href={`/${lang}/contact`} className="text-sm hover:underline">
                   {t("footer.help")}
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="font-bold mb-4">Explore</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link href={`/${lang}/blogs/matka-canyon`} className="text-sm hover:underline">
+                  Explore Matka Canyon
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${lang}/blogs/hiking-destinations`} className="text-sm hover:underline">
+                  View Hiking Destinations
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${lang}/blogs/historic-sites`} className="text-sm hover:underline">
+                  Explore Historic Sites
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${lang}/blogs/mavrovo-park`} className="text-sm hover:underline">
+                  Take a Trip to Park Mavrovo
                 </Link>
               </li>
             </ul>
