@@ -46,22 +46,22 @@ export function SiteFooter({ lang = "en" }: { lang?: string }) {
             <h3 className="font-bold mb-4">Explore</h3>
             <ul className="space-y-2">
               <li>
-                <Link href={`/${lang}/blogs/matka-canyon`} className="text-sm hover:underline">
+                <Link href={`/${lang}/blog/matka-canyon`} className="text-sm hover:underline">
                   Explore Matka Canyon
                 </Link>
               </li>
               <li>
-                <Link href={`/${lang}/blogs/hiking-destinations`} className="text-sm hover:underline">
+                <Link href={`/${lang}/blog/hiking-destinations`} className="text-sm hover:underline">
                   View Hiking Destinations
                 </Link>
               </li>
               <li>
-                <Link href={`/${lang}/blogs/historic-sites`} className="text-sm hover:underline">
+                <Link href={`/${lang}/blog/historic-sites`} className="text-sm hover:underline">
                   Explore Historic Sites
                 </Link>
               </li>
               <li>
-                <Link href={`/${lang}/blogs/mavrovo-park`} className="text-sm hover:underline">
+                <Link href={`/${lang}/blog/mavrovo-park`} className="text-sm hover:underline">
                   Take a Trip to Park Mavrovo
                 </Link>
               </li>
