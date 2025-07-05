@@ -102,22 +102,20 @@ export function DatePickerWithRange({ date, onDateChange }: DatePickerWithRangeP
             <PopoverContent className="w-auto p-0" align="start">
               <Calendar
                 initialFocus
-                mode="range"
+                mode="single"
                 defaultMonth={selectedDate?.from}
-                selected={selectedDate}
-                onSelect={(range) => {
-                  if (range?.from && range?.to) {
-                    onDateChange(range)
-                  } else if (range?.from) {
-                    // If only start date is selected, set end date to start date + 3 days
+                selected={selectedDate?.to}
+                onSelect={(date) => {
+                  if (date) {
                     onDateChange({
-                      from: range.from,
-                      to: new Date(range.from.getTime() + 3 * 24 * 60 * 60 * 1000)
-                    })
+                      from: selectedDate.from,
+                      to: date,
+                    });
                   }
                 }}
                 numberOfMonths={2}
               />
+
             </PopoverContent>
           </Popover>
         </div>
