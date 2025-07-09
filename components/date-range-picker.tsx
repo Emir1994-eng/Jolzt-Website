@@ -16,15 +16,14 @@ interface DatePickerWithRangeProps {
 }
 
 export function DatePickerWithRange({ date, onDateChange }: DatePickerWithRangeProps) {
-  // Set default dates if not provided
   const defaultDate = {
     from: new Date(),
     to: new Date(new Date().setDate(new Date().getDate() + 3)),
   }
 
-  const selectedDate = date || defaultDate
+  const [selectedDate, setSelectedDate] = React.useState<DateRange>(date || defaultDate)
+  const [isSelectingStart, setIsSelectingStart] = React.useState(true)
 
-  // Generate time options
   const timeOptions = []
   for (let i = 0; i < 24; i++) {
     for (let j = 0; j < 60; j += 30) {
@@ -34,96 +33,107 @@ export function DatePickerWithRange({ date, onDateChange }: DatePickerWithRangeP
     }
   }
 
+  const handleDateSelect = (date: Date | undefined) => {
+    if (!date) return
+
+    if (isSelectingStart) {
+      setSelectedDate({
+        from: date,
+        to: undefined
+      })
+      setIsSelectingStart(false)
+    } else {
+      if (date < selectedDate.from!) {
+        setSelectedDate({
+          from: date,
+          to: selectedDate.from
+        })
+      } else {
+        setSelectedDate(prev => ({
+          from: prev.from!,
+          to: date
+        }))
+      }
+      setIsSelectingStart(true)
+    }
+
+    if (!isSelectingStart && selectedDate.from) {
+      onDateChange({
+        from: selectedDate.from,
+        to: date
+      })
+    }
+  }
+
+  const isInRange = (date: Date) => {
+    if (!selectedDate.from || !selectedDate.to) return false
+    return date > selectedDate.from && date < selectedDate.to
+  }
+
   return (
     <div className="grid gap-4">
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <div className="text-sm mb-2">Pick-up date</div>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant={"outline"}
-                className={cn(
-                  "w-full justify-start text-left font-normal",
-                  !selectedDate?.from && "text-muted-foreground"
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {selectedDate?.from ? (
+      {/* Make the date picker full width */}
+      <div>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className={cn(
+                "w-full justify-start text-left font-normal",
+                !selectedDate && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {selectedDate?.from ? (
+                selectedDate.to ? (
+                  <>
+                    {format(selectedDate.from, "MMM d, yyyy")} -{" "}
+                    {format(selectedDate.to, "MMM d, yyyy")}
+                  </>
+                ) : (
                   format(selectedDate.from, "MMM d, yyyy")
-                ) : (
-                  <span>Pick a date</span>
-                )}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                initialFocus
-                mode="single"
-                defaultMonth={selectedDate?.from}
-                selected={selectedDate?.from}
-                onSelect={(date) => {
-                  if (date) {
-                    const adjustedTo = selectedDate.to && date > selectedDate.to
-                      ? new Date(date.getTime() + 3 * 24 * 60 * 60 * 1000)
-                      : selectedDate.to;
-
-                    onDateChange({
-                      from: date,
-                      to: adjustedTo,
-                    });
-                  }
-                }}
-                numberOfMonths={2}
-              />
-
-            </PopoverContent>
-          </Popover>
-        </div>
-        <div>
-          <div className="text-sm mb-2">Return date</div>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant={"outline"}
-                className={cn(
-                  "w-full justify-start text-left font-normal",
-                  !selectedDate?.to && "text-muted-foreground"
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {selectedDate?.to ? (
-                  format(selectedDate.to, "MMM d, yyyy")
-                ) : (
-                  <span>Pick a date</span>
-                )}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                initialFocus
-                mode="single"
-                defaultMonth={selectedDate?.from}
-                selected={selectedDate?.to}
-                onSelect={(date) => {
-                  if (date) {
-                    onDateChange({
-                      from: selectedDate.from,
-                      to: date,
-                    });
-                  }
-                }}
-                numberOfMonths={2}
-              />
-
-            </PopoverContent>
-          </Popover>
-        </div>
+                )
+              ) : (
+                <span>Pick a date range</span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              initialFocus
+              mode="single"
+              defaultMonth={selectedDate?.from}
+              selected={isSelectingStart ? selectedDate.from : selectedDate.to}
+              onSelect={handleDateSelect}
+              numberOfMonths={2}
+              modifiers={{
+                start: selectedDate.from,
+                end: selectedDate.to,
+                inRange: isInRange,
+              }}
+              modifiersStyles={{
+                start: {
+                  backgroundColor: '#f97316',
+                  color: 'white',
+                },
+                end: {
+                  backgroundColor: '#f97316',
+                  color: 'white',
+                },
+                inRange: {
+                  backgroundColor: '#fed7aa',
+                },
+              }}
+            />
+          </PopoverContent>
+        </Popover>
       </div>
+
+      {/* Time selectors remain in two columns */}
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Select defaultValue="12:30">
-            <SelectTrigger>
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Select time" />
             </SelectTrigger>
             <SelectContent>
@@ -137,7 +147,7 @@ export function DatePickerWithRange({ date, onDateChange }: DatePickerWithRangeP
         </div>
         <div>
           <Select defaultValue="08:30">
-            <SelectTrigger>
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Select time" />
             </SelectTrigger>
             <SelectContent>
