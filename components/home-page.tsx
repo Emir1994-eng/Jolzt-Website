@@ -55,6 +55,9 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
     value: 'skopje',
     label: 'Skopje'
   });
+
+  const [pickupTime, setPickupTime] = useState("12:30")
+  const [returnTime, setReturnTime] = useState("08:30")
   const [dateRange, setDateRange] = useState({
     from: new Date(),
     to: new Date(new Date().setDate(new Date().getDate() + 3)),
@@ -118,6 +121,8 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
     url.searchParams.append('region', "Macedonia");
     url.searchParams.append('startDate', startDate);
     url.searchParams.append('endDate', endDate);
+    url.searchParams.append('startTime', pickupTime);
+    url.searchParams.append('returnTime', returnTime);
 
     // Open in new tab
     window.open(url.toString(), '_blank', 'noopener,noreferrer');
@@ -227,12 +232,19 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
                         {t("home.booking.differentReturn")}
                       </Button>
                     </div>
-                    <LocationSelector onLocationChange={handleLocationChange}  />
-                    <DatePickerWithRange date={dateRange} onDateChange={setDateRange} />
+                    <LocationSelector onLocationChange={handleLocationChange} />
+                    <DatePickerWithRange
+                      date={dateRange}
+                      onDateChange={setDateRange}
+                      pickupTime={pickupTime}
+                      setPickupTime={setPickupTime}
+                      returnTime={returnTime}
+                      setReturnTime={setReturnTime}
+                    />
                     {/* <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer"> */}
-                      <Button className="w-full bg-[#f26522] hover:bg-[#e05a1c]" onClick={handleBookNowClick}>
-                        <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
-                      </Button>
+                    <Button className="w-full bg-[#f26522] hover:bg-[#e05a1c]" onClick={handleBookNowClick}>
+                      <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
+                    </Button>
                     {/* </Link> */}
                   </div>
                 </div>
@@ -249,12 +261,19 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
                       {t("home.booking.differentReturn")}
                     </Button>
                   </div>
-                    <LocationSelector onLocationChange={handleLocationChange}  />
-                    <DatePickerWithRange date={dateRange} onDateChange={setDateRange} />
+                  <LocationSelector onLocationChange={handleLocationChange} />
+                  <DatePickerWithRange
+                    date={dateRange}
+                    onDateChange={setDateRange}
+                    pickupTime={pickupTime}
+                    setPickupTime={setPickupTime}
+                    returnTime={returnTime}
+                    setReturnTime={setReturnTime}
+                  />
                   {/* <Link href='https://app.jolzt.com' target="_blank" rel="noopener noreferrer"> */}
-                    <Button className="w-full bg-[#f26522] hover:bg-[#e05a1c]" onClick={handleBookNowClick}>
-                      <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
-                    </Button>
+                  <Button className="w-full bg-[#f26522] hover:bg-[#e05a1c]" onClick={handleBookNowClick}>
+                    <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
+                  </Button>
                   {/* </Link> */}
                   <Button variant="link" size="sm" className="text-[#f26522] text-xs mx-auto">
                     {t("applyRate")}

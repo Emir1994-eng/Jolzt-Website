@@ -13,9 +13,20 @@ import { DateRange } from "react-day-picker"
 interface DatePickerWithRangeProps {
   date?: DateRange
   onDateChange: (date: DateRange) => void
+  pickupTime: string
+  setPickupTime: (time: string) => void
+  returnTime: string
+  setReturnTime: (time: string) => void
 }
 
-export function DatePickerWithRange({ date, onDateChange }: DatePickerWithRangeProps) {
+export function DatePickerWithRange({
+  date,
+  onDateChange,
+  pickupTime,
+  setPickupTime,
+  returnTime,
+  setReturnTime,
+}: DatePickerWithRangeProps) {
   const defaultDate = {
     from: new Date(),
     to: new Date(new Date().setDate(new Date().getDate() + 3)),
@@ -72,7 +83,6 @@ export function DatePickerWithRange({ date, onDateChange }: DatePickerWithRangeP
 
   return (
     <div className="grid gap-4">
-      {/* Make the date picker full width */}
       <div>
         <Popover>
           <PopoverTrigger asChild>
@@ -129,10 +139,9 @@ export function DatePickerWithRange({ date, onDateChange }: DatePickerWithRangeP
         </Popover>
       </div>
 
-      {/* Time selectors remain in two columns */}
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <Select defaultValue="12:30">
+          <Select value={pickupTime} onValueChange={setPickupTime}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select time" />
             </SelectTrigger>
@@ -146,7 +155,7 @@ export function DatePickerWithRange({ date, onDateChange }: DatePickerWithRangeP
           </Select>
         </div>
         <div>
-          <Select defaultValue="08:30">
+          <Select value={returnTime} onValueChange={setReturnTime}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select time" />
             </SelectTrigger>
