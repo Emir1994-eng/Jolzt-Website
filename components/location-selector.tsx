@@ -17,51 +17,7 @@ const locations = [
   {
     value: "skopje-airport",
     label: "Skopje International Airport",
-  },
-  {
-    value: "ohrid",
-    label: "Ohrid",
-  },
-  {
-    value: "ohrid-airport",
-    label: "Ohrid St. Paul the Apostle Airport",
-  },
-  {
-    value: "bitola",
-    label: "Bitola",
-  },
-  {
-    value: "tetovo",
-    label: "Tetovo",
-  },
-  {
-    value: "strumica",
-    label: "Strumica",
-  },
-  {
-    value: "kumanovo",
-    label: "Kumanovo",
-  },
-  {
-    value: "prilep",
-    label: "Prilep",
-  },
-  {
-    value: "struga",
-    label: "Struga",
-  },
-  {
-    value: "veles",
-    label: "Veles",
-  },
-  {
-    value: "gostivar",
-    label: "Gostivar",
-  },
-  {
-    value: "kavadarci",
-    label: "Kavadarci",
-  },
+  }
 ]
 
 interface LocationSelectorProps {

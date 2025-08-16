@@ -67,7 +67,6 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
     setSelectedLocation({ value, label });
   };
 
-
   useEffect(() => {
     const fetchCars = async () => {
       try {
@@ -158,6 +157,21 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
 
   return (
     <div className="flex min-h-screen flex-col">
+      <div className="bg-gradient-to-r from-[#f26522] to-[#f58220] -z-10 px-4 py-3 text-center text-white">
+        <p className="text-sm font-medium">
+          🎉 Use code{" "}
+          <span className="font-bold text-green-300">D1SCT1</span> at
+          checkout to get{" "}
+          <span className="font-bold text-green-300">40% OFF</span> your
+          booking!
+        </p>
+        <button
+          onClick={() => setShow(false)}
+          className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full p-1 hover:bg-white/20"
+        >
+          ✕
+        </button>
+      </div>
       <header className="sticky top-0 z-50 w-full border-b bg-white">
         <div className="container flex h-16 items-center justify-between px-4 md:px-6">
           <div className="flex items-center gap-4 md:gap-6">
@@ -275,9 +289,6 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
                     <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
                   </Button>
                   {/* </Link> */}
-                  <Button variant="link" size="sm" className="text-[#f26522] text-xs mx-auto">
-                    {t("applyRate")}
-                  </Button>
                 </div>
               </div>
 
