@@ -160,9 +160,9 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
       <div className="bg-gradient-to-r from-[#f26522] to-[#f58220] -z-10 px-4 py-3 text-center text-white">
         <p className="text-sm font-medium">
           🎉 Use code{" "}
-          <span className="font-bold text-green-300">D1SCT1</span> at
+          <span className="font-bold text-yellow-300">D1SCT1</span> at
           checkout to get{" "}
-          <span className="font-bold text-green-300">40% OFF</span> your
+          <span className="font-bold text-yellow-300">40% OFF</span> your first
           booking!
         </p>
         <button
