@@ -157,7 +157,7 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <div className="bg-gradient-to-r from-[#f26522] to-[#f58220] -z-10 px-4 py-3 text-center text-white">
+      <div className="sticky top-0 w-full bg-gradient-to-r from-black to-black z-50 px-4 py-3 text-center text-white">
         <p className="text-sm font-medium">
           🎉 Use code{" "}
           <span className="font-bold text-yellow-300">D1SCT1</span> at
@@ -172,7 +172,8 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
           ✕
         </button>
       </div>
-      <header className="sticky top-0 z-50 w-full border-b bg-white">
+
+      <header className="border-b bg-white">
         <div className="container flex h-16 items-center justify-between px-4 md:px-6">
           <div className="flex items-center gap-4 md:gap-6">
             <Link href={`/${lang}`} className="flex items-center gap-2">
