@@ -3,12 +3,15 @@
 import * as React from "react"
 import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
+import { DateRange } from "react-day-picker"
+
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { DateRange } from "react-day-picker"
+import { Checkbox } from "@/components/ui/checkbox"
+import { LocationSelector } from "@/components/location-selector"
 
 interface DatePickerWithRangeProps {
   date?: DateRange
@@ -17,6 +20,7 @@ interface DatePickerWithRangeProps {
   setPickupTime: (time: string) => void
   returnTime: string
   setReturnTime: (time: string) => void
+  onLocationChange: (value: string, label: string) => void
 }
 
 export function DatePickerWithRange({
@@ -26,7 +30,11 @@ export function DatePickerWithRange({
   setPickupTime,
   returnTime,
   setReturnTime,
+  onLocationChange,
 }: DatePickerWithRangeProps) {
+
+  const [returnToDifferentLocation, setReturnToDifferentLocation] = React.useState(false)
+
   const defaultDate = {
     from: new Date(),
     to: new Date(new Date().setDate(new Date().getDate() + 3)),
@@ -35,54 +43,68 @@ export function DatePickerWithRange({
   const [selectedDate, setSelectedDate] = React.useState<DateRange>(date || defaultDate)
   const [isSelectingStart, setIsSelectingStart] = React.useState(true)
 
-  const timeOptions = []
-  for (let i = 0; i < 24; i++) {
-    for (let j = 0; j < 60; j += 30) {
-      const hour = i.toString().padStart(2, "0")
-      const minute = j.toString().padStart(2, "0")
-      timeOptions.push(`${hour}:${minute}`)
-    }
-  }
-
-  const handleDateSelect = (date: Date | undefined) => {
-    if (!date) return
-
-    if (isSelectingStart) {
-      setSelectedDate({
-        from: date,
-        to: undefined
-      })
-      setIsSelectingStart(false)
-    } else {
-      if (date < selectedDate.from!) {
-        setSelectedDate({
-          from: date,
-          to: selectedDate.from
-        })
-      } else {
-        setSelectedDate(prev => ({
-          from: prev.from!,
-          to: date
-        }))
+  const timeOptions = React.useMemo(() => {
+    const options = []
+    for (let i = 0; i < 24; i++) {
+      for (let j = 0; j < 60; j += 30) {
+        const hour = i.toString().padStart(2, "0")
+        const minute = j.toString().padStart(2, "0")
+        options.push(`${hour}:${minute}`)
       }
-      setIsSelectingStart(true)
     }
+    return options
+  }, [])
 
-    if (!isSelectingStart && selectedDate.from) {
-      onDateChange({
-        from: selectedDate.from,
-        to: date
-      })
-    }
-  }
+  const handleDateSelect = React.useCallback(
+    (newDate: Date | undefined) => {
+      if (!newDate) return
 
-  const isInRange = (date: Date) => {
-    if (!selectedDate.from || !selectedDate.to) return false
-    return date > selectedDate.from && date < selectedDate.to
-  }
+      if (isSelectingStart) {
+        setSelectedDate({
+          from: newDate,
+          to: undefined,
+        })
+        setIsSelectingStart(false)
+      } else {
+        const fromDate = selectedDate.from || newDate
+        const toDate = newDate
+
+        if (toDate < fromDate) {
+          setSelectedDate({
+            from: toDate,
+            to: fromDate,
+          })
+          onDateChange({
+            from: toDate,
+            to: fromDate,
+          })
+        } else {
+          setSelectedDate({
+            from: fromDate,
+            to: toDate,
+          })
+          onDateChange({
+            from: fromDate,
+            to: toDate,
+          })
+        }
+        setIsSelectingStart(true)
+      }
+    },
+    [selectedDate, isSelectingStart, onDateChange]
+  )
+
+  const isInRange = React.useCallback(
+    (dateToCheck: Date) => {
+      if (!selectedDate.from || !selectedDate.to) return false
+      return dateToCheck > selectedDate.from && dateToCheck < selectedDate.to
+    },
+    [selectedDate]
+  )
 
   return (
     <div className="grid gap-4">
+      {/* Date Picker */}
       <div>
         <Popover>
           <PopoverTrigger asChild>
@@ -111,9 +133,9 @@ export function DatePickerWithRange({
           <PopoverContent className="w-auto p-0" align="start">
             <Calendar
               initialFocus
-              mode="single"
+              mode="range"
               defaultMonth={selectedDate?.from}
-              selected={isSelectingStart ? selectedDate.from : selectedDate.to}
+              selected={selectedDate}
               onSelect={handleDateSelect}
               numberOfMonths={2}
               modifiers={{
@@ -139,11 +161,12 @@ export function DatePickerWithRange({
         </Popover>
       </div>
 
+      {/* Time Selectors */}
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Select value={pickupTime} onValueChange={setPickupTime}>
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select time" />
+              <SelectValue placeholder="Select pickup time" />
             </SelectTrigger>
             <SelectContent>
               {timeOptions.map((time) => (
@@ -157,7 +180,7 @@ export function DatePickerWithRange({
         <div>
           <Select value={returnTime} onValueChange={setReturnTime}>
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select time" />
+              <SelectValue placeholder="Select return time" />
             </SelectTrigger>
             <SelectContent>
               {timeOptions.map((time) => (
@@ -169,6 +192,27 @@ export function DatePickerWithRange({
           </Select>
         </div>
       </div>
+
+      {/* Return Location Checkbox & Selector */}
+      <div className="flex items-center space-x-2 mt-2">
+        <Checkbox
+          id="return-location"
+          checked={returnToDifferentLocation}
+          onCheckedChange={(checked) => setReturnToDifferentLocation(!!checked)}
+        />
+        <label
+          htmlFor="return-location"
+          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        >
+          Return to different location
+        </label>
+      </div>
+
+      {returnToDifferentLocation && (
+        <div className="mt-2">
+          <LocationSelector onLocationChange={onLocationChange} />
+        </div>
+      )}
     </div>
   )
 }

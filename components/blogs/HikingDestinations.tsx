@@ -39,7 +39,7 @@ const HikingDestinations: React.FC = () => {
       <div className="relative h-screen max-h-[800px] overflow-hidden">
         <div className="absolute inset-0 bg-black/40">
           <Image 
-            src="/hiking-hero.jpg" 
+            src="/hiking-1.jpg" 
             alt="Hiking in North Macedonia"
             fill
             className="object-cover"
@@ -74,7 +74,7 @@ const HikingDestinations: React.FC = () => {
       <div className="max-w-5xl mx-auto px-6 mb-16">
         <div className="relative h-96 w-full rounded-xl overflow-hidden shadow-xl">
           <Image 
-            src="/hiking-main.jpg" 
+            src="/hikings-2.jpg" 
             alt="Hiking trail in North Macedonia"
             fill
             className="object-cover"

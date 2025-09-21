@@ -165,12 +165,6 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
           <span className="font-bold text-yellow-300">40% OFF</span> your first
           booking!
         </p>
-        <button
-          onClick={() => setShow(false)}
-          className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full p-1 hover:bg-white/20"
-        >
-          ✕
-        </button>
       </div>
 
       <header className="border-b bg-white">
@@ -243,9 +237,6 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
                   <div className="grid gap-4">
                     <div className="flex items-center justify-between">
                       <div className="font-medium">{t("home.booking.pickupReturn")}</div>
-                      <Button variant="link" size="sm" className="text-[#f26522] text-xs md:text-sm">
-                        {t("home.booking.differentReturn")}
-                      </Button>
                     </div>
                     <LocationSelector onLocationChange={handleLocationChange} />
                     <DatePickerWithRange
@@ -255,12 +246,14 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
                       setPickupTime={setPickupTime}
                       returnTime={returnTime}
                       setReturnTime={setReturnTime}
+                      onLocationChange={handleLocationChange}
                     />
                     {/* <Link href="https://app.jolzt.com" target="_blank" rel="noopener noreferrer"> */}
                     <Button className="w-full bg-[#f26522] hover:bg-[#e05a1c]" onClick={handleBookNowClick}>
                       <CheckIcon className="h-4 w-4 mr-2" /> {t("common.bookNow")}
                     </Button>
                     {/* </Link> */}
+                    <div className="text-[#f26522] text-sm">{t("common.smallCTAUnderline")}</div>
                   </div>
                 </div>
               </div>
@@ -272,9 +265,6 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
                 <div className="grid gap-4">
                   <div className="flex items-center justify-between">
                     <div className="font-medium">{t("home.booking.pickupReturn")}</div>
-                    <Button variant="link" size="sm" className="text-[#f26522] text-xs p-0">
-                      {t("home.booking.differentReturn")}
-                    </Button>
                   </div>
                   <LocationSelector onLocationChange={handleLocationChange} />
                   <DatePickerWithRange
@@ -284,6 +274,7 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
                     setPickupTime={setPickupTime}
                     returnTime={returnTime}
                     setReturnTime={setReturnTime}
+                    onLocationChange={handleLocationChange}
                   />
                   {/* <Link href='https://app.jolzt.com' target="_blank" rel="noopener noreferrer"> */}
                   <Button className="w-full bg-[#f26522] hover:bg-[#e05a1c]" onClick={handleBookNowClick}>
