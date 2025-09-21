@@ -1,12 +1,13 @@
 {
   "common": {
-    "bookNow": "Book Now",
+    "bookNow": "Search cars",
     "readMore": "Read More",
     "viewAll": "View All",
     "learnMore": "Learn More",
     "applyNow": "Apply Now",
     "contactUs": "Contact Us",
-    "backToHome": "Back to Home"
+    "backToHome": "Back to Home",
+    "smallCTAUnderline": "Today’s discount is applied on the next step."
   },
   "header": {
     "bookYourRide": "Book Your Ride"
@@ -27,14 +28,14 @@
   },
   "home": {
     "hero": {
-      "bookInstantly": "BOOK INSTANTLY, SKIP THE COUNTERS",
-      "description": "Discover a hassle-free way to book your next car in North Macedonia. With Jolzt, you can skip the counters and easily rent a car directly from the app, all from the comfort of your home.",
+      "bookInstantly": "Car Rental in North Macedonia",
+      "description": "Book online—skip the counter. Instant pickup at Skopje Airport or in the city. Full insurance included.",
       "experience": "Experience convenience, flexibility, and premium service every time you drive.",
       "easyPickup": "Easy pickup and return",
       "driveBorders": "Drive across borders"
     },
     "booking": {
-      "pickupReturn": "Pickup & Return",
+      "pickupReturn": "Select your start location",
       "differentReturn": "Different return location",
       "showCars": "Show Cars",
       "applyRate": "Apply corporate rate"

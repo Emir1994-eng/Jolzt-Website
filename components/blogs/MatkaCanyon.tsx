@@ -53,7 +53,7 @@ const MatkaCanyon: React.FC = () => {
         {/* Hero Image - Replace with your actual image */}
         <div className="absolute inset-0 bg-black/40">
           <Image 
-            src="/matka-canyon-hero.jpg" 
+            src="/matka-1.jpg" 
             alt="Matka Canyon"
             fill
             className="object-cover"
@@ -93,7 +93,7 @@ const MatkaCanyon: React.FC = () => {
       <div className="max-w-5xl mx-auto px-6 mb-16">
         <div className="relative h-96 w-full rounded-xl overflow-hidden shadow-xl">
           <Image 
-            src="/matka-canyon-main.jpg" 
+            src="/matka-2.jpg" 
             alt="Matka Canyon Landscape"
             fill
             className="object-cover"
@@ -204,7 +204,7 @@ const MatkaCanyon: React.FC = () => {
       <div className="max-w-5xl mx-auto px-6 my-16">
         <div className="relative h-96 w-full rounded-xl overflow-hidden shadow-xl">
           <Image 
-            src="/matka-canyon-secondary.jpg" 
+            src="/matka-3.jpg" 
             alt="Matka Canyon Details"
             fill
             className="object-cover"

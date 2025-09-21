@@ -12,7 +12,7 @@ const MavrovoPark: React.FC = () => {
             {/* Hero Section */}
             <div className="relative h-96 bg-gray-800">
                 <Image
-                    src="/mavrovo-hero.jpg"
+                    src="/mavrovo-1.jpg"
                     alt="Mavrovo National Park"
                     fill
                     className="object-cover opacity-90"
@@ -39,7 +39,7 @@ const MavrovoPark: React.FC = () => {
                 {/* Main Image */}
                 <div className="relative h-64 md:h-96 w-full mb-12 rounded-lg overflow-hidden shadow-lg">
                     <Image
-                        src="/mavrovo-main.jpg"
+                        src="/mavrovo-2.jpg"
                         alt="Mavrovo National Park Landscape"
                         fill
                         className="object-cover"

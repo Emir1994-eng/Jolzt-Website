@@ -1,12 +1,13 @@
 {
   "common": {
-    "bookNow": "Rezervo Tani",
+    "bookNow": "Kërko makina",
     "readMore": "Lexo më shumë",
     "viewAll": "Shiko të gjitha",
     "learnMore": "Mëso më shumë",
     "applyNow": "Apliko tani",
     "contactUs": "Na kontaktoni",
-    "backToHome": "Kthehu në Fillim"
+    "backToHome": "Kthehu në Fillim",
+    "smallCTAUnderline": "Zbritja e sotme zbatohet në hapin tjetër."
   },
   "header": {
     "bookYourRide": "Rezervo udhëtimin tënd"
@@ -27,14 +28,14 @@
   },
   "home": {
     "hero": {
-      "bookInstantly": "REZERVO MENJËHERË, KAPËRCE SPORTELET",
-      "description": "Zbuloni një mënyrë pa telashe për të rezervuar makinën tuaj të ardhshme në Maqedoninë e Veriut. Me Jolzt, mund të kapërceni sportelet dhe të merrni me qira një makinë direkt nga aplikacioni, të gjitha nga komoditeti i shtëpisë suaj.",
+      "bookInstantly": "Qira makinash në Maqedoninë e Veriut",
+      "description": "Rezervoni online—analizoni sportelin. Marrje e menjëhershme në Aeroportin e Shkupit ose në qytet. Sigurim i plotë i përfshirë.",
       "experience": "Përjetoni komoditet, fleksibilitet dhe shërbim premium sa herë që drejtoni.",
       "easyPickup": "Marrje dhe kthim i lehtë",
       "driveBorders": "Drejtoni përtej kufijve"
     },
     "booking": {
-      "pickupReturn": "Marrje & Kthim",
+      "pickupReturn": "Zgjidhni vendndodhjen tuaj të nisjes",
       "differentReturn": "Vendndodhje e ndryshme kthimi",
       "showCars": "Shfaq Makinat",
       "applyRate": "Apliko tarifë korporative"
