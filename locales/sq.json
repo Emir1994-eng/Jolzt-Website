@@ -28,11 +28,11 @@
   },
   "home": {
     "hero": {
-      "bookInstantly": "Qira makinash në Maqedoninë e Veriut",
+      "bookInstantly": "Qira makinash në Maqedoninë",
       "description": "Rezervoni online—analizoni sportelin. Marrje e menjëhershme në Aeroportin e Shkupit ose në qytet. Sigurim i plotë i përfshirë.",
       "experience": "Përjetoni komoditet, fleksibilitet dhe shërbim premium sa herë që drejtoni.",
-      "easyPickup": "Marrje dhe kthim i lehtë",
-      "driveBorders": "Drejtoni përtej kufijve"
+      "easyPickup": "Sigurim i plotë i përfshirë",
+      "driveBorders": "Anulim falas deri në 48 orë"
     },
     "booking": {
       "pickupReturn": "Zgjidhni vendndodhjen tuaj të nisjes",
