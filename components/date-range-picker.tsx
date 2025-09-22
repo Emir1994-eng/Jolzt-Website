@@ -210,7 +210,7 @@ export function DatePickerWithRange({
 
       {returnToDifferentLocation && (
         <div className="mt-2">
-          <LocationSelector onLocationChange={onLocationChange} />
+          <LocationSelector onLocationChange={onLocationChange} custom={true} />
         </div>
       )}
     </div>

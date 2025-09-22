@@ -28,11 +28,11 @@
   },
   "home": {
     "hero": {
-      "bookInstantly": "Car Rental in North Macedonia",
+      "bookInstantly": "Car Rental in Macedonia",
       "description": "Book online—skip the counter. Instant pickup at Skopje Airport or in the city. Full insurance included.",
       "experience": "Experience convenience, flexibility, and premium service every time you drive.",
-      "easyPickup": "Easy pickup and return",
-      "driveBorders": "Drive across borders"
+      "easyPickup": "Full Insurance included",
+      "driveBorders": "Free Cancellation up to 48 hours"
     },
     "booking": {
       "pickupReturn": "Select your start location",

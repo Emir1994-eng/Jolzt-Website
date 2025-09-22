@@ -266,7 +266,7 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
                   <div className="flex items-center justify-between">
                     <div className="font-medium">{t("home.booking.pickupReturn")}</div>
                   </div>
-                  <LocationSelector onLocationChange={handleLocationChange} />
+                  <LocationSelector onLocationChange={handleLocationChange}/>
                   <DatePickerWithRange
                     date={dateRange}
                     onDateChange={setDateRange}
