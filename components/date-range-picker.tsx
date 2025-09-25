@@ -35,13 +35,23 @@ export function DatePickerWithRange({
 
   const [returnToDifferentLocation, setReturnToDifferentLocation] = React.useState(false)
 
-  const defaultDate = {
-    from: new Date(),
-    to: new Date(new Date().setDate(new Date().getDate() + 3)),
-  }
+  const defaultDate: DateRange = React.useMemo(() => {
+    const today = new Date()
+    const futureDate = new Date()
+    futureDate.setDate(today.getDate() + 3)
 
+    return {
+      from: today,
+      to: futureDate,
+    }
+  }, [])
+  
+  // Local state for the selected range
   const [selectedDate, setSelectedDate] = React.useState<DateRange>(date || defaultDate)
-  const [isSelectingStart, setIsSelectingStart] = React.useState(true)
+  
+  // State to manually track if the user is selecting the start or end date
+  // Start by assuming they will select the start of a new range
+  const [isSelectingStart, setIsSelectingStart] = React.useState(true) 
 
   const timeOptions = React.useMemo(() => {
     const options = []
@@ -59,43 +69,52 @@ export function DatePickerWithRange({
     (newDate: Date | undefined) => {
       if (!newDate) return
 
+      // Logic to determine if we are starting a new range or completing the current one.
+      
+      // Case 1: Starting a new range (either nothing is selected, or a full range was just completed)
       if (isSelectingStart) {
-        setSelectedDate({
-          from: newDate,
-          to: undefined,
-        })
-        setIsSelectingStart(false)
-      } else {
-        const fromDate = selectedDate.from || newDate
-        const toDate = newDate
-
-        if (toDate < fromDate) {
-          setSelectedDate({
-            from: toDate,
-            to: fromDate,
-          })
-          onDateChange({
-            from: toDate,
-            to: fromDate,
-          })
-        } else {
-          setSelectedDate({
-            from: fromDate,
-            to: toDate,
-          })
-          onDateChange({
-            from: fromDate,
-            to: toDate,
-          })
+        const newSelection: DateRange = { 
+            from: newDate, 
+            to: undefined 
         }
-        setIsSelectingStart(true)
+        setSelectedDate(newSelection)
+        onDateChange(newSelection) 
+        setIsSelectingStart(false) // Next click will be the 'to' date
+        
+      } else {
+        // Case 2: Completing the current range (selectedDate.from is defined, isSelectingStart is false)
+        
+        const fromDate = selectedDate.from;
+        const toDate = newDate;
+
+        // Safety check, though fromDate should be defined here
+        if (!fromDate) {
+          setIsSelectingStart(true);
+          return;
+        }
+
+        let finalDateRange: DateRange;
+
+        // Ensure dates are correctly ordered (handle selecting 'to' before 'from')
+        if (toDate < fromDate) {
+          finalDateRange = { from: toDate, to: fromDate };
+        } else {
+          finalDateRange = { from: fromDate, to: toDate };
+        }
+        
+        // Update both local and parent state with the completed range
+        setSelectedDate(finalDateRange)
+        onDateChange(finalDateRange) 
+        
+        setIsSelectingStart(true) // Next click will be the start of a new range
       }
     },
-    [selectedDate, isSelectingStart, onDateChange]
+    [selectedDate.from, onDateChange, isSelectingStart]
   )
 
   const isInRange = React.useCallback(
     (dateToCheck: Date) => {
+      // Ensure both dates exist before checking range
       if (!selectedDate.from || !selectedDate.to) return false
       return dateToCheck > selectedDate.from && dateToCheck < selectedDate.to
     },
@@ -112,17 +131,18 @@ export function DatePickerWithRange({
               variant={"outline"}
               className={cn(
                 "w-full justify-start text-left font-normal",
-                !selectedDate && "text-muted-foreground"
+                !selectedDate.from && "text-muted-foreground"
               )}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
-              {selectedDate?.from ? (
+              {selectedDate.from ? (
                 selectedDate.to ? (
                   <>
                     {format(selectedDate.from, "MMM d, yyyy")} -{" "}
                     {format(selectedDate.to, "MMM d, yyyy")}
                   </>
                 ) : (
+                  // Display only the start date while waiting for the end date
                   format(selectedDate.from, "MMM d, yyyy")
                 )
               ) : (
@@ -133,11 +153,14 @@ export function DatePickerWithRange({
           <PopoverContent className="w-auto p-0" align="start">
             <Calendar
               initialFocus
-              mode="range"
-              defaultMonth={selectedDate?.from}
-              selected={selectedDate}
-              onSelect={handleDateSelect}
+              // Set mode to 'single' so we can manually control the range selection
+              mode="single" 
+              defaultMonth={selectedDate.from}
+              // 'selected' receives the date that should be highlighted as the current selection
+              selected={selectedDate.from} 
+              onSelect={handleDateSelect} 
               numberOfMonths={2}
+              // The 'modifiers' prop is used to visually apply the range highlights
               modifiers={{
                 start: selectedDate.from,
                 end: selectedDate.to,
