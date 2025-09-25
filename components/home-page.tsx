@@ -122,6 +122,8 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
     url.searchParams.append('endDate', endDate);
     url.searchParams.append('startTime', pickupTime);
     url.searchParams.append('returnTime', returnTime);
+    url.searchParams.append('appliedDiscountCode', "true");
+    url.searchParams.append('discountCode', "D1SCT1");
 
     // Open in new tab
     window.open(url.toString(), '_blank', 'noopener,noreferrer');
