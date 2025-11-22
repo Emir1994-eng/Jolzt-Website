@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import GrowthBookProvider from "./GrowthBookProvider";
 import PageViewTracker from "../components/PageViewTracker";
 
@@ -10,7 +11,9 @@ interface ClientProvidersProps {
 const ClientProviders = ({ children }: ClientProvidersProps) => {
   return (
     <GrowthBookProvider>
-      <PageViewTracker />
+      <Suspense fallback={null}>
+        <PageViewTracker />
+      </Suspense>
       {children}
     </GrowthBookProvider>
   );
