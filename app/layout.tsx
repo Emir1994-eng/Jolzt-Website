@@ -3,6 +3,7 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { LanguageProvider } from "@/components/language-selector"
 import FacebookPixelInitializer from './FacebookPixelInitializer'
+import ClientProviders from './providers/ClientProviders'
 import Script from 'next/script'
 
 const inter = Inter({ subsets: ["latin"] })
@@ -41,7 +42,9 @@ export default function RootLayout({
         </noscript>
         <FacebookPixelInitializer />
         <LanguageProvider>
-          {children}
+          <ClientProviders>
+            {children}
+          </ClientProviders>
         </LanguageProvider>
       </body>
     </html>

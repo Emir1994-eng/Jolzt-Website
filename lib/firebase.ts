@@ -19,6 +19,7 @@ declare global {
     ga_debug?: {
       trace?: boolean;
     };
+    _growthbook?: any; // GrowthBook instance for DevTools extension
   }
 }
 
