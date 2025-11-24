@@ -33,6 +33,7 @@ export const GROWTHBOOK_CONFIG = {
     HOMEPAGE_LAYOUT: "homepage-layout",
     PRICING_DISPLAY: "pricing-display",
     CHECKOUT_FLOW: "checkout-flow",
+    VARIANT_A: "variant-a",
   },
 };
 

@@ -7,6 +7,7 @@ import { useFeatureFlag } from "@/app/hooks/useFeatureFlag";
 import { GROWTHBOOK_CONFIG } from "@/app/config/growthbook";
 import GrowthBookConnectionTest from "@/app/components/GrowthBookConnectionTest";
 import SimpleFeatureTest from "@/app/components/SimpleFeatureTest";
+import VariantADemo from "@/app/components/VariantADemo";
 
 const GrowthBookDemoPage = () => {
   // Use React hooks so changes update in real-time when toggling in extension
@@ -98,6 +99,11 @@ const GrowthBookDemoPage = () => {
           {/* Simple Feature Test */}
           <div>
             <SimpleFeatureTest />
+          </div>
+
+          {/* Variant-A Multi-Value Experiment Demo */}
+          <div>
+            <VariantADemo />
           </div>
 
           {/* Success Message */}
