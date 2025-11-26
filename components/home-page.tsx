@@ -34,6 +34,8 @@ import { SiteFooter } from "@/components/site-footer"
 import { useTranslations } from "@/utils/i18n"
 import CarsLoading from "./ui/carsloading"
 import axios from "axios"
+import { useExperimentValue } from "@/app/hooks/useFeatureFlag";
+import { GROWTHBOOK_CONFIG } from "@/app/config/growthbook";
 import { format } from "date-fns"
 import { analytics } from '@/lib/firebase'
 
@@ -43,6 +45,95 @@ interface Car {
   category: string;
   regularPrice: number;
 }
+
+const HERO_TEXT_VARIANTS = {
+  "0": {
+    heading: {
+      en: "Car Rental in Macedonia",
+      mk: "Изнајмување автомобили во Македонија",
+      sq: "Marrje me qira e veturave në Maqedoni",
+    },
+    subheading: {
+      en: "Book online—skip the counter. Instant pickup at Skopje Airport or in the city. Full insurance included.",
+      mk: "Резервирајте онлајн—избегнете го шалтерот. Инстант подигнување на аеродромот Скопје или во градот. Вклучено целосно осигурување.",
+      sq: "Rezervoni online—anashkaloni sportelin. Marrje e menjëhershme në Aeroportin e Shkupit ose në qytet. Përfshirë sigurim të plotë.",
+    },
+    ratingline: {
+      en: "Experience convenience, flexibility, and premium service every time you drive.",
+      mk: "Искусете удобност, флексибилност и врвна услуга секој пат кога возите.",
+      sq: "Përjetoni komoditet, fleksibilitet dhe shërbim premium çdo herë që vozitni.",
+    },
+    benefit1: {
+      en: "Full Insurance included",
+      mk: "Вклучено целосно осигурување",
+      sq: "Sigurim i plotë i përfshirë",
+    },
+    benefit2: {
+      en: "Free Cancellation up to 48 hours",
+      mk: "Бесплатно откажување до 48 часа",
+      sq: "Anulim falas deri në 48 orë",
+    },
+  },
+  "1": {
+    heading: {
+      en: "Effortless Airport Pickup, From Touchdown to Keys in Hand",
+      mk: "Лесно подигнување на аеродром, од слетување до клучеви во рака",
+      sq: "Marrje e lehtë në aeroport, nga ulja deri te çelësat në dorë",
+    },
+    subheading: {
+      en: "Land, walk out, get your car. No lines, no confusion, no waiting. Transparent pricing and simple instructions every step of the way.",
+      mk: "Слетајте, излезете, земете го вашиот автомобил. Без редици, без конфузија, без чекање. Транспарентно цени и едноставни упатства на секој чекор.",
+      sq: "Ulni, dilni, merrni veturën tuaj. Pa rreshta, pa konfuzion, pa pritje. Çmime transparente dhe udhëzime të thjeshta në çdo hap.",
+    },
+    ratingline: {
+      en: "Trusted by travelers who want a smooth, predictable arrival experience.",
+      mk: "Доверлив од патници кои сакаат непречено, предвидливо искуство при пристигнување.",
+      sq: "I besuar nga udhëtarët që duan një përvojë të qetë dhe të parashikueshme të mbërritjes.",
+    },
+    benefit1: {
+      en: "Instant Airport Pickup (No Counter, No Lines)",
+      mk: "Инстант подигнување од аеродром (Без шалтер, без редици)",
+      sq: "Marrje e menjëhershme në aeroport (Pa sportel, pa rreshta)",
+    },
+    benefit2: {
+      en: "Clear Pricing & Simple Instructions",
+      mk: "Јасни цени и едноставни упатства",
+      sq: "Çmime të qarta dhe udhëzime të thjeshta",
+    },
+  },
+  "2": {
+    heading: {
+      en: "Car Rental in Macedonia, Without the Guesswork",
+      mk: "Изнајмување автомобили во Македонија, без погодување",
+      sq: "Marrje me qira e veturave në Maqedoni, pa hamendje",
+    },
+    subheading: {
+      en: "Clear pricing, simple instructions, and full insurance included—so you always know exactly what to expect.",
+      mk: "Јасни цени, едноставни упатства и вклучено целосно осигурување—така што секогаш знаете што точно да очекувате.",
+      sq: "Çmime të qarta, udhëzime të thjeshta dhe sigurim i plotë i përfshirë—kështu që gjithmonë e dini saktësisht se çfarë të prisni.",
+    },
+    ratingline: {
+      en: "Safe, predictable, and easy from booking to return.",
+      mk: "Безбедно, предвидливо и лесно од резервација до враќање.",
+      sq: "E sigurt, e parashikueshme dhe e lehtë nga rezervimi deri në kthim.",
+    },
+    benefit1: {
+      en: "Full Insurance Always Included",
+      mk: "Секогаш вклучено целосно осигурување",
+      sq: "Sigurim i plotë gjithmonë i përfshirë",
+    },
+    benefit2: {
+      en: "Clear, Upfront Pricing (No Surprises)",
+      mk: "Јасно, однапред цени (Без изненадувања)",
+      sq: "Çmime të qarta dhe paraprake (Pa surpriza)",
+    },
+  },
+} as const;
+
+// Define a type for the language keys
+type LangKey = "en" | "mk" | "sq";
+// Define a type for the variant keys
+type VariantKey = keyof typeof HERO_TEXT_VARIANTS;
 
 export default function HomePage({ lang = "en" }: { lang?: string }) {
   const { t } = useTranslations(lang)
@@ -152,6 +243,30 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
 
   }
 
+  // 3. Implement the useExperimentValue hook
+  const heroVariant = useExperimentValue<string>(
+    GROWTHBOOK_CONFIG.EXPERIMENTS.VARIANT_A,
+    {
+      defaultValue: "0",
+      possibleValues: ["0", "1", "2"],
+    }
+  );
+
+  // 4. Dynamically select the text based on variant and language
+  const currentVariantText = HERO_TEXT_VARIANTS[heroVariant.value as VariantKey] || HERO_TEXT_VARIANTS["0"];
+
+  // Helper to safely access translation for the current language
+  const getLocalizedText = (textMap: typeof currentVariantText.heading) => {
+    return textMap[lang] || textMap["en"]; // Fallback to English if current lang is not found
+  };
+
+  // Get the specific translated texts for the current variant
+  const headingText = getLocalizedText(currentVariantText.heading);
+  const subheadingText = getLocalizedText(currentVariantText.subheading);
+  const ratingLineText = getLocalizedText(currentVariantText.ratingline);
+  const benefit1Text = getLocalizedText(currentVariantText.benefit1);
+  const benefit2Text = getLocalizedText(currentVariantText.benefit2);
+
   if (loading) return <CarsLoading />
   if (error) return <div className="p-4 text-red-500">Error: {error}</div>
   if (!cars) return <div className="p-4">No cars data available</div>
@@ -206,9 +321,9 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
               <div className="flex flex-col justify-center space-y-4">
                 <div>
                   <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
-                    {t("home.hero.bookInstantly")}
+                    {headingText}
                   </h1>
-                  <p className="text-white text-base md:text-lg mb-6 max-w-lg">{t("home.hero.description")}</p>
+                  <p className="text-white text-base md:text-lg mb-6 max-w-lg">{subheadingText}</p>
                 </div>
 
                 <div className="hidden lg:block">
@@ -217,17 +332,17 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
                       <StarIcon className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                       <span className="font-bold">4.8</span>
                     </div>
-                    <span className="text-white text-sm">{t("home.hero.experience")}</span>
+                    <span className="text-white text-sm">{ratingLineText}</span>
                   </div>
 
                   <div className="flex flex-row gap-4">
                     <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-white">
                       <CheckIcon className="h-6 w-6 mb-2" />
-                      <p className="font-medium">{t("home.hero.easyPickup")}</p>
+                      <p className="font-medium">{benefit1Text}</p>
                     </div>
                     <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-white">
                       <GlobeIcon className="h-6 w-6 mb-2" />
-                      <p className="font-medium">{t("home.hero.driveBorders")}</p>
+                      <p className="font-medium">{benefit2Text}</p>
                     </div>
                   </div>
                 </div>
@@ -268,7 +383,7 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
                   <div className="flex items-center justify-between">
                     <div className="font-medium">{t("home.booking.pickupReturn")}</div>
                   </div>
-                  <LocationSelector onLocationChange={handleLocationChange}/>
+                  <LocationSelector onLocationChange={handleLocationChange} />
                   <DatePickerWithRange
                     date={dateRange}
                     onDateChange={setDateRange}
@@ -292,17 +407,17 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
                     <StarIcon className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                     <span className="font-bold">4.8</span>
                   </div>
-                  <span className="text-white text-sm">{t("home.hero.experience")}</span>
+                  <span className="text-white text-sm">{ratingLineText}</span>
                 </div>
 
                 <div className="flex flex-col gap-4">
                   <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-white">
                     <CheckIcon className="h-6 w-6 mb-2" />
-                    <p className="font-medium">{t("home.hero.easyPickup")}</p>
+                    <p className="font-medium">{benefit1Text}</p>
                   </div>
                   <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-white">
                     <GlobeIcon className="h-6 w-6 mb-2" />
-                    <p className="font-medium">{t("home.hero.driveBorders")}</p>
+                    <p className="font-medium">{benefit2Text}</p>
                   </div>
                 </div>
               </div>
