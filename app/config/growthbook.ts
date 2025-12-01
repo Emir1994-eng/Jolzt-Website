@@ -16,6 +16,24 @@ export const GROWTHBOOK_CONFIG = {
     // Add any default user attributes here
   },
   
+  // Tracking configuration
+  // The trackingCallback is now configured in the GrowthBookProvider
+  // It automatically tracks experiment exposures to both GrowthBook and Firebase Analytics (GA4)
+  TRACKING: {
+    // Enable tracking callback (now enabled by default in provider)
+    enabled: true,
+    
+    // Track to Firebase Analytics/BigQuery
+    trackToFirebase: true,
+    
+    // Log tracking events to console in development
+    debug: process.env.NEXT_PUBLIC_GROWTHBOOK_DEV_MODE === "true",
+    
+    // Event names used for tracking
+    EXPERIMENT_VIEWED: "experiment_viewed",
+    EXPERIMENT_CONVERTED: "experiment_converted",
+  },
+  
   // Feature flag keys - define your feature flags here for better type safety
   FEATURES: {
     // Example feature flags - replace with your actual feature flags
