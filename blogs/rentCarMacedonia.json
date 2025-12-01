@@ -1,0 +1,78 @@
+{
+  "title": "How to Rent a Car in Macedonia Without Surprises",
+  "introduction": "Renting a car in Macedonia shouldn’t feel like a gamble. Too many travelers — both diaspora returning home and first-time visitors — deal with unclear prices, surprise fees, vague insurance terms, and chaotic airport pickup. This guide breaks down the most common issues and shows how to recognize a transparent rental offer before you book.",
+
+  "mainContent": {
+    "section": "Why Renting a Car in Macedonia Feels Risky",
+    "description": "If you listen to enough traveler stories, patterns appear: the price shown online isn’t the final price at pickup, ‘included insurance’ often means almost nothing, and airport pickup instructions are unclear or inconsistent. Many small agencies operate informally, and while some are honest, the experience can still be chaotic. A good rental aims to make everything predictable — no drama, no guessing, and no surprises.",
+    "imageSuggestion": "Visual: A simple booking screen mockup with a clear 'Total Price' highlighted and text: 'Before you fly: this is the price. After you land: it's still the price.'"
+  },
+
+  "whyJolzt": {
+    "header": "The 4 Most Common Surprises With Local Car Rentals",
+    "description": "Most negative rental experiences fall into four predictable categories. Here’s what typically goes wrong — and how a transparent rental provider prevents it.",
+    "benefits": [
+      "Price differences at pickup due to hidden fees, airport charges, or mandatory insurance upgrades.",
+      "Vague insurance coverage, unclear deductibles, or pressured add-on sales at the counter.",
+      "Unexpected deposits, extra fees, or credit card rules not shown before booking.",
+      "Confusing airport pickup steps, delays, or unclear meeting points."
+    ]
+  },
+
+  "matkaCanyon": {
+    "header": "Breaking Down the 4 Main Problems",
+    "description": "Here’s a clear explanation of each common rental problem and what a transparent solution looks like.",
+    "attractions": [
+      {
+        "title": "1. Price Differences at Pickup",
+        "description": "The number you saw online suddenly becomes much higher at the counter. Hidden airport fees, unclear mileage rules, or mandatory insurance upgrades appear out of nowhere. A transparent rental shows the REAL price before you enter payment details — not at the airport.",
+        "imageSuggestion": "Visual: Booking card graphic with 'Total for 5 days: €210 (no extra mandatory fees at pickup).'"
+      },
+      {
+        "title": "2. Vague Insurance Coverage",
+        "description": "‘Full insurance included’ can mean anything — from truly full coverage to almost nothing. Red flags include unclear excess, vague wording, or forced add-on sales. A good rental explains insurance in normal language: what’s covered, what isn’t, and the exact excess amount.",
+        "imageSuggestion": "Visual: Insurance summary box listing coverage: collision damage, theft, excess shown clearly."
+      },
+      {
+        "title": "3. Random Deposits & Extra Fees",
+        "description": "Surprise deposits 2–3× the rental cost, undisclosed contract fees, and unclear card rules are common. None are illegal if buried in the fine print, but they create a bad experience. A transparent rental states — upfront — the deposit amount, how it works, and whether it applies to your booking.",
+        "imageSuggestion": "Visual: Breakdown graphic: Rental Price, Deposit Amount, Optional Extras — all clearly labeled."
+      },
+      {
+        "title": "4. Confusing Airport Pickup",
+        "description": "Standing outside Arrivals and calling a busy phone number, receiving vague directions, or waiting 30+ minutes is extremely common. A proper rental gives precise instructions: where to go, who you’ll meet, how to recognize them, and how long it will take.",
+        "imageSuggestion": "Visual: A 4-step graphic: 'Land → Exit A → Meet at landmark → Keys in 5 minutes.'"
+      }
+    ]
+  },
+
+  "tripBenefits": {
+    "header": "Checklist: How to Know a Rental Offer Is Actually Transparent",
+    "benefits": [
+      "Total price is shown before payment — not revealed at the counter.",
+      "Insurance is explained clearly, in simple terms you can understand in 30 seconds.",
+      "Deposit policy is visible upfront, including the exact amount.",
+      "Airport pickup steps are described clearly and precisely.",
+      "Cancellation rules are easy to understand with no hidden penalties."
+    ],
+    "summary": "If an offer fails two or more of these points, you probably shouldn’t book it."
+  },
+
+  "vision": {
+    "header": "What a Smooth Skopje Airport Pickup Should Look Like",
+    "description": "The ideal experience is simple: your total price is locked in, you receive clear instructions before your flight, and pickup happens in minutes without confusion. The same information shown on the website is what happens in real life — no surprises, no last-minute changes.",
+    "destinations": [
+      "Exit arrivals",
+      "Walk to a clear landmark",
+      "Meet your car host",
+      "Receive keys in minutes"
+    ],
+    "imageSuggestion": "Visual: Phone mockup showing confirmation screen with step-by-step airport pickup instructions."
+  },
+
+  "conclusion": {
+    "header": "A Calmer Way to Book a Rental Car",
+    "description": "A good car rental experience in Macedonia is built on transparency. You should see the real price, know what your insurance covers, understand the deposit, and receive clear pickup instructions before you arrive. Jolzt aims to meet this standard by showing travelers everything upfront so there are no surprises at the counter.",
+    "callToAction": "Book Your Car Today"
+  }
+}
