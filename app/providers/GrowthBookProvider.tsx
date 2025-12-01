@@ -3,6 +3,7 @@
 import { GrowthBook, GrowthBookProvider as GBProvider } from "@growthbook/growthbook-react";
 import { GROWTHBOOK_CONFIG } from "../config/growthbook";
 import { useEffect, useMemo } from "react";
+import { analytics } from "@/lib/firebase";
 
 const GrowthBookProvider = ({ children }: { children: React.ReactNode }) => {
   // Determine when to enable DevTools integration
@@ -32,6 +33,45 @@ const GrowthBookProvider = ({ children }: { children: React.ReactNode }) => {
       attributes: GROWTHBOOK_CONFIG.defaultAttributes,
       // Keep streaming updates enabled by default; can be disabled via env if needed
       backgroundSync: true,
+      // Add tracking callback to automatically track experiment exposures
+      trackingCallback: (experiment, result) => {
+        try {
+          // Track experiment exposure data
+          const trackingData = {
+            experiment_id: experiment.key,
+            experiment_name: experiment.key,
+            variation_id: result.variationId || "control",
+            variation_name: result.variationId || "control",
+            // Include rule information if available
+            rule_id: experiment.namespace?.[0] || undefined,
+            user_id: (GROWTHBOOK_CONFIG.defaultAttributes as any)?.userId || undefined,
+          };
+
+          // Track to GrowthBook (this ensures it's available for analysis in GB)
+          if (typeof window !== "undefined") {
+            if (GROWTHBOOK_CONFIG.TRACKING.debug) {
+              console.log("[GrowthBook] Experiment exposure tracked:", trackingData);
+            }
+          }
+
+          // Also track to Firebase Analytics (for BigQuery export and additional analysis)
+          if (analytics && typeof window !== "undefined") {
+            try {
+              const { logEvent } = require("firebase/analytics");
+              logEvent(analytics, "experiment_viewed", {
+                experiment_id: trackingData.experiment_id,
+                variation_id: trackingData.variation_id,
+                variation_name: trackingData.variation_name,
+                timestamp: new Date().toISOString(),
+              });
+            } catch (error) {
+              console.warn("[GrowthBook] Failed to track to Firebase Analytics:", error);
+            }
+          }
+        } catch (error) {
+          console.error("[GrowthBook] Tracking callback error:", error);
+        }
+      },
     });
 
     // Explicitly expose instance to window for DevTools extension

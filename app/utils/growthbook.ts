@@ -23,11 +23,12 @@ export const updateUserAttributes = (user: any, growthbook: GrowthBookInstance |
 };
 
 /**
- * Track events in GrowthBook AND Google Analytics 4
+ * Track events in Google Analytics 4 (GA4)
  * This ensures events are available in BigQuery for GrowthBook analysis
+ * Note: GrowthBook SDK handles experiment tracking via the trackingCallback in GrowthBookProvider
  * @param eventName - Name of the event
  * @param properties - Event properties
- * @param growthbook - GrowthBook instance
+ * @param growthbook - GrowthBook instance (kept for backwards compatibility)
  * @param analytics - Firebase Analytics instance (optional)
  */
 export const trackEvent = async (
@@ -36,12 +37,11 @@ export const trackEvent = async (
   growthbook: GrowthBookInstance | null,
   analytics: Analytics | null | undefined = null
 ) => {
-  // Track in GrowthBook
-  if (growthbook) {
-    growthbook.track(eventName, properties);
-  }
+  // Note: GrowthBook SDK v1.6.2 doesn't have a track() method
+  // Instead, tracking is handled by the trackingCallback in GrowthBookProvider
+  // This function focuses on tracking to GA4/Firebase Analytics
   
-  // Also track in GA4 for BigQuery export
+  // Track in GA4 for BigQuery export
   if (analytics && typeof window !== 'undefined') {
     try {
       const { logEvent } = await import('firebase/analytics');
@@ -112,18 +112,25 @@ export const isFeatureEnabled = (key: string, growthbook: GrowthBookInstance | n
 
 /**
  * Run an experiment and get the result
+ * Note: Use hooks instead (useExperiment, useExperimentValue) for React components
+ * This is a fallback for non-React contexts
  * @param key - Experiment key
- * @param options - Experiment options
  * @param growthbook - GrowthBook instance
  * @returns Experiment result
  */
-export const runExperiment = (key: string, options: { defaultValue?: any; variations?: any[] } = {}, growthbook: GrowthBookInstance | null) => {
-  if (!growthbook) return { value: options.defaultValue, variation: null, inExperiment: false };
+export const runExperiment = (key: string, growthbook: GrowthBookInstance | null) => {
+  if (!growthbook) return { value: null, variation: null, inExperiment: false };
   
-  return growthbook.run({
-    key,
-    ...options
-  });
+  // Use getFeatureValue which is the primary API for getting experiment results
+  const value = growthbook.getFeatureValue(key, null);
+  const features = growthbook.getFeatures();
+  const feature = features[key];
+  
+  return {
+    value: value as any,
+    variation: value ? String(value) : "unknown",
+    inExperiment: !!feature,
+  };
 };
 
 /**
@@ -149,5 +156,34 @@ export const refreshFeatures = async (growthbook: GrowthBookInstance | null) => 
   } catch (error) {
     console.error("Failed to refresh GrowthBook features:", error);
   }
+};
+
+/**
+ * Track experiment conversion event
+ * This should be called when a user completes a conversion goal in an experiment
+ * @param experimentKey - Experiment key
+ * @param conversionMetric - Conversion metric name (e.g., "booking_completed", "purchase")
+ * @param conversionValue - Optional conversion value (e.g., revenue amount)
+ * @param growthbook - GrowthBook instance
+ * @param analytics - Firebase Analytics instance (optional)
+ */
+export const trackExperimentConversion = async (
+  experimentKey: string,
+  conversionMetric: string,
+  conversionValue?: number,
+  growthbook: GrowthBookInstance | null = null,
+  analytics: Analytics | null | undefined = null
+) => {
+  const conversionProps = {
+    experiment: experimentKey,
+    metric: conversionMetric,
+    ...(conversionValue !== undefined && { value: conversionValue }),
+  };
+  
+  // Track conversion event
+  await trackEvent('experiment_converted', conversionProps, growthbook, analytics);
+  
+  // Also track specific conversion metric
+  await trackEvent(`conversion_${conversionMetric}`, conversionProps, growthbook, analytics);
 };
 
