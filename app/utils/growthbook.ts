@@ -2,8 +2,218 @@ import { GROWTHBOOK_CONFIG, getUserAttributes } from "../config/growthbook";
 import { GrowthBook } from "@growthbook/growthbook-react";
 import type { Analytics } from "firebase/analytics";
 
+declare global {
+  interface Window {
+    gtag?: any;
+    dataLayer?: any[];
+    ga_debug?: {
+      trace?: boolean;
+      user_pseudo_id?: string;
+      [key: string]: any;
+    };
+  _growthbook?: GrowthBook<Record<string, any>>;
+    _ga4PseudoIdDebug?: boolean;
+  }
+}
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const extractFromGtagInstances = (): string | undefined => {
+  if (typeof window === "undefined") return undefined;
+  const { gtag } = window;
+
+  if (!gtag || typeof gtag.getAll !== "function") return undefined;
+
+  try {
+    const instances = gtag.getAll();
+    if (!Array.isArray(instances)) return undefined;
+
+    for (const instance of instances) {
+      if (!instance) continue;
+
+      const privateValue = instance?.user_pseudo_id || instance?.u;
+      if (typeof privateValue === "string" && privateValue.length) {
+        return privateValue;
+      }
+
+      if (typeof instance.get === "function") {
+        const clientId = instance.get("client_id") || instance.get("clientId");
+        if (clientId) {
+          return clientId;
+        }
+      }
+    }
+  } catch (error) {
+    if (GROWTHBOOK_CONFIG.TRACKING.debug) {
+      console.debug("[GrowthBook] gtag.getAll() lookup failed:", error);
+    }
+  }
+
+  return undefined;
+};
+
+const extractFromGaDebug = (): string | undefined => {
+  if (typeof window === "undefined") return undefined;
+  const pseudoId = window.ga_debug?.user_pseudo_id;
+  return typeof pseudoId === "string" && pseudoId.length ? pseudoId : undefined;
+};
+
+const extractFromDataLayer = (): string | undefined => {
+  if (typeof window === "undefined") return undefined;
+  const layer = window.dataLayer;
+
+  if (!Array.isArray(layer) || !layer.length) return undefined;
+
+  for (let i = layer.length - 1; i >= 0; i -= 1) {
+    const entry = layer[i];
+    if (!entry) continue;
+
+    const payload = Array.isArray(entry) ? entry[1] : entry;
+    if (!payload || typeof payload !== "object") continue;
+
+    const candidate =
+      payload.user_pseudo_id ||
+      payload.userPseudoId ||
+      payload.client_id ||
+      payload.clientId;
+
+    if (typeof candidate === "string" && candidate.length) {
+      return candidate;
+    }
+  }
+
+  return undefined;
+};
+
+const extractFromGaCookie = (): string | undefined => {
+  if (typeof document === "undefined") return undefined;
+
+  const cookieMatch = document.cookie.match(/(?:^|;\s*)_ga=([^;]+)/);
+  if (!cookieMatch) return undefined;
+
+  try {
+    const rawValue = decodeURIComponent(cookieMatch[1]);
+    // Typical GA cookie format: GA1.1.123456789.123456789
+    const parts = rawValue.split(".");
+    if (parts.length >= 4) {
+      return `${parts[2]}.${parts[3]}`;
+    }
+    if (parts.length >= 2) {
+      return parts.slice(-2).join(".");
+    }
+    return rawValue;
+  } catch (error) {
+    if (GROWTHBOOK_CONFIG.TRACKING.debug) {
+      console.debug("[GrowthBook] Failed to parse _ga cookie:", error);
+    }
+    return undefined;
+  }
+};
+
+const getMeasurementId = (analytics?: Analytics | null): string | undefined => {
+  return (
+    analytics?.app?.options?.measurementId ||
+    (analytics as any)?.config?.measurementId ||
+    process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+  );
+};
+
+const getClientIdViaGtagCommand = async (measurementId: string): Promise<string | undefined> => {
+  if (typeof window === "undefined") return undefined;
+  const gtag = window.gtag;
+
+  if (typeof gtag !== "function") return undefined;
+
+  return new Promise((resolve) => {
+    let resolved = false;
+
+    try {
+      gtag("get", measurementId, "client_id", (id: string) => {
+        resolved = true;
+        resolve(id);
+      });
+    } catch (error) {
+      if (GROWTHBOOK_CONFIG.TRACKING.debug) {
+        console.debug("[GrowthBook] gtag('get') call failed:", error);
+      }
+      resolved = true;
+      resolve(undefined);
+    }
+
+    setTimeout(() => {
+      if (!resolved) {
+        resolve(undefined);
+      }
+    }, 300);
+  });
+};
+
+const extractGa4UserPseudoId = async (
+  analyticsInstance?: Analytics | null,
+  attempt?: number
+): Promise<string | undefined> => {
+  const directMatch =
+    extractFromGtagInstances() ||
+    extractFromGaDebug() ||
+    extractFromDataLayer() ||
+    extractFromGaCookie();
+
+  if (directMatch) {
+    return directMatch;
+  }
+
+  const measurementId = getMeasurementId(analyticsInstance);
+  if (measurementId) {
+    const clientId = await getClientIdViaGtagCommand(measurementId);
+    if (clientId) {
+      return clientId;
+    }
+  }
+
+  return undefined;
+};
+
+export const getGa4UserPseudoId = async (
+  analyticsInstance?: Analytics | null
+): Promise<string | undefined> => {
+  if (typeof window === "undefined") return undefined;
+
+  const maxAttempts = 15;
+  const delayMs = 120;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    const result = await extractGa4UserPseudoId(analyticsInstance, attempt);
+    if (result) {
+      return result;
+    }
+
+    await sleep(delayMs);
+  }
+
+  return undefined;
+};
+
 // Type for GrowthBook instance
 type GrowthBookInstance = InstanceType<typeof GrowthBook>;
+type FeatureRule = {
+  hashAttribute?: string;
+  hashVersion?: number;
+  variations?: unknown[];
+  experiment?: {
+    hashAttribute?: string;
+    hashVersion?: number;
+    variations?: unknown[];
+    [key: string]: any;
+  };
+  [key: string]: any;
+};
+
+type FeatureDefinition = {
+  rules?: FeatureRule[];
+  [key: string]: any;
+};
+
+type FeatureMap = Record<string, FeatureDefinition>;
 
 /**
  * Utility functions for GrowthBook integration
@@ -18,7 +228,25 @@ type GrowthBookInstance = InstanceType<typeof GrowthBook>;
 export const updateUserAttributes = (user: any, growthbook: GrowthBookInstance | null) => {
   if (!growthbook) return;
   
-  const attributes = getUserAttributes(user);
+  const existingAttributes: Record<string, any> = typeof growthbook.getAttributes === "function"
+    ? (growthbook.getAttributes() as Record<string, any>)
+    : {};
+
+  const attributes: Record<string, any> = {
+    ...existingAttributes,
+    ...getUserAttributes(user),
+  };
+
+  // Preserve anonymous_id used for experiment hashing
+  if (existingAttributes?.anonymous_id && !attributes.anonymous_id) {
+    attributes.anonymous_id = existingAttributes.anonymous_id;
+  }
+
+  // Ensure fallback id attribute stays consistent for experiments without explicit hashAttribute
+  if (existingAttributes?.id && !attributes.id) {
+    attributes.id = existingAttributes.id;
+  }
+
   growthbook.setAttributes(attributes);
 };
 
@@ -152,10 +380,81 @@ export const refreshFeatures = async (growthbook: GrowthBookInstance | null) => 
   if (!growthbook) return;
   
   try {
-    await growthbook.loadFeatures();
+    await growthbook.refreshFeatures();
+    enforceHashAttributeOnGrowthBookExperiments(growthbook);
   } catch (error) {
     console.error("Failed to refresh GrowthBook features:", error);
   }
+};
+
+const ruleContainsVariations = (rule: FeatureRule): boolean => {
+  if (!rule || typeof rule !== "object") return false;
+
+  if (Array.isArray(rule.variations) && rule.variations.length > 0) {
+    return true;
+  }
+
+  const experiment = rule.experiment;
+  return Array.isArray(experiment?.variations) && experiment.variations.length > 0;
+};
+
+const patchRuleHashing = (
+  rule: FeatureRule,
+  hashAttribute: string,
+  hashVersion: number
+): boolean => {
+  if (!ruleContainsVariations(rule)) {
+    return false;
+  }
+
+  let modified = false;
+
+  if (!rule.hashAttribute) {
+    rule.hashAttribute = hashAttribute;
+    modified = true;
+  }
+
+  if (!rule.hashVersion) {
+    rule.hashVersion = hashVersion;
+    modified = true;
+  }
+
+  if (rule.experiment) {
+    if (!rule.experiment.hashAttribute) {
+      rule.experiment.hashAttribute = hashAttribute;
+      modified = true;
+    }
+
+    if (!rule.experiment.hashVersion) {
+      rule.experiment.hashVersion = hashVersion;
+      modified = true;
+    }
+  }
+
+  return modified;
+};
+
+export const enforceHashAttributeOnGrowthBookExperiments = (
+  growthbook: GrowthBookInstance | null,
+  hashAttribute: string = GROWTHBOOK_CONFIG.hashing?.attribute || "anonymous_id",
+  hashVersion: number = GROWTHBOOK_CONFIG.hashing?.version ?? 2
+) => {
+  if (!growthbook) return;
+
+  const features = (growthbook.getFeatures?.() as FeatureMap) || {};
+  let mutated = false;
+
+  Object.entries(features).forEach(([featureKey, featureDefinition]) => {
+    if (!featureDefinition?.rules?.length) return;
+
+    const rulesMutated = featureDefinition.rules.some((rule) =>
+      patchRuleHashing(rule, hashAttribute, hashVersion)
+    );
+
+    if (rulesMutated) {
+      mutated = true;
+    }
+  });
 };
 
 /**

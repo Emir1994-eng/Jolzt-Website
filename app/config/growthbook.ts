@@ -15,6 +15,12 @@ export const GROWTHBOOK_CONFIG = {
     environment: process.env.NODE_ENV,
     // Add any default user attributes here
   },
+
+  // Default hashing behavior for experiments
+  hashing: {
+    attribute: process.env.NEXT_PUBLIC_GROWTHBOOK_HASH_ATTRIBUTE || "anonymous_id",
+    version: Number(process.env.NEXT_PUBLIC_GROWTHBOOK_HASH_VERSION || 2),
+  },
   
   // Tracking configuration
   // The trackingCallback is now configured in the GrowthBookProvider
@@ -58,14 +64,17 @@ export const GROWTHBOOK_CONFIG = {
 // Helper function to get user attributes
 export const getUserAttributes = (user?: {
   id?: string;
+  userId?: string;
+  uid?: string;
   email?: string;
   [key: string]: any;
 }) => {
   if (!user) return GROWTHBOOK_CONFIG.defaultAttributes;
-  
+  const resolvedId = user.id || user.userId || user.uid;
+
   return {
     ...GROWTHBOOK_CONFIG.defaultAttributes,
-    userId: user.id,
+    ...(resolvedId && { id: resolvedId, userId: resolvedId }),
     email: user.email,
     // Add any user-specific attributes here
     // userType: user.type,
