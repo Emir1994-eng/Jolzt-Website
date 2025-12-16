@@ -44,9 +44,7 @@ const extractFromGtagInstances = (): string | undefined => {
       }
     }
   } catch (error) {
-    if (GROWTHBOOK_CONFIG.TRACKING.debug) {
-      console.debug("[GrowthBook] gtag.getAll() lookup failed:", error);
-    }
+    // Silently fail GA4 pseudo ID extraction
   }
 
   return undefined;
@@ -103,9 +101,6 @@ const extractFromGaCookie = (): string | undefined => {
     }
     return rawValue;
   } catch (error) {
-    if (GROWTHBOOK_CONFIG.TRACKING.debug) {
-      console.debug("[GrowthBook] Failed to parse _ga cookie:", error);
-    }
     return undefined;
   }
 };
@@ -133,9 +128,6 @@ const getClientIdViaGtagCommand = async (measurementId: string): Promise<string 
         resolve(id);
       });
     } catch (error) {
-      if (GROWTHBOOK_CONFIG.TRACKING.debug) {
-        console.debug("[GrowthBook] gtag('get') call failed:", error);
-      }
       resolved = true;
       resolve(undefined);
     }
@@ -279,7 +271,7 @@ export const trackEvent = async (
         timestamp: new Date().toISOString(),
       });
     } catch (error) {
-      console.warn('Failed to log event to GA4:', error);
+      // Silently fail event tracking
     }
   }
 };
@@ -383,7 +375,7 @@ export const refreshFeatures = async (growthbook: GrowthBookInstance | null) => 
     await growthbook.refreshFeatures();
     enforceHashAttributeOnGrowthBookExperiments(growthbook);
   } catch (error) {
-    console.error("Failed to refresh GrowthBook features:", error);
+    // Silently fail feature refresh
   }
 };
 
@@ -484,5 +476,44 @@ export const trackExperimentConversion = async (
   
   // Also track specific conversion metric
   await trackEvent(`conversion_${conversionMetric}`, conversionProps, growthbook, analytics);
+};
+
+/**
+ * Create a GA4 tracking callback for GrowthBook experiments
+ * This is the critical function that logs experiment exposure events to Firebase Analytics (GA4)
+ * which then export to BigQuery for analysis in GrowthBook
+ * 
+ * @param analyticsInstance - Firebase Analytics instance
+ * @returns A tracking callback function for GrowthBook
+ */
+export const createGa4TrackingCallback = (analyticsInstance: Analytics | null) => {
+  return async (experiment: any, result: any) => {
+    if (!analyticsInstance || typeof window === "undefined") {
+      return;
+    }
+
+    try {
+      // Dynamically import logEvent to avoid blocking
+      const { logEvent } = await import("firebase/analytics");
+      
+      // Use numeric variation ID for consistency (0, 1, 2, etc.)
+      const variationIndex = result.variationId !== undefined 
+        ? String(result.variationId)
+        : "0";
+
+      const experimentId = experiment.key || "unknown";
+
+      // Log the critical experiment_viewed event with params GA4/BigQuery will see
+      await logEvent(analyticsInstance, "experiment_viewed", {
+        experiment_id: experimentId,
+        variation_id: variationIndex,
+        // Add additional context
+        experiment_name: experiment.key || "unknown",
+        rule_id: experiment.namespace?.[0] || undefined,
+      });
+    } catch (error) {
+      // Silently fail - tracking errors shouldn't break the app
+    }
+  };
 };
 
