@@ -496,24 +496,109 @@ export const createGa4TrackingCallback = (analyticsInstance: Analytics | null) =
       // Dynamically import logEvent to avoid blocking
       const { logEvent } = await import("firebase/analytics");
       
-      // Use numeric variation ID for consistency (0, 1, 2, etc.)
-      const variationIndex = result.variationId !== undefined 
-        ? String(result.variationId)
-        : "0";
+      const experimentId = experiment?.key;
+      
+      // Skip if no experiment key
+      if (!experimentId) {
+        return;
+      }
 
-      const experimentId = experiment.key || "unknown";
+      // Get variation ID from result
+      // GrowthBook provides variationId as the index (0, 1, 2, etc.)
+      // But it can also be undefined if user is not in experiment
+      const variationId = result?.variationId;
+      
+      // Only track if we have a variation ID or we know they're in the experiment
+      if (variationId === undefined && !result?.inExperiment) {
+        return;
+      }
+
+      // Use variation ID or default to 0 (control)
+      const trackVariationId = variationId !== undefined ? String(variationId) : "0";
 
       // Log the critical experiment_viewed event with params GA4/BigQuery will see
       await logEvent(analyticsInstance, "experiment_viewed", {
         experiment_id: experimentId,
-        variation_id: variationIndex,
+        variation_id: trackVariationId,
         // Add additional context
-        experiment_name: experiment.key || "unknown",
-        rule_id: experiment.namespace?.[0] || undefined,
+        experiment_name: experimentId,
+        rule_id: experiment?.namespace?.[0],
       });
     } catch (error) {
       // Silently fail - tracking errors shouldn't break the app
     }
   };
+};
+
+/**
+ * Track feature flag evaluation to GA4
+ * This handles feature flags that are used as experiments (e.g., var-exp-a)
+ * 
+ * @param featureKey - Feature flag key (e.g., "var-exp-a")
+ * @param featureValue - The evaluated value of the feature
+ * @param analyticsInstance - Firebase Analytics instance
+ */
+export const trackFeatureFlagToGA4 = async (
+  featureKey: string,
+  featureValue: any,
+  analyticsInstance: Analytics | null | undefined
+) => {
+  if (!analyticsInstance || typeof window === "undefined") {
+    return;
+  }
+
+  try {
+    const { logEvent } = await import("firebase/analytics");
+    
+    // Map feature values to variation IDs for consistency
+    // This handles string values like "Control", "Variation 1", etc.
+    let variationId: string;
+    
+    if (typeof featureValue === "number") {
+      variationId = String(featureValue);
+    } else if (featureValue === "Control" || featureValue === "control" || featureValue === 0) {
+      variationId = "0";
+    } else if (featureValue === "Variation 1" || featureValue === "variation-1" || featureValue === 1) {
+      variationId = "1";
+    } else if (featureValue === "Variation 2" || featureValue === "variation-2" || featureValue === 2) {
+      variationId = "2";
+    } else {
+      // For any other string value, use it as-is
+      variationId = String(featureValue);
+    }
+
+    // Log to GA4 with experiment_viewed event (same as experiment tracking)
+    await logEvent(analyticsInstance, "experiment_viewed", {
+      experiment_id: featureKey,
+      variation_id: variationId,
+      experiment_name: featureKey,
+      feature_flag: "true", // Mark this as from a feature flag
+    });
+  } catch (error) {
+    // Silently fail - tracking errors shouldn't break the app
+  }
+};
+
+/**
+ * Helper to track feature flag usage after a useFeatureValue hook call
+ * Call this after you read a feature flag value to log it to GA4
+ * 
+ * @param featureKey - The feature flag key
+ * @param featureValue - The value returned from useFeatureValue
+ * @param analyticsInstance - Firebase Analytics instance
+ * 
+ * @example
+ * const variant = useFeatureValue("var-exp-a", "Control");
+ * useEffect(() => {
+ *   trackFeatureFlagUsage("var-exp-a", variant, analytics);
+ * }, [variant]);
+ */
+export const trackFeatureFlagUsage = (
+  featureKey: string,
+  featureValue: any,
+  analyticsInstance: Analytics | null | undefined
+) => {
+  // Call tracking function immediately (it's already async-safe)
+  trackFeatureFlagToGA4(featureKey, featureValue, analyticsInstance);
 };
 
