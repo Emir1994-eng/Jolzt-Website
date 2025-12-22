@@ -1,39 +1,40 @@
-import type { Metadata } from "next"
-import "../globals.css"
+import type { Metadata } from "next";
+import "../globals.css";
 
-export const supportedLanguages = ["en", "mk", "sq"] as const
-export type SupportedLanguage = typeof supportedLanguages[number]
+export const supportedLanguages = ["en", "mk", "sq"] as const;
+export type SupportedLanguage = (typeof supportedLanguages)[number];
 
 // Generate type-safe metadata
 export async function generateMetadata({
   params,
 }: {
-  params: { lang: SupportedLanguage }
+  params: Promise<{ lang: SupportedLanguage }>;
 }): Promise<Metadata> {
+  const { lang } = await params;
   return {
     title: {
       en: "Jolzt - Car Rental in North Macedonia",
       mk: "Jolzt - Изнајмување автомобили",
       sq: "Jolzt - Qiraja e makinave",
-    }[params.lang],
+    }[lang],
     description: {
       en: "Rent a car in North Macedonia...",
       mk: "Изнајмете автомобил...",
       sq: "Prenoto një makinë...",
-    }[params.lang],
-  }
+    }[lang],
+  };
 }
 
 export function generateStaticParams() {
-  return supportedLanguages.map((lang) => ({ lang }))
+  return supportedLanguages.map((lang) => ({ lang }));
 }
 
 export default function LocaleLayout({
   children,
   params,
 }: {
-  children: React.ReactNode
-  params: { lang: string }
+  children: React.ReactNode;
+  params: Promise<{ lang: string }>;
 }) {
-  return <>{children}</>
+  return <>{children}</>;
 }

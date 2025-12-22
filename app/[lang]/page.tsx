@@ -4,12 +4,13 @@ import { supportedLanguages } from "./layout"
 
 type SupportedLanguage = typeof supportedLanguages[number];
 
-export default function LocalizedHomePage({ params }: { params: { lang: string } }) {
-  const lang = params.lang as SupportedLanguage;
+export default async function LocalizedHomePage({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  const supportedLang = lang as SupportedLanguage;
 
-  if (!supportedLanguages.includes(lang)) {
+  if (!supportedLanguages.includes(supportedLang)) {
     redirect("/en");
   }
 
-  return <HomePage lang={lang} />;
+  return <HomePage lang={supportedLang} />;
 }
