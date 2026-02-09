@@ -11,7 +11,7 @@ export function SiteFooter({ lang = "en" }: { lang?: string }) {
   return (
     <footer className="bg-slate-900 text-white py-12">
       <div className="container px-4 md:px-6">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-5">
           <div>
             <h3 className="font-bold mb-4">JOLZT</h3>
             <ul className="space-y-2">
@@ -67,6 +67,42 @@ export function SiteFooter({ lang = "en" }: { lang?: string }) {
               </li>
             </ul>
           </div>
+          <div>
+            <h3 className="font-bold mb-4">Services</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link
+                  href="https://jolzt.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm hover:underline"
+                >
+                  Jolzt Rent a Car
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="https://luggage.jolzt.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm hover:underline"
+                >
+                  Jolzt Luggage Storage
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="https://laundry.jolzt.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm hover:underline"
+                >
+                  Jolzt Laundry Service
+                </Link>
+              </li>
+            </ul>
+          </div>
+
           <div>
             <h3 className="font-bold mb-4">Legal</h3>
             <ul className="space-y-2">

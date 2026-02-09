@@ -314,6 +314,22 @@
     "benefit3": "Mbështetje 24/7 për klientët",
     "benefit4": "Pa kosto fillestare"
   },
+  "services": {
+    "title": "Më shumë se qira makinash",
+    "subtitle": "Udhëtoni më lehtë. Lëvizni më zgjuar. Jolzt kujdeset për pjesën tjetër.",
+    "luggageTitle": "Ruajtje dhe dorëzim i bagazhit",
+    "luggageDesc": "Lini bagazhin tuaj dhe eksploroni lirshëm. Ne e ruajmë ose e dorëzojmë bagazhin tuaj në mënyrë të sigurt.",
+    "luggageFeature1": "Ruajtje e sigurt e bagazhit",
+    "luggageFeature2": "Dorëzim në aeroport dhe qytet",
+    "luggageFeature3": "Ideale për dalje të hershme",
+    "luggageCta": "Zbulo shërbimin e bagazhit",
+    "laundryTitle": "Shërbim lavanderie dhe pastrimi",
+    "laundryDesc": "Rroba të pastra pa shqetësime. Planifikoni marrjen dhe merrni rrobat tuaja të pastruara, të palosura dhe të dorëzuara.",
+    "laundryFeature1": "Marrje dhe dorëzim i përfshirë",
+    "laundryFeature2": "Kohë e shpejtë përpunimi",
+    "laundryFeature3": "Ideale për qëndrime të gjata dhe udhëtarë",
+    "laundryCta": "Zbulo shërbimin e lavanderisë"
+  },
   "legal": {
     "termsOfService": {
       "title": "Kushtet e Shërbimit",
