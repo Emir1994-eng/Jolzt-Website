@@ -314,6 +314,22 @@
     "benefit3": "24/7 customer support",
     "benefit4": "No upfront costs"
   },
+  "services": {
+    "title": "More Than Car Rentals",
+    "subtitle": "Travel lighter. Move smarter. Let Jolzt handle the rest.",
+    "luggageTitle": "Luggage Storage & Delivery",
+    "luggageDesc": "Drop off your luggage and explore freely. We store or deliver your bags safely so you can enjoy your trip without the weight.",
+    "luggageFeature1": "Secure luggage storage",
+    "luggageFeature2": "Airport & city delivery",
+    "luggageFeature3": "Perfect for early check-outs",
+    "luggageCta": "Explore Luggage Service",
+    "laundryTitle": "Laundry & Cleaning Service",
+    "laundryDesc": "Fresh clothes without the hassle. Schedule a pickup and get your laundry cleaned, folded, and delivered back to you.",
+    "laundryFeature1": "Pickup & delivery included",
+    "laundryFeature2": "Fast turnaround times",
+    "laundryFeature3": "Ideal for long stays & travelers",
+    "laundryCta": "Explore Laundry Service"
+  },
   "legal": {
     "termsOfService": {
       "title": "Terms of Service",

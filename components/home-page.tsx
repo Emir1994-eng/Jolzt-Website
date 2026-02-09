@@ -6,6 +6,7 @@ import Link from "next/link"
 import {
   StarIcon,
   CheckIcon,
+  CheckCircle,
   GlobeIcon,
   ChevronRight,
   Building2Icon,
@@ -1000,6 +1001,120 @@ export default function HomePage({ lang = "en" }: { lang?: string }) {
             </div>
           </div>
         </section>
+        <section className="py-16 md:py-24 bg-gradient-to-br from-[#111827] to-[#1f2937] relative overflow-hidden">
+          <div className="absolute inset-0 bg-pattern opacity-10 mix-blend-overlay"></div>
+
+          <div className="container px-4 md:px-6 relative z-10">
+            <div className="max-w-2xl mx-auto text-center text-white mb-12">
+              <h2 className="text-3xl md:text-5xl font-bold mb-4">
+                {t("services.title")}
+              </h2>
+              <h3 className="text-xl md:text-2xl font-medium mb-6 text-white/90">
+                {t("services.subtitle")}
+              </h3>
+              <div className="h-1 w-24 bg-white/40 mx-auto"></div>
+            </div>
+
+            <div className="grid lg:grid-cols-2 gap-8 md:gap-16 items-stretch">
+
+              {/* Luggage Service */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-white/20 text-white flex flex-col justify-between">
+                <div>
+                  <h4 className="text-2xl font-bold mb-4">
+                    {t("services.luggageTitle")}
+                  </h4>
+
+                  <p className="text-white/80 mb-6 text-base md:text-lg">
+                    {t("services.luggageDesc")}
+                  </p>
+
+                  <div className="grid gap-4">
+                    <div className="flex items-center gap-3">
+                      <CheckCircle className="h-5 w-5 text-[#f58220]" />
+                      <span className="text-white/90">
+                        {t("services.luggageFeature1")}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <CheckCircle className="h-5 w-5 text-[#f58220]" />
+                      <span className="text-white/90">
+                        {t("services.luggageFeature2")}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <CheckCircle className="h-5 w-5 text-[#f58220]" />
+                      <span className="text-white/90">
+                        {t("services.luggageFeature3")}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <Button
+                  asChild
+                  size="lg"
+                  className="mt-8 bg-[#f58220] hover:bg-[#f26522] text-white font-bold rounded-full px-6 py-5 h-auto shadow-lg transition-transform hover:scale-105"
+                >
+                  <Link href="https://luggage.jolzt.com/">
+                    {t("services.luggageCta")}
+                    <ChevronRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+              </div>
+
+              {/* Laundry Service */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-white/20 text-white flex flex-col justify-between">
+                <div>
+                  <h4 className="text-2xl font-bold mb-4">
+                    {t("services.laundryTitle")}
+                  </h4>
+
+                  <p className="text-white/80 mb-6 text-base md:text-lg">
+                    {t("services.laundryDesc")}
+                  </p>
+
+                  <div className="grid gap-4">
+                    <div className="flex items-center gap-3">
+                      <CheckCircle className="h-5 w-5 text-[#f58220]" />
+                      <span className="text-white/90">
+                        {t("services.laundryFeature1")}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <CheckCircle className="h-5 w-5 text-[#f58220]" />
+                      <span className="text-white/90">
+                        {t("services.laundryFeature2")}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <CheckCircle className="h-5 w-5 text-[#f58220]" />
+                      <span className="text-white/90">
+                        {t("services.laundryFeature3")}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <Button
+                  asChild
+                  size="lg"
+                  className="mt-8 bg-[#f58220] hover:bg-[#f26522] text-white font-bold rounded-full px-6 py-5 h-auto shadow-lg transition-transform hover:scale-105"
+                >
+                  <Link href="https://laundry.jolzt.com/">
+                    {t("services.laundryCta")}
+                    <ChevronRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
       </main>
       <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
       <SiteFooter lang={lang} />
