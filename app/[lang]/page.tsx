@@ -1,10 +1,14 @@
-import { redirect } from "next/navigation"
-import HomePage from "@/components/home-page"
-import { supportedLanguages } from "./layout"
+import { redirect } from "next/navigation";
+import { supportedLanguages } from "./layout";
+import HomepageSelector from "@/components/homepage-selector";
 
-type SupportedLanguage = typeof supportedLanguages[number];
+type SupportedLanguage = (typeof supportedLanguages)[number];
 
-export default async function LocalizedHomePage({ params }: { params: Promise<{ lang: string }> }) {
+export default async function LocalizedHomePage({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
   const { lang } = await params;
   const supportedLang = lang as SupportedLanguage;
 
@@ -12,5 +16,7 @@ export default async function LocalizedHomePage({ params }: { params: Promise<{ 
     redirect("/en");
   }
 
-  return <HomePage lang={supportedLang} />;
+  return (
+    <HomepageSelector lang={supportedLang} />
+  );
 }
