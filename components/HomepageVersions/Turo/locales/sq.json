@@ -1,0 +1,101 @@
+{
+  "nav": {
+    "howItWorks": "Si funksionon",
+    "cars": "Veturat",
+    "whyJolzt": "Pse Jolzt"
+  },
+  "common": {
+    "bookYourRide": "Rezervo udhëtimin",
+    "failedToLoadCars": "Dështoi ngarkimi i veturave",
+    "loadingCars": "Po ngarkohen veturat...",
+    "noCars": "Nuk ka vetura të disponueshme për momentin.",
+    "reviews": "vlerësime",
+    "from": "Nga",
+    "perDay": "/ditë",
+    "seats": "Ulëse"
+  },
+  "hero": {
+    "roadside": "Asistencë rrugore 24/7",
+    "pickupLocation": "Lokacioni i marrjes",
+    "pickupDropoff": "Marrje / Dorëzim",
+    "pickupTime": "Koha e marrjes",
+    "discountNote": "Zbritja e sotme aplikohet në hapin tjetër."
+  },
+  "howItWorks": {
+    "eyebrow": "Si funksionon",
+    "title": "Marrja e një veture me qira me Jolzt është e shpejtë, e lehtë dhe pa stres",
+    "description": "E kemi thjeshtuar procesin për t'ju kursyer kohë dhe para.",
+    "steps": [
+      {
+        "title": "Rezervo për pak minuta",
+        "description": "Zgjidhni datat, shfletoni veturat dhe rezervoni menjëherë. Pa dokumente, pa pritje në radhë.",
+        "highlight": "Kurseni deri në 30% krahasuar me qiratë tradicionale"
+      },
+      {
+        "title": "Anashkalo sportelin",
+        "description": "Shkoni direkt te vetura me check-in digjital. Pa radhë, pa dokumente, vetëm merre dhe vozit.",
+        "highlight": "Koha mesatare e marrjes nën 2 minuta"
+      },
+      {
+        "title": "Vozit pa brenga",
+        "description": "Sigurim i plotë i përfshirë me asistencë rrugore 24/7. Anulim falas deri në 48 orë.",
+        "highlight": "98% kënaqësi e klientëve"
+      }
+    ]
+  },
+  "fleet": {
+    "eyebrow": "Gjej udhëtimin perfekt",
+    "title": "Zgjidhni nga përzgjedhja jonë e gjerë e veturave me çmimet më të mira në Maqedoninë e Veriut"
+  },
+  "trust": {
+    "eyebrow": "Pse Jolzt",
+    "title": "E kemi thjeshtuar procesin për t'ju kursyer kohë dhe para",
+    "items": [
+      {
+        "title": "Sigurim i plotë gjithmonë i përfshirë",
+        "description": "Pa tarifa të fshehura në sportel. Çdo qira përfshin mbulim të plotë.",
+        "stat": "100% mbulim"
+      },
+      {
+        "title": "Konfirmim i menjëhershëm",
+        "description": "Konfirmuar në sekonda. Anashkaloni sportelin me check-in digjital.",
+        "stat": "Marrje nën 2 minuta"
+      },
+      {
+        "title": "Vlerësim 4.8/5 nga klientët",
+        "description": "E sigurt, e parashikueshme dhe e lehtë nga rezervimi deri në kthim. E besuar nga mijëra.",
+        "stat": "98% kënaqësi"
+      },
+      {
+        "title": "Çmime të qarta paraprakisht",
+        "description": "Çmimi që shihni është çmimi që paguani. Pa surpriza.",
+        "stat": "Kurseni deri në 30%"
+      }
+    ]
+  },
+  "footer": {
+    "brand": "JOLZT",
+    "home": "Ballina",
+    "about": "Rreth nesh",
+    "howItWorks": "Si funksionon Jolzt",
+    "partner": "Bëhu partner me Jolzt",
+    "help": "Ndihmë & kontakt",
+    "explore": "Eksploro",
+    "exploreMatka": "Eksploro Kanionin Matka",
+    "viewHiking": "Shiko destinacionet për hiking",
+    "exploreHistoric": "Eksploro vendet historike",
+    "tripMavrovo": "Bëj një udhëtim në Parkun Mavrovë",
+    "services": "Shërbime",
+    "serviceRent": "Jolzt Rent a Car",
+    "serviceLuggage": "Jolzt Luggage Storage",
+    "serviceLaundry": "Jolzt Laundry Service",
+    "legal": "Ligjore",
+    "terms": "Kushtet e shërbimit",
+    "privacy": "Politika e privatësisë",
+    "payment": "Kushtet e pagesës",
+    "download": "Shkarko aplikacionin",
+    "downloadDesc": "Merr aplikacionin Jolzt për përvojën më të mirë",
+    "appStore": "Shkarko në App Store",
+    "googlePlay": "Merr në Google Play"
+  }
+}

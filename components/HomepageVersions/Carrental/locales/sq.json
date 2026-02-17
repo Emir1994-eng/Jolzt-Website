@@ -1,0 +1,100 @@
+{
+  "nav": {
+    "howItWorks": "Si funksionon",
+    "vehicles": "Veturat",
+    "experiences": "Përvoja"
+  },
+  "common": {
+    "bookYourRide": "Rezervo udhëtimin",
+    "failedToLoadCars": "Dështoi ngarkimi i veturave"
+  },
+  "hero": {
+    "pickupLocationLabel": "Lokacioni i marrjes",
+    "airportOrCity": "Aeroport ose qytet",
+    "dateRangeLabel": "Intervali i datave",
+    "datePlaceholder": "9 Shk - 12 Shk, 2026",
+    "discountNote": "Zbritja e sotme aplikohet në hapin tjetër."
+  },
+  "steps": {
+    "title": "Tre hapa të thjeshtë",
+    "description": "Marrja e një veture me qira me Jolzt është e shpejtë, e lehtë dhe pa stres. E kemi thjeshtuar procesin për t'ju kursyer kohë dhe para.",
+    "items": [
+      {
+        "title": "Rezervo për pak minuta",
+        "description": "Zgjidhni datat, shfletoni veturat dhe rezervoni menjëherë. Pa dokumente, pa pritje.",
+        "stat": "Kurseni deri në 30% krahasuar me qiratë tradicionale"
+      },
+      {
+        "title": "Anashkalo sportelin",
+        "description": "Shkoni direkt te vetura me check-in digjital. Pa radhë, vetëm merre dhe vozit.",
+        "stat": "Marrja mesatare nën 2 minuta"
+      },
+      {
+        "title": "Vozit pa brenga",
+        "description": "Sigurim i plotë i përfshirë me asistencë rrugore 24/7. Anulim falas deri në 48 orë.",
+        "stat": "98% kënaqësi e klientëve"
+      }
+    ]
+  },
+  "experience": {
+    "eyebrow": "Shfleto sipas përvojës",
+    "title": "Gjej udhëtimin perfekt",
+    "description": "Zgjidhni nga përzgjedhja jonë e gjerë e veturave me çmimet më të mira në Maqedoninë e Veriut.",
+    "fromSuffix": "/ditë",
+    "cta": "Eksploro",
+    "items": [
+      {
+        "title": "Lëvizje në qytet",
+        "description": "Veturat kompakte perfekte për lëvizje në Shkup dhe më gjerë"
+      },
+      {
+        "title": "Aventurë malore",
+        "description": "SUV të ndërtuara për rrugët malore maqedonase dhe parqet kombëtare"
+      },
+      {
+        "title": "Klasa biznes",
+        "description": "Sedan premium për një përvojë të rafinuar udhëtimi"
+      }
+    ]
+  },
+  "featured": {
+    "eyebrow": "Flotë e veçuar",
+    "title": "Veturat më të njohura",
+    "description": "Nga veturat kompakte deri te SUV luksoze, kemi opsionin perfekt për çdo udhëtim.",
+    "loading": "Po ngarkohen veturat...",
+    "seats": "Ulëse",
+    "from": "Nga",
+    "perDay": "/ditë"
+  },
+  "badges": {
+    "Best Seller": "Më e shitura",
+    "Great for Mountains": "E shkëlqyer për male",
+    "Economy Choice": "Zgjedhje ekonomike",
+    "Premium Pick": "Zgjedhje premium"
+  },
+  "footer": {
+    "brand": "JOLZT",
+    "home": "Ballina",
+    "about": "Rreth nesh",
+    "howItWorks": "Si funksionon Jolzt",
+    "partner": "Bëhu partner me Jolzt",
+    "help": "Ndihmë & kontakt",
+    "explore": "Eksploro",
+    "exploreMatka": "Eksploro Kanionin Matka",
+    "viewHiking": "Shiko destinacionet për hiking",
+    "exploreHistoric": "Eksploro vendet historike",
+    "tripMavrovo": "Bëj një udhëtim në Parkun Mavrovë",
+    "services": "Shërbime",
+    "serviceRent": "Jolzt Rent a Car",
+    "serviceLuggage": "Jolzt Luggage Storage",
+    "serviceLaundry": "Jolzt Laundry Service",
+    "legal": "Ligjore",
+    "terms": "Kushtet e shërbimit",
+    "privacy": "Politika e privatësisë",
+    "payment": "Kushtet e pagesës",
+    "download": "Shkarko aplikacionin",
+    "downloadDesc": "Merr aplikacionin Jolzt për përvojën më të mirë",
+    "appStore": "Shkarko në App Store",
+    "googlePlay": "Merr në Google Play"
+  }
+}
