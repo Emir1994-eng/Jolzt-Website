@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Image from "next/image"
 import Link from "next/link"
 import axios from "axios"
 import { format } from "date-fns"
@@ -327,23 +328,14 @@ function Header({
     <header className="sticky top-0 z-50 border-b border-[hsl(220,13%,91%)] bg-white">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <Link href={`/${lang}`} className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[hsl(24,100%,50%)]">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              className="text-white"
-            >
-              <path
-                d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"
-                fill="currentColor"
-              />
-            </svg>
-          </div>
-          <span className="text-xl font-bold tracking-tight text-[hsl(220,15%,10%)]">
-            JOLZT
-          </span>
+          <Image
+            src="/placeholder.svg?height=32&width=32"
+            alt="Jolzt Logo"
+            width={32}
+            height={32}
+            className="rounded"
+          />
+          <span className="text-xl font-bold text-[#f26522]">JOLZT</span>
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">

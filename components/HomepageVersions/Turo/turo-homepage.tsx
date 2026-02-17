@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import heroBg from "./hero-bg.jpg";
 import axios from "axios";
 import { format } from "date-fns";
@@ -403,14 +405,16 @@ function Navbar({
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <a href={`/${lang}`} className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#FF6B00]">
-              <Car className="h-4 w-4 text-white" />
-            </div>
-            <span className="text-lg font-bold text-white tracking-tight">
-              JOLZT
-            </span>
-          </a>
+          <Link href={`/${lang}`} className="flex items-center gap-2">
+            <Image
+              src="/placeholder.svg?height=32&width=32"
+              alt="Jolzt Logo"
+              width={32}
+              height={32}
+              className="rounded"
+            />
+            <span className="text-xl font-bold text-[#f26522]">JOLZT</span>
+          </Link>
 
           {/* Desktop links */}
           <div className="hidden items-center gap-8 md:flex">
