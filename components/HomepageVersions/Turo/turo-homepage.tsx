@@ -30,6 +30,10 @@ import {
 import { useExperimentValue } from "@/app/hooks/useFeatureFlag";
 import { GROWTHBOOK_CONFIG } from "@/app/config/growthbook";
 import { analytics } from "@/lib/firebase";
+import { LanguageSelector } from "@/components/language-selector";
+import turoEn from "./locales/en.json";
+import turoMk from "./locales/mk.json";
+import turoSq from "./locales/sq.json";
 
 interface HomePageCar {
   _id?: string;
@@ -152,6 +156,21 @@ const HERO_TEXT_VARIANTS = {
 
 type LangKey = "en" | "mk" | "sq";
 type VariantKey = keyof typeof HERO_TEXT_VARIANTS;
+type TuroTexts = typeof turoEn;
+
+const TURO_LOCALES: Record<LangKey, TuroTexts> = {
+  en: turoEn,
+  mk: turoMk,
+  sq: turoSq,
+};
+
+const getTuroTexts = (lang: string): TuroTexts => {
+  if (lang === "mk" || lang === "sq" || lang === "en") {
+    return TURO_LOCALES[lang];
+  }
+
+  return TURO_LOCALES.en;
+};
 
 declare global {
   interface Window {
@@ -162,34 +181,22 @@ declare global {
 /* ───────────────────────── DATA ───────────────────────── */
 
 const NAV_LINKS = [
-  { label: "How It Works", href: "#how-it-works" },
-  { label: "Cars", href: "#fleet" },
-  { label: "Why Jolzt", href: "#why-jolzt" },
+  { href: "#how-it-works" },
+  { href: "#fleet" },
+  { href: "#why-jolzt" },
 ];
 
 const STEPS = [
   {
     number: "01",
-    title: "Book in minutes",
-    description:
-      "Choose dates, browse cars, and book instantly. No paperwork, no waiting in line.",
-    highlight: "Save up to 30% compared to traditional rentals",
     icon: Smartphone,
   },
   {
     number: "02",
-    title: "Skip the counter",
-    description:
-      "Go straight to your car with our digital check-in. No lines, no paperwork, just grab and drive.",
-    highlight: "Average pickup time under 2 minutes",
     icon: Zap,
   },
   {
     number: "03",
-    title: "Drive worry-free",
-    description:
-      "Full insurance included with 24/7 roadside assistance. Free cancellation up to 48 hours.",
-    highlight: "98% customer satisfaction",
     icon: ShieldCheck,
   },
 ];
@@ -328,30 +335,15 @@ const FALLBACK_CARS: DisplayCar[] = [
 const TRUST_FEATURES = [
   {
     icon: ShieldCheck,
-    title: "Full Insurance Always Included",
-    description:
-      "No hidden fees at the counter. Every rental includes comprehensive coverage.",
-    stat: "100% covered",
   },
   {
     icon: Zap,
-    title: "Instant Confirmation",
-    description:
-      "Confirmed in seconds. Skip the counter with our digital check-in.",
-    stat: "Under 2 min pickup",
   },
   {
     icon: Star,
-    title: "4.8/5 Customer Rating",
-    description:
-      "Safe, predictable, and easy from booking to return. Trusted by thousands.",
-    stat: "98% satisfaction",
   },
   {
     icon: BadgeCheck,
-    title: "Clear, Upfront Pricing",
-    description: "The price you see is the price you pay. No surprises, ever.",
-    stat: "Save up to 30%",
   },
 ];
 
@@ -385,9 +377,11 @@ const mapCarForDisplay = (car: HomePageCar, index: number): DisplayCar => {
 function Navbar({
   lang,
   onBookNowClick,
+  texts,
 }: {
   lang: string;
   onBookNowClick: () => void;
+  texts: TuroTexts;
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -409,31 +403,26 @@ function Navbar({
 
           {/* Desktop links */}
           <div className="hidden items-center gap-8 md:flex">
-            {NAV_LINKS.map((link) => (
+            {NAV_LINKS.map((link, index) => (
               <a
-                key={link.label}
+                key={link.href}
                 href={link.href}
                 className="text-sm font-medium text-white/60 transition-colors hover:text-white"
               >
-                {link.label}
+                {index === 0 ? texts.nav.howItWorks : index === 1 ? texts.nav.cars : texts.nav.whyJolzt}
               </a>
             ))}
           </div>
 
           {/* Desktop CTA */}
           <div className="hidden items-center gap-4 md:flex">
-            <a
-              href={`/${lang}`}
-              className="text-sm font-medium text-white/60 transition-colors hover:text-white"
-            >
-              {lang.toUpperCase()}
-            </a>
+            <LanguageSelector color="dark" />
             <button
               type="button"
               onClick={onBookNowClick}
               className="rounded-full bg-[#FF6B00] px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#e55f00]"
             >
-              Book Your Ride
+              {texts.common.bookYourRide}
             </button>
           </div>
 
@@ -457,14 +446,14 @@ function Navbar({
       {mobileOpen && (
         <div className="border-t border-white/5 bg-[#0a0a0a]/95 backdrop-blur-xl px-4 py-4 md:hidden">
           <div className="flex flex-col gap-4">
-            {NAV_LINKS.map((link) => (
+            {NAV_LINKS.map((link, index) => (
               <a
-                key={link.label}
+                key={link.href}
                 href={link.href}
                 className="text-sm font-medium text-white/60"
                 onClick={() => setMobileOpen(false)}
               >
-                {link.label}
+                {index === 0 ? texts.nav.howItWorks : index === 1 ? texts.nav.cars : texts.nav.whyJolzt}
               </a>
             ))}
             <button
@@ -475,7 +464,7 @@ function Navbar({
                 setMobileOpen(false);
               }}
             >
-              Book Your Ride
+              {texts.common.bookYourRide}
             </button>
           </div>
         </div>
@@ -496,6 +485,7 @@ function HeroSearch({
   dateLabel,
   pickupTime,
   onSearchCars,
+  texts,
 }: {
   headingText: string;
   subheadingText: string;
@@ -506,6 +496,7 @@ function HeroSearch({
   dateLabel: string;
   pickupTime: string;
   onSearchCars: () => void;
+  texts: TuroTexts;
 }) {
   return (
     <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#0a0a0a]">
@@ -549,7 +540,7 @@ function HeroSearch({
           </div>
           <div className="flex items-center gap-2 text-white/40">
             <Headphones className="h-4 w-4" />
-            <span className="text-sm">24/7 Roadside Assistance</span>
+            <span className="text-sm">{texts.hero.roadside}</span>
           </div>
         </div>
       </div>
@@ -563,7 +554,7 @@ function HeroSearch({
               <MapPin className="h-5 w-5 text-[#FF6B00] shrink-0" />
               <div>
                 <p className="text-[10px] font-medium uppercase tracking-wider text-white/40">
-                  Pick-up Location
+                  {texts.hero.pickupLocation}
                 </p>
                 <p className="text-sm font-medium text-white">
                   {locationLabel}
@@ -576,7 +567,7 @@ function HeroSearch({
               <CalendarDays className="h-5 w-5 text-[#FF6B00] shrink-0" />
               <div>
                 <p className="text-[10px] font-medium uppercase tracking-wider text-white/40">
-                  Pick-up / Drop-off
+                  {texts.hero.pickupDropoff}
                 </p>
                 <p className="text-sm font-medium text-white">
                   {dateLabel}
@@ -589,7 +580,7 @@ function HeroSearch({
               <Clock className="h-5 w-5 text-[#FF6B00] shrink-0" />
               <div>
                 <p className="text-[10px] font-medium uppercase tracking-wider text-white/40">
-                  Pick-up Time
+                  {texts.hero.pickupTime}
                 </p>
                 <p className="text-sm font-medium text-white">{pickupTime}</p>
               </div>
@@ -602,12 +593,12 @@ function HeroSearch({
               className="flex items-center justify-center gap-2 rounded-xl bg-[#FF6B00] px-8 py-3.5 text-sm font-bold text-white transition-all hover:bg-[#e55f00] hover:shadow-lg hover:shadow-[#FF6B00]/25 md:px-10"
             >
               <Search className="h-4 w-4" />
-              Book Your Ride
+              {texts.common.bookYourRide}
             </button>
           </div>
         </div>
         <p className="mt-3 text-center text-xs text-white/30">
-          {"Today's discount is applied on the next step."}
+          {texts.hero.discountNote}
         </p>
       </div>
     </section>
@@ -616,7 +607,7 @@ function HeroSearch({
 
 /* ───────────────────────── HOW IT WORKS ───────────────────────── */
 
-function HowItWorks() {
+function HowItWorks({ texts }: { texts: TuroTexts }) {
   return (
     <section
       id="how-it-works"
@@ -625,18 +616,18 @@ function HowItWorks() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <p className="text-sm font-semibold uppercase tracking-widest text-[#FF6B00]">
-            How It Works
+            {texts.howItWorks.eyebrow}
           </p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-white md:text-4xl">
-            Renting a car with Jolzt is quick, easy, and worry-free
+            {texts.howItWorks.title}
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-base text-white/50">
-            {"We've simplified the process to save you time and money."}
+            {texts.howItWorks.description}
           </p>
         </div>
 
         <div className="mt-16 grid gap-8 md:grid-cols-3">
-          {STEPS.map((step) => (
+          {STEPS.map((step, i) => (
             <div
               key={step.number}
               className="group relative rounded-2xl border border-white/5 bg-white/[0.02] p-8 transition-all hover:border-[#FF6B00]/20 hover:bg-white/[0.04]"
@@ -648,14 +639,14 @@ function HowItWorks() {
                 <step.icon className="h-6 w-6" />
               </div>
               <h3 className="mt-5 text-xl font-semibold text-white">
-                {step.title}
+                {texts.howItWorks.steps[i]?.title}
               </h3>
               <p className="mt-3 text-sm leading-relaxed text-white/50">
-                {step.description}
+                {texts.howItWorks.steps[i]?.description}
               </p>
               <p className="mt-4 flex items-center gap-1.5 text-xs font-medium text-[#FF6B00]">
                 <span className="inline-block h-1 w-1 rounded-full bg-[#FF6B00]" />
-                {step.highlight}
+                {texts.howItWorks.steps[i]?.highlight}
               </p>
             </div>
           ))}
@@ -672,11 +663,13 @@ function PopularCars({
   loading,
   error,
   onCarClick,
+  texts,
 }: {
   cars: DisplayCar[];
   loading: boolean;
   error: string | null;
   onCarClick: (carId: string) => () => void;
+  texts: TuroTexts;
 }) {
   const [scrollPos, setScrollPos] = useState(0);
 
@@ -699,11 +692,10 @@ function PopularCars({
         <div className="flex items-end justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-widest text-[#FF6B00]">
-              Find your perfect ride
+              {texts.fleet.eyebrow}
             </p>
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-white md:text-4xl">
-              Choose from our wide selection of vehicles at the best
-              prices in North Macedonia
+              {texts.fleet.title}
             </h2>
           </div>
           <div className="hidden gap-2 md:flex">
@@ -733,7 +725,7 @@ function PopularCars({
           style={{ scrollbarWidth: "none" }}
         >
           {loading && (
-            <div className="text-white/60 px-2">Loading cars...</div>
+            <div className="text-white/60 px-2">{texts.common.loadingCars}</div>
           )}
           {!loading && error && (
             <div className="text-red-400 px-2">{error}</div>
@@ -766,7 +758,7 @@ function PopularCars({
                       {car.name}
                     </h3>
                     <p className="text-sm text-white/40">
-                      {car.year} &middot; {car.location} ({car.reviews} reviews)
+                      {car.year} &middot; {car.location} ({car.reviews} {texts.common.reviews})
                     </p>
                   </div>
                   <div className="flex items-center gap-1">
@@ -783,7 +775,7 @@ function PopularCars({
                 <div className="mt-4 flex flex-wrap gap-2">
                   <span className="flex items-center gap-1.5 rounded-full bg-white/5 px-2.5 py-1 text-xs text-white/50">
                     <Users className="h-3 w-3" />
-                    {car.seats}
+                    {car.seats} {texts.common.seats}
                   </span>
                   <span className="flex items-center gap-1.5 rounded-full bg-white/5 px-2.5 py-1 text-xs text-white/50">
                     <Fuel className="h-3 w-3" />
@@ -810,12 +802,12 @@ function PopularCars({
                 {/* Price + CTA */}
                 <div className="mt-5 border-t border-white/5 pt-4">
                   <div>
-                    <p className="text-xs text-white/40">From</p>
+                    <p className="text-xs text-white/40">{texts.common.from}</p>
                     <p className="text-2xl font-bold text-white">
                       {"€"}
                       {car.price}
                       <span className="text-sm font-normal text-white/40">
-                        /day
+                        {texts.common.perDay}
                       </span>
                     </p>
                   </div>
@@ -824,7 +816,7 @@ function PopularCars({
             </div>
           ))}
           {!loading && !error && cars.length === 0 && (
-            <div className="text-white/60 px-2">No cars available right now.</div>
+            <div className="text-white/60 px-2">{texts.common.noCars}</div>
           )}
         </div>
       </div>
@@ -834,36 +826,36 @@ function PopularCars({
 
 /* ───────────────────────── TRUST SECTION ───────────────────────── */
 
-function TrustSection() {
+function TrustSection({ texts }: { texts: TuroTexts }) {
   return (
     <section id="why-jolzt" className="bg-[#111111] py-20 md:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <p className="text-sm font-semibold uppercase tracking-widest text-[#FF6B00]">
-            Why Jolzt
+            {texts.trust.eyebrow}
           </p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-white md:text-4xl">
-            {"We've simplified the process to save you time and money"}
+            {texts.trust.title}
           </h2>
         </div>
 
         <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {TRUST_FEATURES.map((feature) => (
+          {TRUST_FEATURES.map((feature, index) => (
             <div
-              key={feature.title}
+              key={index}
               className="group rounded-2xl border border-white/5 bg-white/[0.02] p-6 transition-all hover:border-[#FF6B00]/20 hover:bg-white/[0.04]"
             >
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#FF6B00]/10 text-[#FF6B00] transition-colors group-hover:bg-[#FF6B00]/20">
                 <feature.icon className="h-6 w-6" />
               </div>
               <h3 className="mt-5 text-lg font-semibold text-white">
-                {feature.title}
+                {texts.trust.items[index]?.title}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-white/50">
-                {feature.description}
+                {texts.trust.items[index]?.description}
               </p>
               <p className="mt-4 text-xs font-bold uppercase tracking-wider text-[#FF6B00]">
-                {feature.stat}
+                {texts.trust.items[index]?.stat}
               </p>
             </div>
           ))}
@@ -875,70 +867,70 @@ function TrustSection() {
 
 /* ───────────────────────── FOOTER ───────────────────────── */
 
-function SiteFooter({ lang }: { lang: string }) {
+function SiteFooter({ lang, texts }: { lang: string; texts: TuroTexts }) {
   return (
     <footer className="border-t border-white/5 bg-[#0a0a0a]">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-10 md:grid-cols-5">
           <div>
-            <h3 className="font-bold mb-4 text-white">JOLZT</h3>
+            <h3 className="font-bold mb-4 text-white">{texts.footer.brand}</h3>
             <ul className="space-y-2">
               <li>
                 <Link href={`/${lang}`} className="text-sm text-white/60 hover:underline">
-                  Home
+                  {texts.footer.home}
                 </Link>
               </li>
               <li>
                 <Link href={`/${lang}/about-us`} className="text-sm text-white/60 hover:underline">
-                  About Us
+                  {texts.footer.about}
                 </Link>
               </li>
               <li>
                 <Link href={`/${lang}/how-jolzt-works`} className="text-sm text-white/60 hover:underline">
-                  How Jolzt Works
+                  {texts.footer.howItWorks}
                 </Link>
               </li>
               <li>
                 <Link href={`/${lang}/partner`} className="text-sm text-white/60 hover:underline">
-                  Partner with Jolzt
+                  {texts.footer.partner}
                 </Link>
               </li>
               <li>
                 <Link href={`/${lang}/contact`} className="text-sm text-white/60 hover:underline">
-                  Help & Contact
+                  {texts.footer.help}
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="font-bold mb-4 text-white">Explore</h3>
+            <h3 className="font-bold mb-4 text-white">{texts.footer.explore}</h3>
             <ul className="space-y-2">
               <li>
                 <Link href={`/${lang}/blog/matka-canyon`} className="text-sm text-white/60 hover:underline">
-                  Explore Matka Canyon
+                  {texts.footer.exploreMatka}
                 </Link>
               </li>
               <li>
                 <Link href={`/${lang}/blog/hiking-destinations`} className="text-sm text-white/60 hover:underline">
-                  View Hiking Destinations
+                  {texts.footer.viewHiking}
                 </Link>
               </li>
               <li>
                 <Link href={`/${lang}/blog/historic-sites`} className="text-sm text-white/60 hover:underline">
-                  Explore Historic Sites
+                  {texts.footer.exploreHistoric}
                 </Link>
               </li>
               <li>
                 <Link href={`/${lang}/blog/mavrovo-park`} className="text-sm text-white/60 hover:underline">
-                  Take a Trip to Park Mavrovo
+                  {texts.footer.tripMavrovo}
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="font-bold mb-4 text-white">Services</h3>
+            <h3 className="font-bold mb-4 text-white">{texts.footer.services}</h3>
             <ul className="space-y-2">
               <li>
                 <Link
@@ -947,7 +939,7 @@ function SiteFooter({ lang }: { lang: string }) {
                   rel="noopener noreferrer"
                   className="text-sm text-white/60 hover:underline"
                 >
-                  Jolzt Rent a Car
+                  {texts.footer.serviceRent}
                 </Link>
               </li>
               <li>
@@ -957,7 +949,7 @@ function SiteFooter({ lang }: { lang: string }) {
                   rel="noopener noreferrer"
                   className="text-sm text-white/60 hover:underline"
                 >
-                  Jolzt Luggage Storage
+                  {texts.footer.serviceLuggage}
                 </Link>
               </li>
               <li>
@@ -967,36 +959,36 @@ function SiteFooter({ lang }: { lang: string }) {
                   rel="noopener noreferrer"
                   className="text-sm text-white/60 hover:underline"
                 >
-                  Jolzt Laundry Service
+                  {texts.footer.serviceLaundry}
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="font-bold mb-4 text-white">Legal</h3>
+            <h3 className="font-bold mb-4 text-white">{texts.footer.legal}</h3>
             <ul className="space-y-2">
               <li>
                 <Link href={`/${lang}/terms-of-service`} className="text-sm text-white/60 hover:underline">
-                  Terms of Service
+                  {texts.footer.terms}
                 </Link>
               </li>
               <li>
                 <Link href={`/${lang}/privacy-policy`} className="text-sm text-white/60 hover:underline">
-                  Privacy Policy
+                  {texts.footer.privacy}
                 </Link>
               </li>
               <li>
                 <Link href={`/${lang}/terms-of-payment`} className="text-sm text-white/60 hover:underline">
-                  Terms of Payment
+                  {texts.footer.payment}
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="font-bold mb-4 text-white">Download App</h3>
-            <p className="text-sm text-white/40 mb-4">Get the Jolzt app for the best experience</p>
+            <h3 className="font-bold mb-4 text-white">{texts.footer.download}</h3>
+            <p className="text-sm text-white/40 mb-4">{texts.footer.downloadDesc}</p>
             <div className="flex flex-col gap-2">
               <Link
                 href="https://apps.apple.com/mk/app/jolzt-rent-a-car-macedonia/id6618112125"
@@ -1011,7 +1003,7 @@ function SiteFooter({ lang }: { lang: string }) {
                   height={24}
                   className="mr-2"
                 />
-                Download on App Store
+                {texts.footer.appStore}
               </Link>
               <Link
                 href="https://play.google.com/store/apps/details?id=com.jolzt&hl=en&pli=1"
@@ -1026,7 +1018,7 @@ function SiteFooter({ lang }: { lang: string }) {
                   height={24}
                   className="mr-2"
                 />
-                Get it on Google Play
+                {texts.footer.googlePlay}
               </Link>
             </div>
           </div>
@@ -1036,13 +1028,13 @@ function SiteFooter({ lang }: { lang: string }) {
           <div className="text-sm text-white/40">© Jolzt {new Date().getFullYear()}</div>
           <div className="flex flex-wrap justify-center gap-4">
             <Link href={`/${lang}/terms-of-service`} className="text-sm text-white/40 hover:underline">
-              Terms of Service
+              {texts.footer.terms}
             </Link>
             <Link href={`/${lang}/privacy-policy`} className="text-sm text-white/40 hover:underline">
-              Privacy Policy
+              {texts.footer.privacy}
             </Link>
             <Link href={`/${lang}/terms-of-payment`} className="text-sm text-white/40 hover:underline">
-              Terms of Payment
+              {texts.footer.payment}
             </Link>
           </div>
         </div>
@@ -1054,6 +1046,7 @@ function SiteFooter({ lang }: { lang: string }) {
 /* ───────────────────────── PAGE ───────────────────────── */
 
 export default function JolztHomepage({ lang = "en" }: { lang?: string }) {
+  const texts = getTuroTexts(lang);
   const [cars, setCars] = useState<DisplayCar[]>(FALLBACK_CARS);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -1080,7 +1073,7 @@ export default function JolztHomepage({ lang = "en" }: { lang?: string }) {
   const currentVariantText =
     HERO_TEXT_VARIANTS[heroVariant.value as VariantKey] || HERO_TEXT_VARIANTS["0"];
   const currentLang = (lang as LangKey) || "en";
-  const getLocalizedText = (textMap: typeof currentVariantText.heading) => {
+  const getLocalizedText = (textMap: Record<LangKey, string>) => {
     return textMap[currentLang] || textMap.en;
   };
 
@@ -1107,7 +1100,7 @@ export default function JolztHomepage({ lang = "en" }: { lang?: string }) {
         setCars(mappedCars.length > 0 ? mappedCars : FALLBACK_CARS);
       } catch (fetchError: unknown) {
         const err = fetchError as { response?: { data?: { error?: string } } };
-        setError(err.response?.data?.error || "Failed to load cars");
+        setError(err.response?.data?.error || texts.common.failedToLoadCars);
         setCars(FALLBACK_CARS);
       } finally {
         setLoading(false);
@@ -1115,7 +1108,7 @@ export default function JolztHomepage({ lang = "en" }: { lang?: string }) {
     };
 
     fetchCars();
-  }, []);
+  }, [texts.common.failedToLoadCars]);
 
   const openBookingUrl = () => {
     const formatDate = (date: Date) => format(date, "dd-MM-yyyy");
@@ -1184,7 +1177,7 @@ export default function JolztHomepage({ lang = "en" }: { lang?: string }) {
 
   return (
     <main className="bg-[#0a0a0a]">
-      <Navbar lang={lang} onBookNowClick={handleBookNowClick} />
+      <Navbar lang={lang} onBookNowClick={handleBookNowClick} texts={texts} />
       <HeroSearch
         headingText={headingText}
         subheadingText={subheadingText}
@@ -1195,16 +1188,18 @@ export default function JolztHomepage({ lang = "en" }: { lang?: string }) {
         dateLabel={dateLabel}
         pickupTime={pickupTime}
         onSearchCars={handleBookNowClick}
+        texts={texts}
       />
-      <HowItWorks />
+      <HowItWorks texts={texts} />
       <PopularCars
         cars={cars}
         loading={loading}
         error={error}
         onCarClick={handleCarClick}
+        texts={texts}
       />
-      <TrustSection />
-      <SiteFooter lang={lang} />
+      <TrustSection texts={texts} />
+      <SiteFooter lang={lang} texts={texts} />
     </main>
   );
 }

@@ -1,0 +1,100 @@
+{
+  "nav": {
+    "howItWorks": "How It Works",
+    "vehicles": "Vehicles",
+    "experiences": "Experiences"
+  },
+  "common": {
+    "bookYourRide": "Book Your Ride",
+    "failedToLoadCars": "Failed to load cars"
+  },
+  "hero": {
+    "pickupLocationLabel": "Pickup location",
+    "airportOrCity": "Airport or City",
+    "dateRangeLabel": "Date range",
+    "datePlaceholder": "Feb 9 - Feb 12, 2026",
+    "discountNote": "Today's discount is applied on the next step."
+  },
+  "steps": {
+    "title": "Three simple steps",
+    "description": "Renting a car with Jolzt is quick, easy, and worry-free. We simplified the process to save you time and money.",
+    "items": [
+      {
+        "title": "Book in Minutes",
+        "description": "Choose your dates, browse cars, and book instantly. No paperwork, no waiting.",
+        "stat": "Save up to 30% vs traditional rentals"
+      },
+      {
+        "title": "Skip the Counter",
+        "description": "Go straight to your car with our digital check-in. No lines, just grab and drive.",
+        "stat": "Average pickup under 2 minutes"
+      },
+      {
+        "title": "Drive Worry-Free",
+        "description": "Full insurance included with 24/7 roadside assistance. Free cancellation up to 48h.",
+        "stat": "98% customer satisfaction"
+      }
+    ]
+  },
+  "experience": {
+    "eyebrow": "Browse by Experience",
+    "title": "Find your perfect ride",
+    "description": "Choose from our wide selection of vehicles at the best prices in North Macedonia.",
+    "fromSuffix": "/day",
+    "cta": "Explore",
+    "items": [
+      {
+        "title": "City Hopping",
+        "description": "Compact cars perfect for navigating Skopje and beyond"
+      },
+      {
+        "title": "Mountain Adventure",
+        "description": "SUVs built for Macedonian mountain roads and national parks"
+      },
+      {
+        "title": "Business Class",
+        "description": "Premium sedans for a refined travel experience"
+      }
+    ]
+  },
+  "featured": {
+    "eyebrow": "Featured Fleet",
+    "title": "Popular vehicles",
+    "description": "From compact cars to luxury SUVs, we have the perfect option for every trip.",
+    "loading": "Loading cars...",
+    "seats": "Seats",
+    "from": "From",
+    "perDay": "/day"
+  },
+  "badges": {
+    "Best Seller": "Best Seller",
+    "Great for Mountains": "Great for Mountains",
+    "Economy Choice": "Economy Choice",
+    "Premium Pick": "Premium Pick"
+  },
+  "footer": {
+    "brand": "JOLZT",
+    "home": "Home",
+    "about": "About Us",
+    "howItWorks": "How Jolzt Works",
+    "partner": "Partner with Jolzt",
+    "help": "Help & Contact",
+    "explore": "Explore",
+    "exploreMatka": "Explore Matka Canyon",
+    "viewHiking": "View Hiking Destinations",
+    "exploreHistoric": "Explore Historic Sites",
+    "tripMavrovo": "Take a Trip to Park Mavrovo",
+    "services": "Services",
+    "serviceRent": "Jolzt Rent a Car",
+    "serviceLuggage": "Jolzt Luggage Storage",
+    "serviceLaundry": "Jolzt Laundry Service",
+    "legal": "Legal",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "payment": "Terms of Payment",
+    "download": "Download App",
+    "downloadDesc": "Get the Jolzt app for the best experience",
+    "appStore": "Download on App Store",
+    "googlePlay": "Get it on Google Play"
+  }
+}

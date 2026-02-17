@@ -27,6 +27,10 @@ import {
 import { useExperimentValue } from "@/app/hooks/useFeatureFlag"
 import { GROWTHBOOK_CONFIG } from "@/app/config/growthbook"
 import { analytics } from "@/lib/firebase"
+import { LanguageSelector } from "@/components/language-selector"
+import carrentalEn from "./locales/en.json"
+import carrentalMk from "./locales/mk.json"
+import carrentalSq from "./locales/sq.json"
 
 interface HomePageCar {
   _id?: string
@@ -148,6 +152,21 @@ const HERO_TEXT_VARIANTS = {
 
 type LangKey = "en" | "mk" | "sq"
 type VariantKey = keyof typeof HERO_TEXT_VARIANTS
+type CarrentalTexts = typeof carrentalEn
+
+const CARR_LOCALES: Record<LangKey, CarrentalTexts> = {
+  en: carrentalEn,
+  mk: carrentalMk,
+  sq: carrentalSq,
+}
+
+const getCarrentalTexts = (lang: string): CarrentalTexts => {
+  if (lang === "mk" || lang === "sq" || lang === "en") {
+    return CARR_LOCALES[lang]
+  }
+
+  return CARR_LOCALES.en
+}
 
 declare global {
   interface Window {
@@ -170,45 +189,27 @@ const LOCATIONS = [
 const STEPS = [
   {
     icon: Smartphone,
-    title: "Book in Minutes",
-    description:
-      "Choose your dates, browse cars, and book instantly. No paperwork, no waiting.",
-    stat: "Save up to 30% vs traditional rentals",
   },
   {
     icon: Footprints,
-    title: "Skip the Counter",
-    description:
-      "Go straight to your car with our digital check-in. No lines, just grab and drive.",
-    stat: "Average pickup under 2 minutes",
   },
   {
     icon: CarFront,
-    title: "Drive Worry-Free",
-    description:
-      "Full insurance included with 24/7 roadside assistance. Free cancellation up to 48h.",
-    stat: "98% customer satisfaction",
   },
 ]
 
 const EXPERIENCES = [
   {
-    title: "City Hopping",
-    description: "Compact cars perfect for navigating Skopje and beyond",
     image:
       "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?q=80&w=1920&auto=format&fit=crop",
     from: "34",
   },
   {
-    title: "Mountain Adventure",
-    description: "SUVs built for Macedonian mountain roads and national parks",
     image:
       "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1920&auto=format&fit=crop",
     from: "60",
   },
   {
-    title: "Business Class",
-    description: "Premium sedans for a refined travel experience",
     image:
       "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1920&auto=format&fit=crop",
     from: "75",
@@ -318,9 +319,11 @@ const mapCarCard = (car: HomePageCar, index: number): CarCard => {
 function Header({
   lang,
   onBookNowClick,
+  texts,
 }: {
   lang: string
   onBookNowClick: () => void
+  texts: CarrentalTexts
 }) {
   const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -343,36 +346,30 @@ function Header({
             href="#how-it-works"
             className="text-sm font-medium text-[hsl(220,10%,46%)] transition-colors hover:text-[hsl(220,15%,10%)]"
           >
-            How It Works
+            {texts.nav.howItWorks}
           </Link>
           <Link
             href="#vehicles"
             className="text-sm font-medium text-[hsl(220,10%,46%)] transition-colors hover:text-[hsl(220,15%,10%)]"
           >
-            Vehicles
+            {texts.nav.vehicles}
           </Link>
           <Link
             href="#experiences"
             className="text-sm font-medium text-[hsl(220,10%,46%)] transition-colors hover:text-[hsl(220,15%,10%)]"
           >
-            Experiences
+            {texts.nav.experiences}
           </Link>
         </nav>
 
         <div className="hidden items-center gap-4 md:flex">
-          <button
-            type="button"
-            className="flex items-center gap-1.5 text-sm font-medium text-[hsl(220,10%,46%)] transition-colors hover:text-[hsl(220,15%,10%)]"
-          >
-            <Globe className="h-4 w-4" />
-            {lang.toUpperCase()}
-          </button>
+          <LanguageSelector />
           <button
             type="button"
             onClick={onBookNowClick}
             className="rounded-full bg-neutral-900 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-neutral-800"
           >
-            Book Your Ride
+            {texts.common.bookYourRide}
           </button>
         </div>
 
@@ -398,21 +395,21 @@ function Header({
               className="text-sm font-medium text-[hsl(220,10%,46%)]"
               onClick={() => setMobileOpen(false)}
             >
-              How It Works
+              {texts.nav.howItWorks}
             </Link>
             <Link
               href="#vehicles"
               className="text-sm font-medium text-[hsl(220,10%,46%)]"
               onClick={() => setMobileOpen(false)}
             >
-              Vehicles
+              {texts.nav.vehicles}
             </Link>
             <Link
               href="#experiences"
               className="text-sm font-medium text-[hsl(220,10%,46%)]"
               onClick={() => setMobileOpen(false)}
             >
-              Experiences
+              {texts.nav.experiences}
             </Link>
             <button
               type="button"
@@ -422,7 +419,7 @@ function Header({
                 setMobileOpen(false)
               }}
             >
-              Book Your Ride
+              {texts.common.bookYourRide}
             </button>
           </nav>
         </div>
@@ -449,6 +446,7 @@ function HeroSection({
   ratingLineText,
   benefit1Text,
   benefit2Text,
+  texts,
 }: {
   location: string
   onLocationChange: (value: string) => void
@@ -463,6 +461,7 @@ function HeroSection({
   ratingLineText: string
   benefit1Text: string
   benefit2Text: string
+  texts: CarrentalTexts
 }) {
   const [showLocations, setShowLocations] = useState(false)
 
@@ -509,13 +508,13 @@ function HeroSection({
             {/* Location */}
             <div className="relative flex-1 lg:border-r lg:border-[hsl(220,13%,91%)]">
               <label htmlFor="location" className="sr-only">
-                Pickup location
+                {texts.hero.pickupLocationLabel}
               </label>
               <MapPin className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[hsl(220,10%,46%)]" />
               <input
                 id="location"
                 type="text"
-                placeholder="Airport or City"
+                placeholder={texts.hero.airportOrCity}
                 value={location}
                 onChange={(e) => onLocationChange(e.target.value)}
                 onFocus={() => setShowLocations(true)}
@@ -546,14 +545,14 @@ function HeroSection({
             {/* Date */}
             <div className="flex-1 lg:border-r lg:border-[hsl(220,13%,91%)]">
               <label htmlFor="dates" className="sr-only">
-                Date range
+                {texts.hero.dateRangeLabel}
               </label>
               <div className="relative">
                 <Calendar className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[hsl(220,10%,46%)]" />
                 <input
                   id="dates"
                   type="text"
-                  placeholder="Feb 9 - Feb 12, 2026"
+                  placeholder={texts.hero.datePlaceholder}
                   className="w-full bg-transparent py-3 pl-11 pr-4 text-sm text-[hsl(220,15%,10%)] placeholder:text-[hsl(220,10%,46%)] focus:outline-none"
                   readOnly
                   value={dateLabel}
@@ -592,15 +591,13 @@ function HeroSection({
               className="group flex w-full items-center justify-center gap-2 rounded-xl bg-neutral-900 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-neutral-800 lg:w-[25%]"
             >
               <Search className="h-4 w-4" />
-              Book Your Ride
+              {texts.common.bookYourRide}
               <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </button>
           </div>
         </div>
 
-        <p className="mt-3 text-center text-xs text-[hsl(220,10%,46%)]">
-          {"Today's discount is applied on the next step."}
-        </p>
+        <p className="mt-3 text-center text-xs text-[hsl(220,10%,46%)]">{texts.hero.discountNote}</p>
       </div>
     </section>
   )
@@ -610,27 +607,26 @@ function HeroSection({
    HOW IT WORKS
    ───────────────────────────────────────────── */
 
-function HowItWorksSection() {
+function HowItWorksSection({ texts }: { texts: CarrentalTexts }) {
   return (
     <section id="how-it-works" className="bg-white px-6 py-24">
       <div className="mx-auto max-w-7xl">
         <div className="mb-16 text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-[hsl(24,100%,50%)]">
-            How It Works
+            {texts.nav.howItWorks}
           </p>
           <h2 className="text-balance text-4xl font-bold tracking-tight text-[hsl(220,15%,10%)] md:text-5xl">
-            Three simple steps
+            {texts.steps.title}
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-[hsl(220,10%,46%)]">
-            Renting a car with Jolzt is quick, easy, and worry-free. We
-            simplified the process to save you time and money.
+            {texts.steps.description}
           </p>
         </div>
 
         <div className="grid gap-8 md:grid-cols-3">
           {STEPS.map((step, i) => (
             <div
-              key={step.title}
+              key={i}
               className="group relative rounded-2xl bg-[hsl(210,20%,98%)] p-8 shadow-lg transition-shadow hover:shadow-xl"
             >
               <span className="absolute -top-4 left-8 flex h-8 w-8 items-center justify-center rounded-full bg-[hsl(24,100%,50%)] text-xs font-bold text-white">
@@ -642,13 +638,13 @@ function HowItWorksSection() {
               </div>
 
               <h3 className="mb-3 text-xl font-bold text-[hsl(220,15%,10%)]">
-                {step.title}
+                {texts.steps.items[i]?.title}
               </h3>
               <p className="mb-5 text-sm leading-relaxed text-[hsl(220,10%,46%)]">
-                {step.description}
+                {texts.steps.items[i]?.description}
               </p>
               <p className="text-xs font-semibold text-[hsl(24,100%,50%)]">
-                {step.stat}
+                {texts.steps.items[i]?.stat}
               </p>
             </div>
           ))}
@@ -662,27 +658,26 @@ function HowItWorksSection() {
    BROWSE BY EXPERIENCE
    ───────────────────────────────────────────── */
 
-function ExperienceSection() {
+function ExperienceSection({ texts }: { texts: CarrentalTexts }) {
   return (
     <section id="experiences" className="bg-white px-6 py-24">
       <div className="mx-auto max-w-7xl">
         <div className="mb-14 text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-[hsl(24,100%,50%)]">
-            Browse by Experience
+            {texts.experience.eyebrow}
           </p>
           <h2 className="text-balance text-4xl font-bold tracking-tight text-[hsl(220,15%,10%)] md:text-5xl">
-            Find your perfect ride
+            {texts.experience.title}
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-[hsl(220,10%,46%)]">
-            Choose from our wide selection of vehicles at the best prices in
-            North Macedonia.
+            {texts.experience.description}
           </p>
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
-          {EXPERIENCES.map((exp) => (
+          {EXPERIENCES.map((exp, index) => (
             <div
-              key={exp.title}
+              key={`${exp.from}-${index}`}
               className="group relative flex h-96 cursor-pointer flex-col justify-end overflow-hidden rounded-2xl shadow-lg"
             >
               <div
@@ -694,16 +689,17 @@ function ExperienceSection() {
               <div className="relative z-10 p-6">
                 <p className="mb-1 text-xs font-medium uppercase tracking-wider text-orange-400">
                   {"\u20AC"}
-                  {exp.from}/day
+                  {exp.from}
+                  {texts.experience.fromSuffix}
                 </p>
                 <h3 className="mb-2 text-2xl font-bold text-white">
-                  {exp.title}
+                  {texts.experience.items[index]?.title}
                 </h3>
                 <p className="mb-4 text-sm text-neutral-300">
-                  {exp.description}
+                  {texts.experience.items[index]?.description}
                 </p>
                 <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-white transition-all group-hover:gap-2.5">
-                  Explore
+                  {texts.experience.cta}
                   <ArrowRight className="h-4 w-4" />
                 </span>
               </div>
@@ -724,32 +720,33 @@ function FeaturedVehicles({
   loading,
   error,
   onCarClick,
+  texts,
 }: {
   cars: CarCard[]
   loading: boolean
   error: string | null
   onCarClick: (carId: string) => () => void
+  texts: CarrentalTexts
 }) {
   return (
     <section id="vehicles" className="bg-[hsl(210,20%,98%)] px-6 py-24">
       <div className="mx-auto max-w-7xl">
         <div className="mb-14 text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-[hsl(24,100%,50%)]">
-            Featured Fleet
+            {texts.featured.eyebrow}
           </p>
           <h2 className="text-balance text-4xl font-bold tracking-tight text-[hsl(220,15%,10%)] md:text-5xl">
-            Popular vehicles
+            {texts.featured.title}
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-[hsl(220,10%,46%)]">
-            From compact cars to luxury SUVs, we have the perfect option for
-            every trip.
+            {texts.featured.description}
           </p>
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {loading && (
             <div className="col-span-full text-center text-sm text-[hsl(220,10%,46%)]">
-              Loading cars...
+              {texts.featured.loading}
             </div>
           )}
           {!loading && error && (
@@ -771,7 +768,7 @@ function FeaturedVehicles({
                 <span
                   className={`absolute left-3 top-3 rounded-full px-3 py-1 text-xs font-semibold ${BADGE_STYLES[car.badge]}`}
                 >
-                  {car.badge}
+                  {texts.badges[car.badge as keyof typeof texts.badges] || car.badge}
                 </span>
               </div>
 
@@ -795,7 +792,7 @@ function FeaturedVehicles({
                 <div className="mb-5 flex flex-wrap gap-x-4 gap-y-2 text-xs text-[hsl(220,10%,46%)]">
                   <span className="flex items-center gap-1">
                     <Users className="h-3.5 w-3.5" />
-                    {car.seats} Seats
+                    {car.seats} {texts.featured.seats}
                   </span>
                   <span className="flex items-center gap-1">
                     <Fuel className="h-3.5 w-3.5" />
@@ -810,7 +807,7 @@ function FeaturedVehicles({
                 <div className="flex items-end border-t border-[hsl(220,13%,91%)] pt-4">
                   <div>
                     <span className="text-xs text-[hsl(220,10%,46%)]">
-                      From
+                      {texts.featured.from}
                     </span>
                     <p>
                       <span className="text-3xl font-bold text-[hsl(220,15%,10%)]">
@@ -818,7 +815,7 @@ function FeaturedVehicles({
                         {car.price}
                       </span>
                       <span className="ml-1 text-sm text-[hsl(220,10%,46%)]">
-                        /day
+                        {texts.featured.perDay}
                       </span>
                     </p>
                   </div>
@@ -836,51 +833,51 @@ function FeaturedVehicles({
    FOOTER
    ───────────────────────────────────────────── */
 
-function FooterSection({ lang }: { lang: string }) {
+function FooterSection({ lang, texts }: { lang: string; texts: CarrentalTexts }) {
   return (
     <footer className="border-t border-[hsl(220,13%,91%)] bg-white px-6 py-16">
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-5">
           <div>
-            <h3 className="mb-4 font-bold text-[hsl(220,15%,10%)]">JOLZT</h3>
+            <h3 className="mb-4 font-bold text-[hsl(220,15%,10%)]">{texts.footer.brand}</h3>
             <ul className="space-y-2">
               <li>
                 <Link href={`/${lang}`} className="text-sm text-[hsl(220,10%,46%)] hover:underline">
-                  Home
+                  {texts.footer.home}
                 </Link>
               </li>
               <li>
                 <Link href={`/${lang}/about-us`} className="text-sm text-[hsl(220,10%,46%)] hover:underline">
-                  About Us
+                  {texts.footer.about}
                 </Link>
               </li>
               <li>
                 <Link href={`/${lang}/how-jolzt-works`} className="text-sm text-[hsl(220,10%,46%)] hover:underline">
-                  How Jolzt Works
+                  {texts.footer.howItWorks}
                 </Link>
               </li>
               <li>
                 <Link href={`/${lang}/partner`} className="text-sm text-[hsl(220,10%,46%)] hover:underline">
-                  Partner with Jolzt
+                  {texts.footer.partner}
                 </Link>
               </li>
               <li>
                 <Link href={`/${lang}/contact`} className="text-sm text-[hsl(220,10%,46%)] hover:underline">
-                  Help & Contact
+                  {texts.footer.help}
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="mb-4 font-bold text-[hsl(220,15%,10%)]">Explore</h3>
+            <h3 className="mb-4 font-bold text-[hsl(220,15%,10%)]">{texts.footer.explore}</h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   href={`/${lang}/blog/matka-canyon`}
                   className="text-sm text-[hsl(220,10%,46%)] hover:underline"
                 >
-                  Explore Matka Canyon
+                  {texts.footer.exploreMatka}
                 </Link>
               </li>
               <li>
@@ -888,7 +885,7 @@ function FooterSection({ lang }: { lang: string }) {
                   href={`/${lang}/blog/hiking-destinations`}
                   className="text-sm text-[hsl(220,10%,46%)] hover:underline"
                 >
-                  View Hiking Destinations
+                  {texts.footer.viewHiking}
                 </Link>
               </li>
               <li>
@@ -896,7 +893,7 @@ function FooterSection({ lang }: { lang: string }) {
                   href={`/${lang}/blog/historic-sites`}
                   className="text-sm text-[hsl(220,10%,46%)] hover:underline"
                 >
-                  Explore Historic Sites
+                  {texts.footer.exploreHistoric}
                 </Link>
               </li>
               <li>
@@ -904,14 +901,14 @@ function FooterSection({ lang }: { lang: string }) {
                   href={`/${lang}/blog/mavrovo-park`}
                   className="text-sm text-[hsl(220,10%,46%)] hover:underline"
                 >
-                  Take a Trip to Park Mavrovo
+                  {texts.footer.tripMavrovo}
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="mb-4 font-bold text-[hsl(220,15%,10%)]">Services</h3>
+            <h3 className="mb-4 font-bold text-[hsl(220,15%,10%)]">{texts.footer.services}</h3>
             <ul className="space-y-2">
               <li>
                 <Link
@@ -920,7 +917,7 @@ function FooterSection({ lang }: { lang: string }) {
                   rel="noopener noreferrer"
                   className="text-sm text-[hsl(220,10%,46%)] hover:underline"
                 >
-                  Jolzt Rent a Car
+                  {texts.footer.serviceRent}
                 </Link>
               </li>
               <li>
@@ -930,7 +927,7 @@ function FooterSection({ lang }: { lang: string }) {
                   rel="noopener noreferrer"
                   className="text-sm text-[hsl(220,10%,46%)] hover:underline"
                 >
-                  Jolzt Luggage Storage
+                  {texts.footer.serviceLuggage}
                 </Link>
               </li>
               <li>
@@ -940,21 +937,21 @@ function FooterSection({ lang }: { lang: string }) {
                   rel="noopener noreferrer"
                   className="text-sm text-[hsl(220,10%,46%)] hover:underline"
                 >
-                  Jolzt Laundry Service
+                  {texts.footer.serviceLaundry}
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="mb-4 font-bold text-[hsl(220,15%,10%)]">Legal</h3>
+            <h3 className="mb-4 font-bold text-[hsl(220,15%,10%)]">{texts.footer.legal}</h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   href={`/${lang}/terms-of-service`}
                   className="text-sm text-[hsl(220,10%,46%)] hover:underline"
                 >
-                  Terms of Service
+                  {texts.footer.terms}
                 </Link>
               </li>
               <li>
@@ -962,7 +959,7 @@ function FooterSection({ lang }: { lang: string }) {
                   href={`/${lang}/privacy-policy`}
                   className="text-sm text-[hsl(220,10%,46%)] hover:underline"
                 >
-                  Privacy Policy
+                  {texts.footer.privacy}
                 </Link>
               </li>
               <li>
@@ -970,15 +967,15 @@ function FooterSection({ lang }: { lang: string }) {
                   href={`/${lang}/terms-of-payment`}
                   className="text-sm text-[hsl(220,10%,46%)] hover:underline"
                 >
-                  Terms of Payment
+                  {texts.footer.payment}
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="mb-4 font-bold text-[hsl(220,15%,10%)]">Download App</h3>
-            <p className="mb-4 text-sm text-[hsl(220,10%,46%)]">Get the Jolzt app for the best experience</p>
+            <h3 className="mb-4 font-bold text-[hsl(220,15%,10%)]">{texts.footer.download}</h3>
+            <p className="mb-4 text-sm text-[hsl(220,10%,46%)]">{texts.footer.downloadDesc}</p>
             <div className="flex flex-col gap-2">
               <Link
                 href="https://apps.apple.com/mk/app/jolzt-rent-a-car-macedonia/id6618112125"
@@ -993,7 +990,7 @@ function FooterSection({ lang }: { lang: string }) {
                   height={24}
                   className="mr-2"
                 />
-                Download on App Store
+                {texts.footer.appStore}
               </Link>
               <Link
                 href="https://play.google.com/store/apps/details?id=com.jolzt&hl=en&pli=1"
@@ -1008,7 +1005,7 @@ function FooterSection({ lang }: { lang: string }) {
                   height={24}
                   className="mr-2"
                 />
-                Get it on Google Play
+                {texts.footer.googlePlay}
               </Link>
             </div>
           </div>
@@ -1018,13 +1015,13 @@ function FooterSection({ lang }: { lang: string }) {
           <div className="text-sm text-[hsl(220,10%,46%)]">© Jolzt {new Date().getFullYear()}</div>
           <div className="flex flex-wrap justify-center gap-4">
             <Link href={`/${lang}/terms-of-service`} className="text-sm text-[hsl(220,10%,46%)] hover:underline">
-              Terms of Service
+              {texts.footer.terms}
             </Link>
             <Link href={`/${lang}/privacy-policy`} className="text-sm text-[hsl(220,10%,46%)] hover:underline">
-              Privacy Policy
+              {texts.footer.privacy}
             </Link>
             <Link href={`/${lang}/terms-of-payment`} className="text-sm text-[hsl(220,10%,46%)] hover:underline">
-              Terms of Payment
+              {texts.footer.payment}
             </Link>
           </div>
         </div>
@@ -1038,6 +1035,7 @@ function FooterSection({ lang }: { lang: string }) {
    ───────────────────────────────────────────── */
 
 export default function CarrentalHomepage({ lang = "en" }: { lang?: string }) {
+  const texts = getCarrentalTexts(lang)
   const [cars, setCars] = useState<CarCard[]>(FALLBACK_CARS)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -1061,7 +1059,7 @@ export default function CarrentalHomepage({ lang = "en" }: { lang?: string }) {
   const currentVariantText =
     HERO_TEXT_VARIANTS[heroVariant.value as VariantKey] || HERO_TEXT_VARIANTS["0"]
   const currentLang = (lang as LangKey) || "en"
-  const getLocalizedText = (textMap: typeof currentVariantText.heading) => {
+  const getLocalizedText = (textMap: Record<LangKey, string>) => {
     return textMap[currentLang] || textMap.en
   }
 
@@ -1088,7 +1086,7 @@ export default function CarrentalHomepage({ lang = "en" }: { lang?: string }) {
         setCars(mappedCars.length > 0 ? mappedCars : FALLBACK_CARS)
       } catch (fetchError: unknown) {
         const err = fetchError as { response?: { data?: { error?: string } } }
-        setError(err.response?.data?.error || "Failed to load cars")
+        setError(err.response?.data?.error || texts.common.failedToLoadCars)
         setCars(FALLBACK_CARS)
       } finally {
         setLoading(false)
@@ -1096,7 +1094,7 @@ export default function CarrentalHomepage({ lang = "en" }: { lang?: string }) {
     }
 
     fetchCars()
-  }, [])
+  }, [texts.common.failedToLoadCars])
 
   const openBookingUrl = () => {
     const formatDate = (date: Date) => format(date, "dd-MM-yyyy")
@@ -1162,7 +1160,7 @@ export default function CarrentalHomepage({ lang = "en" }: { lang?: string }) {
 
   return (
     <div className="min-h-screen bg-[hsl(210,20%,98%)]">
-      <Header lang={lang} onBookNowClick={handleBookNowClick} />
+      <Header lang={lang} onBookNowClick={handleBookNowClick} texts={texts} />
       <HeroSection
         location={location}
         onLocationChange={setLocation}
@@ -1177,16 +1175,18 @@ export default function CarrentalHomepage({ lang = "en" }: { lang?: string }) {
         ratingLineText={ratingLineText}
         benefit1Text={benefit1Text}
         benefit2Text={benefit2Text}
+        texts={texts}
       />
-      <HowItWorksSection />
-      <ExperienceSection />
+      <HowItWorksSection texts={texts} />
+      <ExperienceSection texts={texts} />
       <FeaturedVehicles
         cars={cars}
         loading={loading}
         error={error}
         onCarClick={handleCarClick}
+        texts={texts}
       />
-      <FooterSection lang={lang} />
+      <FooterSection lang={lang} texts={texts} />
     </div>
   )
 }

@@ -1,0 +1,101 @@
+{
+  "nav": {
+    "howItWorks": "How It Works",
+    "cars": "Cars",
+    "whyJolzt": "Why Jolzt"
+  },
+  "common": {
+    "bookYourRide": "Book Your Ride",
+    "failedToLoadCars": "Failed to load cars",
+    "loadingCars": "Loading cars...",
+    "noCars": "No cars available right now.",
+    "reviews": "reviews",
+    "from": "From",
+    "perDay": "/day",
+    "seats": "Seats"
+  },
+  "hero": {
+    "roadside": "24/7 Roadside Assistance",
+    "pickupLocation": "Pick-up Location",
+    "pickupDropoff": "Pick-up / Drop-off",
+    "pickupTime": "Pick-up Time",
+    "discountNote": "Today's discount is applied on the next step."
+  },
+  "howItWorks": {
+    "eyebrow": "How It Works",
+    "title": "Renting a car with Jolzt is quick, easy, and worry-free",
+    "description": "We've simplified the process to save you time and money.",
+    "steps": [
+      {
+        "title": "Book in minutes",
+        "description": "Choose dates, browse cars, and book instantly. No paperwork, no waiting in line.",
+        "highlight": "Save up to 30% compared to traditional rentals"
+      },
+      {
+        "title": "Skip the counter",
+        "description": "Go straight to your car with our digital check-in. No lines, no paperwork, just grab and drive.",
+        "highlight": "Average pickup time under 2 minutes"
+      },
+      {
+        "title": "Drive worry-free",
+        "description": "Full insurance included with 24/7 roadside assistance. Free cancellation up to 48 hours.",
+        "highlight": "98% customer satisfaction"
+      }
+    ]
+  },
+  "fleet": {
+    "eyebrow": "Find your perfect ride",
+    "title": "Choose from our wide selection of vehicles at the best prices in North Macedonia"
+  },
+  "trust": {
+    "eyebrow": "Why Jolzt",
+    "title": "We've simplified the process to save you time and money",
+    "items": [
+      {
+        "title": "Full Insurance Always Included",
+        "description": "No hidden fees at the counter. Every rental includes comprehensive coverage.",
+        "stat": "100% covered"
+      },
+      {
+        "title": "Instant Confirmation",
+        "description": "Confirmed in seconds. Skip the counter with our digital check-in.",
+        "stat": "Under 2 min pickup"
+      },
+      {
+        "title": "4.8/5 Customer Rating",
+        "description": "Safe, predictable, and easy from booking to return. Trusted by thousands.",
+        "stat": "98% satisfaction"
+      },
+      {
+        "title": "Clear, Upfront Pricing",
+        "description": "The price you see is the price you pay. No surprises, ever.",
+        "stat": "Save up to 30%"
+      }
+    ]
+  },
+  "footer": {
+    "brand": "JOLZT",
+    "home": "Home",
+    "about": "About Us",
+    "howItWorks": "How Jolzt Works",
+    "partner": "Partner with Jolzt",
+    "help": "Help & Contact",
+    "explore": "Explore",
+    "exploreMatka": "Explore Matka Canyon",
+    "viewHiking": "View Hiking Destinations",
+    "exploreHistoric": "Explore Historic Sites",
+    "tripMavrovo": "Take a Trip to Park Mavrovo",
+    "services": "Services",
+    "serviceRent": "Jolzt Rent a Car",
+    "serviceLuggage": "Jolzt Luggage Storage",
+    "serviceLaundry": "Jolzt Laundry Service",
+    "legal": "Legal",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "payment": "Terms of Payment",
+    "download": "Download App",
+    "downloadDesc": "Get the Jolzt app for the best experience",
+    "appStore": "Download on App Store",
+    "googlePlay": "Get it on Google Play"
+  }
+}
