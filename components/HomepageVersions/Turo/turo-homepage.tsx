@@ -7,7 +7,6 @@ import heroBg from "./hero-bg.jpg";
 import axios from "axios";
 import { format } from "date-fns";
 import {
-  Car,
   Menu,
   X,
   MapPin,
@@ -23,7 +22,6 @@ import {
   Fuel,
   Settings2,
   Star,
-  ArrowRight,
   Zap,
   BadgeCheck,
   ChevronLeft,
@@ -357,13 +355,6 @@ const TRUST_FEATURES = [
   },
 ];
 
-const FOOTER_LINKS = {
-  Company: ["About Us", "Careers", "Blog", "Press"],
-  Support: ["Help Center", "Contact Us", "FAQ", "Live Chat"],
-  Legal: ["Privacy Policy", "Terms of Service", "Cookie Policy"],
-  Locations: ["Skopje", "Ohrid", "Bitola", "Skopje Airport"],
-};
-
 const mapCarForDisplay = (car: HomePageCar, index: number): DisplayCar => {
   const modelName = [car.model, car.modelType].filter(Boolean).join(" ").trim();
   const features =
@@ -611,7 +602,7 @@ function HeroSearch({
               className="flex items-center justify-center gap-2 rounded-xl bg-[#FF6B00] px-8 py-3.5 text-sm font-bold text-white transition-all hover:bg-[#e55f00] hover:shadow-lg hover:shadow-[#FF6B00]/25 md:px-10"
             >
               <Search className="h-4 w-4" />
-              Search Cars
+              Book Your Ride
             </button>
           </div>
         </div>
@@ -750,7 +741,8 @@ function PopularCars({
           {!loading && !error && cars.map((car, i) => (
             <div
               key={`${car.id}-${car.year}-${i}`}
-              className="group flex-shrink-0 w-[320px] overflow-visible rounded-2xl border border-white/5 bg-[#161616] transition-all hover:border-[#FF6B00]/20"
+              className="group flex-shrink-0 w-[320px] cursor-pointer overflow-visible rounded-2xl border border-white/5 bg-[#161616] transition-all hover:border-[#FF6B00]/20"
+              onClick={onCarClick(car.id)}
             >
               {/* Image — pops out */}
               <div className="relative mx-auto -mt-2 w-[90%] pt-4">
@@ -816,7 +808,7 @@ function PopularCars({
                 </div>
 
                 {/* Price + CTA */}
-                <div className="mt-5 flex items-end justify-between border-t border-white/5 pt-4">
+                <div className="mt-5 border-t border-white/5 pt-4">
                   <div>
                     <p className="text-xs text-white/40">From</p>
                     <p className="text-2xl font-bold text-white">
@@ -827,14 +819,6 @@ function PopularCars({
                       </span>
                     </p>
                   </div>
-                  <button
-                    type="button"
-                    onClick={onCarClick(car.id)}
-                    className="flex items-center gap-1.5 rounded-full bg-[#FF6B00] px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#e55f00]"
-                  >
-                    Search cars
-                    <ArrowRight className="h-3 w-3" />
-                  </button>
                 </div>
               </div>
             </div>
@@ -891,73 +875,175 @@ function TrustSection() {
 
 /* ───────────────────────── FOOTER ───────────────────────── */
 
-function SiteFooter() {
+function SiteFooter({ lang }: { lang: string }) {
   return (
     <footer className="border-t border-white/5 bg-[#0a0a0a]">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-10 md:grid-cols-5">
-          {/* Brand */}
-          <div className="md:col-span-1">
-            <a href="/" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#FF6B00]">
-                <Car className="h-4 w-4 text-white" />
-              </div>
-              <span className="text-lg font-bold text-white tracking-tight">
-                JOLZT
-              </span>
-            </a>
-            <p className="mt-4 text-sm leading-relaxed text-white/40">
-              Renting a car with Jolzt is quick, easy, and worry-free.{" "}
-              {"We've simplified the process to save you time and money."}
-            </p>
+          <div>
+            <h3 className="font-bold mb-4 text-white">JOLZT</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link href={`/${lang}`} className="text-sm text-white/60 hover:underline">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${lang}/about-us`} className="text-sm text-white/60 hover:underline">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${lang}/how-jolzt-works`} className="text-sm text-white/60 hover:underline">
+                  How Jolzt Works
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${lang}/partner`} className="text-sm text-white/60 hover:underline">
+                  Partner with Jolzt
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${lang}/contact`} className="text-sm text-white/60 hover:underline">
+                  Help & Contact
+                </Link>
+              </li>
+            </ul>
           </div>
 
-          {/* Link columns */}
-          {Object.entries(FOOTER_LINKS).map(([heading, links]) => (
-            <div key={heading}>
-              <h4 className="text-sm font-semibold uppercase tracking-wider text-white/70">
-                {heading}
-              </h4>
-              <ul className="mt-4 space-y-3">
-                {links.map((link) => (
-                  <li key={link}>
-                    <a
-                      href="#"
-                      className="text-sm text-white/40 transition-colors hover:text-white"
-                    >
-                      {link}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+          <div>
+            <h3 className="font-bold mb-4 text-white">Explore</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link href={`/${lang}/blog/matka-canyon`} className="text-sm text-white/60 hover:underline">
+                  Explore Matka Canyon
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${lang}/blog/hiking-destinations`} className="text-sm text-white/60 hover:underline">
+                  View Hiking Destinations
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${lang}/blog/historic-sites`} className="text-sm text-white/60 hover:underline">
+                  Explore Historic Sites
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${lang}/blog/mavrovo-park`} className="text-sm text-white/60 hover:underline">
+                  Take a Trip to Park Mavrovo
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-bold mb-4 text-white">Services</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link
+                  href="https://jolzt.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-white/60 hover:underline"
+                >
+                  Jolzt Rent a Car
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="https://luggage.jolzt.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-white/60 hover:underline"
+                >
+                  Jolzt Luggage Storage
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="https://laundry.jolzt.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-white/60 hover:underline"
+                >
+                  Jolzt Laundry Service
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-bold mb-4 text-white">Legal</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link href={`/${lang}/terms-of-service`} className="text-sm text-white/60 hover:underline">
+                  Terms of Service
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${lang}/privacy-policy`} className="text-sm text-white/60 hover:underline">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${lang}/terms-of-payment`} className="text-sm text-white/60 hover:underline">
+                  Terms of Payment
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-bold mb-4 text-white">Download App</h3>
+            <p className="text-sm text-white/40 mb-4">Get the Jolzt app for the best experience</p>
+            <div className="flex flex-col gap-2">
+              <Link
+                href="https://apps.apple.com/mk/app/jolzt-rent-a-car-macedonia/id6618112125"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-start rounded-md border border-white/30 px-3 py-2 text-[12px] font-medium text-white transition-colors hover:bg-white/10"
+              >
+                <Image
+                  src="/3.png?height=20&width=20"
+                  alt="App Store"
+                  width={24}
+                  height={24}
+                  className="mr-2"
+                />
+                Download on App Store
+              </Link>
+              <Link
+                href="https://play.google.com/store/apps/details?id=com.jolzt&hl=en&pli=1"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-start rounded-md border border-white/30 px-3 py-2 text-[12px] font-medium text-white transition-colors hover:bg-white/10"
+              >
+                <Image
+                  src="/4.png?height=20&width=20"
+                  alt="Google Play"
+                  width={24}
+                  height={24}
+                  className="mr-2"
+                />
+                Get it on Google Play
+              </Link>
             </div>
-          ))}
+          </div>
         </div>
 
-        {/* Bottom bar */}
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/5 pt-8 md:flex-row">
-          <p className="text-sm text-white/30">
-            &copy; {new Date().getFullYear()} Jolzt. All rights reserved.
-          </p>
-          <div className="flex gap-6">
-            <a
-              href="#"
-              className="text-sm text-white/30 transition-colors hover:text-white"
-            >
-              Privacy
-            </a>
-            <a
-              href="#"
-              className="text-sm text-white/30 transition-colors hover:text-white"
-            >
-              Terms
-            </a>
-            <a
-              href="#"
-              className="text-sm text-white/30 transition-colors hover:text-white"
-            >
-              Cookies
-            </a>
+          <div className="text-sm text-white/40">© Jolzt {new Date().getFullYear()}</div>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link href={`/${lang}/terms-of-service`} className="text-sm text-white/40 hover:underline">
+              Terms of Service
+            </Link>
+            <Link href={`/${lang}/privacy-policy`} className="text-sm text-white/40 hover:underline">
+              Privacy Policy
+            </Link>
+            <Link href={`/${lang}/terms-of-payment`} className="text-sm text-white/40 hover:underline">
+              Terms of Payment
+            </Link>
           </div>
         </div>
       </div>
@@ -1118,7 +1204,7 @@ export default function JolztHomepage({ lang = "en" }: { lang?: string }) {
         onCarClick={handleCarClick}
       />
       <TrustSection />
-      <SiteFooter />
+      <SiteFooter lang={lang} />
     </main>
   );
 }

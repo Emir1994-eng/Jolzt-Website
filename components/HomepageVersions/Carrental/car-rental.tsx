@@ -592,7 +592,7 @@ function HeroSection({
               className="group flex w-full items-center justify-center gap-2 rounded-xl bg-neutral-900 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-neutral-800 lg:w-[25%]"
             >
               <Search className="h-4 w-4" />
-              Search Cars
+              Book Your Ride
               <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </button>
           </div>
@@ -758,7 +758,8 @@ function FeaturedVehicles({
           {!loading && !error && cars.map((car) => (
             <div
               key={car.id + car.year}
-              className="group overflow-hidden rounded-2xl bg-white shadow-lg transition-shadow hover:shadow-xl"
+              className="group cursor-pointer overflow-hidden rounded-2xl bg-white shadow-lg transition-shadow hover:shadow-xl"
+              onClick={onCarClick(car.id)}
             >
               {/* Car image */}
               <div className="relative aspect-[4/3] overflow-hidden">
@@ -806,7 +807,7 @@ function FeaturedVehicles({
                   </span>
                 </div>
 
-                <div className="flex items-end justify-between">
+                <div className="flex items-end border-t border-[hsl(220,13%,91%)] pt-4">
                   <div>
                     <span className="text-xs text-[hsl(220,10%,46%)]">
                       From
@@ -821,14 +822,6 @@ function FeaturedVehicles({
                       </span>
                     </p>
                   </div>
-                  <button
-                    type="button"
-                    onClick={onCarClick(car.id)}
-                    className="flex items-center gap-1 rounded-full bg-neutral-900 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-neutral-800"
-                  >
-                    Book
-                    <ChevronRight className="h-3.5 w-3.5" />
-                  </button>
                 </div>
               </div>
             </div>
@@ -843,141 +836,197 @@ function FeaturedVehicles({
    FOOTER
    ───────────────────────────────────────────── */
 
-function FooterSection() {
+function FooterSection({ lang }: { lang: string }) {
   return (
     <footer className="border-t border-[hsl(220,13%,91%)] bg-white px-6 py-16">
       <div className="mx-auto max-w-7xl">
-        <div className="grid gap-12 md:grid-cols-4">
-          <div className="md:col-span-1">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[hsl(24,100%,50%)]">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  className="text-white"
-                >
-                  <path
-                    d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"
-                    fill="currentColor"
-                  />
-                </svg>
-              </div>
-              <span className="text-lg font-bold text-[hsl(220,15%,10%)]">
-                JOLZT
-              </span>
-            </Link>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-[hsl(220,10%,46%)]">
-              Clear pricing, simple instructions, and full insurance included.
-              Car rental in Macedonia made easy.
-            </p>
-          </div>
-
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-5">
           <div>
-            <h4 className="mb-4 text-sm font-semibold text-[hsl(220,15%,10%)]">
-              Company
-            </h4>
-            <ul className="flex flex-col gap-3">
+            <h3 className="mb-4 font-bold text-[hsl(220,15%,10%)]">JOLZT</h3>
+            <ul className="space-y-2">
               <li>
-                <Link
-                  href="#"
-                  className="text-sm text-[hsl(220,10%,46%)] transition-colors hover:text-[hsl(220,15%,10%)]"
-                >
+                <Link href={`/${lang}`} className="text-sm text-[hsl(220,10%,46%)] hover:underline">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${lang}/about-us`} className="text-sm text-[hsl(220,10%,46%)] hover:underline">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link
-                  href="#"
-                  className="text-sm text-[hsl(220,10%,46%)] transition-colors hover:text-[hsl(220,15%,10%)]"
-                >
-                  Careers
+                <Link href={`/${lang}/how-jolzt-works`} className="text-sm text-[hsl(220,10%,46%)] hover:underline">
+                  How Jolzt Works
                 </Link>
               </li>
               <li>
-                <Link
-                  href="#"
-                  className="text-sm text-[hsl(220,10%,46%)] transition-colors hover:text-[hsl(220,15%,10%)]"
-                >
-                  Blog
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="mb-4 text-sm font-semibold text-[hsl(220,15%,10%)]">
-              Support
-            </h4>
-            <ul className="flex flex-col gap-3">
-              <li>
-                <Link
-                  href="#"
-                  className="text-sm text-[hsl(220,10%,46%)] transition-colors hover:text-[hsl(220,15%,10%)]"
-                >
-                  Help Center
+                <Link href={`/${lang}/partner`} className="text-sm text-[hsl(220,10%,46%)] hover:underline">
+                  Partner with Jolzt
                 </Link>
               </li>
               <li>
-                <Link
-                  href="#"
-                  className="text-sm text-[hsl(220,10%,46%)] transition-colors hover:text-[hsl(220,15%,10%)]"
-                >
-                  Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-sm text-[hsl(220,10%,46%)] transition-colors hover:text-[hsl(220,15%,10%)]"
-                >
-                  FAQ
+                <Link href={`/${lang}/contact`} className="text-sm text-[hsl(220,10%,46%)] hover:underline">
+                  Help & Contact
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="mb-4 text-sm font-semibold text-[hsl(220,15%,10%)]">
-              Legal
-            </h4>
-            <ul className="flex flex-col gap-3">
+            <h3 className="mb-4 font-bold text-[hsl(220,15%,10%)]">Explore</h3>
+            <ul className="space-y-2">
               <li>
                 <Link
-                  href="#"
-                  className="text-sm text-[hsl(220,10%,46%)] transition-colors hover:text-[hsl(220,15%,10%)]"
+                  href={`/${lang}/blog/matka-canyon`}
+                  className="text-sm text-[hsl(220,10%,46%)] hover:underline"
+                >
+                  Explore Matka Canyon
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${lang}/blog/hiking-destinations`}
+                  className="text-sm text-[hsl(220,10%,46%)] hover:underline"
+                >
+                  View Hiking Destinations
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${lang}/blog/historic-sites`}
+                  className="text-sm text-[hsl(220,10%,46%)] hover:underline"
+                >
+                  Explore Historic Sites
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${lang}/blog/mavrovo-park`}
+                  className="text-sm text-[hsl(220,10%,46%)] hover:underline"
+                >
+                  Take a Trip to Park Mavrovo
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="mb-4 font-bold text-[hsl(220,15%,10%)]">Services</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link
+                  href="https://jolzt.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-[hsl(220,10%,46%)] hover:underline"
+                >
+                  Jolzt Rent a Car
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="https://luggage.jolzt.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-[hsl(220,10%,46%)] hover:underline"
+                >
+                  Jolzt Luggage Storage
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="https://laundry.jolzt.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-[hsl(220,10%,46%)] hover:underline"
+                >
+                  Jolzt Laundry Service
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="mb-4 font-bold text-[hsl(220,15%,10%)]">Legal</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link
+                  href={`/${lang}/terms-of-service`}
+                  className="text-sm text-[hsl(220,10%,46%)] hover:underline"
                 >
                   Terms of Service
                 </Link>
               </li>
               <li>
                 <Link
-                  href="#"
-                  className="text-sm text-[hsl(220,10%,46%)] transition-colors hover:text-[hsl(220,15%,10%)]"
+                  href={`/${lang}/privacy-policy`}
+                  className="text-sm text-[hsl(220,10%,46%)] hover:underline"
                 >
                   Privacy Policy
                 </Link>
               </li>
               <li>
                 <Link
-                  href="#"
-                  className="text-sm text-[hsl(220,10%,46%)] transition-colors hover:text-[hsl(220,15%,10%)]"
+                  href={`/${lang}/terms-of-payment`}
+                  className="text-sm text-[hsl(220,10%,46%)] hover:underline"
                 >
-                  Insurance Policy
+                  Terms of Payment
                 </Link>
               </li>
             </ul>
           </div>
+
+          <div>
+            <h3 className="mb-4 font-bold text-[hsl(220,15%,10%)]">Download App</h3>
+            <p className="mb-4 text-sm text-[hsl(220,10%,46%)]">Get the Jolzt app for the best experience</p>
+            <div className="flex flex-col gap-2">
+              <Link
+                href="https://apps.apple.com/mk/app/jolzt-rent-a-car-macedonia/id6618112125"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-start rounded-md border border-[hsl(220,13%,85%)] px-3 py-2 text-[12px] font-medium text-[hsl(220,15%,10%)] transition-colors hover:bg-[hsl(220,13%,97%)]"
+              >
+                <Image
+                  src="/3.png?height=20&width=20"
+                  alt="App Store"
+                  width={24}
+                  height={24}
+                  className="mr-2"
+                />
+                Download on App Store
+              </Link>
+              <Link
+                href="https://play.google.com/store/apps/details?id=com.jolzt&hl=en&pli=1"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-start rounded-md border border-[hsl(220,13%,85%)] px-3 py-2 text-[12px] font-medium text-[hsl(220,15%,10%)] transition-colors hover:bg-[hsl(220,13%,97%)]"
+              >
+                <Image
+                  src="/4.png?height=20&width=20"
+                  alt="Google Play"
+                  width={24}
+                  height={24}
+                  className="mr-2"
+                />
+                Get it on Google Play
+              </Link>
+            </div>
+          </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[hsl(220,13%,91%)] pt-8 md:flex-row">
-          <p className="text-xs text-[hsl(220,10%,46%)]">
-            {"\u00A9"} 2026 Jolzt. All rights reserved.
-          </p>
-          <p className="text-xs text-[hsl(220,10%,46%)]">
-            Made with care in North Macedonia
-          </p>
+        <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-[hsl(220,13%,91%)] pt-8 md:flex-row">
+          <div className="text-sm text-[hsl(220,10%,46%)]">© Jolzt {new Date().getFullYear()}</div>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link href={`/${lang}/terms-of-service`} className="text-sm text-[hsl(220,10%,46%)] hover:underline">
+              Terms of Service
+            </Link>
+            <Link href={`/${lang}/privacy-policy`} className="text-sm text-[hsl(220,10%,46%)] hover:underline">
+              Privacy Policy
+            </Link>
+            <Link href={`/${lang}/terms-of-payment`} className="text-sm text-[hsl(220,10%,46%)] hover:underline">
+              Terms of Payment
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
@@ -1137,7 +1186,7 @@ export default function CarrentalHomepage({ lang = "en" }: { lang?: string }) {
         error={error}
         onCarClick={handleCarClick}
       />
-      <FooterSection />
+      <FooterSection lang={lang} />
     </div>
   )
 }
